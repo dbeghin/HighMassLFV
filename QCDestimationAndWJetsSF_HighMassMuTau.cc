@@ -21,10 +21,10 @@ int main(/*int argc, char** argv*/) {
   vector<TFile*> file_in;
   int i_CR1 = file_in.size();
   file_in.push_back( new TFile("Figures/histos_highmassmutau_CR1.root", "R") );
-  int i_CR3 = file_in.size();
-  file_in.push_back( new TFile("Figures/histos_highmassmutau_CR3.root", "R") );
   int i_CR4 = file_in.size();
   file_in.push_back( new TFile("Figures/histos_highmassmutau_CR4.root", "R") );
+  int i_CR3 = file_in.size();
+  file_in.push_back( new TFile("Figures/histos_highmassmutau_CR3.root", "R") );
   int i_CR5 = file_in.size();
   file_in.push_back( new TFile("Figures/histos_highmassmutau_CR5.root", "R") );
   int i_CR7 = file_in.size();
@@ -41,9 +41,9 @@ int main(/*int argc, char** argv*/) {
   CR_list.push_back("CR9");
 
   vector<TString> names;
-  names.push_back("data_");//0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-  names.push_back("WJets_");//1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-  names.push_back("QCD_");//2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  names.push_back("data_");//0
+  names.push_back("WJets_");//1
+  names.push_back("QCD_");//2
   names.push_back("DY_");
   names.push_back("TT_");
   names.push_back("ST_");
@@ -65,8 +65,8 @@ int main(/*int argc, char** argv*/) {
   vars.push_back("ev_MET");
   vars.push_back("ev_Mcol");
 
-  //retrieve histograms from all control regions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-  //only for CR4 (1) do we care to have all histos                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+  //retrieve histograms from all control regions
+  //only for CR4 (1) do we care to have all histos
   vector<TH1F*> h[file_in.size()][names.size()];
   for (unsigned int i=0; i<file_in.size(); ++i) {
     for (unsigned int j=0; j<names.size(); ++j) {
@@ -79,7 +79,7 @@ int main(/*int argc, char** argv*/) {
   }
 
 
-  //Get WJets SF in SS iso mu, anti-iso tau CR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+  //Get WJets SF in SS iso mu, anti-iso tau CR
   TH1F* h_data = (TH1F*) h[i_CR7][0][0]->Clone("data_wjetsCR7");
   for (unsigned int j=2; j<names.size(); ++j) h_data->Add(h[i_CR7][j][0], -1);
   float data_error_sq = 0;
@@ -93,7 +93,7 @@ int main(/*int argc, char** argv*/) {
   cout << "WJets SF CR7 " << WJets_SF_CR7 << "  stat err " << WJets_SF_CR7_err << "  QCD err " << 0.5*h[i_CR7][2][0]->Integral()/h[i_CR7][1][0]->Integral() << endl << endl;
 
 
-  //Get WJets SF in SS iso mu, iso tau CR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+  //Get WJets SF in SS iso mu, iso tau CR
   TH1F* h_data_CR9 = (TH1F*) h[i_CR9][0][0]->Clone("data_wjetsCR9");
   for (unsigned int j=2; j<names.size(); ++j) h_data_CR9->Add(h[i_CR9][j][0], -1);
   data_error_sq = 0;
@@ -106,10 +106,10 @@ int main(/*int argc, char** argv*/) {
   float WJets_SF_CR9_err = sqrt( data_error_sq/pow(h_data_CR9->Integral(), 2) + MC_error_sq/pow(h[i_CR9][1][0]->Integral(), 2) ) * WJets_SF_CR9;
   cout << "WJets SF CR9 " << WJets_SF_CR9 << "  stat err " << WJets_SF_CR9_err << "  QCD err " << 0.5*h[i_CR9][2][0]->Integral()/h[i_CR9][1][0]->Integral() << endl << endl;
 
-  //rescale WJets histos                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  //rescale WJets histos
   h[i_CR3][1][0]->Scale(WJets_SF_CR7), h[i_CR1][1][0]->Scale(WJets_SF_CR9);
 
-  //Get 3to1 WJets tau-pt-dependent SF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+  //Get 3to1 WJets tau-pt-dependent SF
   float x[] = {30, 40, 50, 70, 100, 500};
   int len_x = 6;
   TH1F* ptratio = new TH1F("WJetsSF_byTauPt", "WJetsSF_byTauPt", len_x-1, x);
@@ -143,17 +143,17 @@ int main(/*int argc, char** argv*/) {
   denominator->SetBinContent(jBin, bin_content_den);
   denominator->SetBinError(jBin, sqrt(bin_error_den));
 
-  //flat SF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+  //flat SF
   cout << "WJets flat 3to1 SF " << ptratio->Integral()/denominator->Integral() << endl;
 
-  //pt-dependent SF                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  //pt-dependent SF
   ptratio->Divide(denominator);
   file_out_W->cd();
   ptratio->Write();
   file_out_W->Close();
 
 
-  //Get mu iso SF (5to3 SF) (approx. of 4to2) and mutau iso SF (5to1) (approx. of 4to0)                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+  //Get mu iso SF (5to3 SF) (approx. of 4to2) and mutau iso SF (5to1) (approx. of 4to0)
   TH1F* h_data5 = (TH1F*) h[i_CR5][0][0]->Clone("data_CR5");
   TH1F* h_data3 = (TH1F*) h[i_CR3][0][0]->Clone("data_CR3");
   TH1F* h_data1 = (TH1F*) h[i_CR1][0][0]->Clone("data_CR1");

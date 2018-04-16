@@ -15,19 +15,19 @@
 
 using namespace std;
 int main(/*int argc, char** argv*/) {
-  //tau iso SF (3to1 SF) (approx. of 2to0)                                                                                                                                                                                                                                 
-  float tau_iso_SF = 0.609718;//0.0129414; //WJets 3to1 SF                                                                                                                                                                                                                 
+  //tau iso SF (3to1 SF) (approx. of 2to0)
+  float tau_iso_SF = 0.609718;//0.0129414; //WJets 3to1 SF
   cout << "tau iso SF               " << tau_iso_SF << endl;
 
 
   TFile* file_out = new TFile("HighMassLFVMuTau/Wjets_CR0.root", "RECREATE");
   TFile* file_in = new TFile("Figures/histos_highmassmutau_CR2.root", "R");
-  //TFile* file_in_SF = new TFile("Figures/WjetsSF.root", "R");                                                                                                                                                                                                            
+  //TFile* file_in_SF = new TFile("Figures/WjetsSF.root", "R");
 
   vector<TString> names;
-  names.push_back("data_");//0                                                                                                                                                                                                                                             
-  names.push_back("WJets_");//1                                                                                                                                                                                                                                            
-  names.push_back("QCD_");//2                                                                                                                                                                                                                                              
+  names.push_back("data_");//0
+  names.push_back("WJets_");//1
+  names.push_back("QCD_");//2
   names.push_back("DY_");
   names.push_back("TT_");
   names.push_back("ST_");
@@ -49,7 +49,7 @@ int main(/*int argc, char** argv*/) {
   vars.push_back("ev_MET");
   vars.push_back("ev_Mcol");
 
-  //retrieve histograms from all control regions                                                                                                                                                                                                                           
+  //retrieve histograms from all control regions
   vector<TH1F*> h[names.size()];
   for (unsigned int j=0; j<names.size(); ++j) {
     for (unsigned int k=0; k<vars.size(); ++k) {
