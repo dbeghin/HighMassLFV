@@ -21,10 +21,10 @@ int main(/*int argc, char** argv*/) {
   vector<TFile*> file_in;
   int i_CR1 = file_in.size();
   file_in.push_back( new TFile("Figures/histos_highmassmutau_CR1.root", "R") );
-  int i_CR4 = file_in.size();
-  file_in.push_back( new TFile("Figures/histos_highmassmutau_CR4.root", "R") );
   int i_CR3 = file_in.size();
   file_in.push_back( new TFile("Figures/histos_highmassmutau_CR3.root", "R") );
+  int i_CR4 = file_in.size();
+  file_in.push_back( new TFile("Figures/histos_highmassmutau_CR4.root", "R") );
   int i_CR5 = file_in.size();
   file_in.push_back( new TFile("Figures/histos_highmassmutau_CR5.root", "R") );
   int i_CR7 = file_in.size();
