@@ -1,0 +1,6 @@
+/pnfs/iihe/cms/store/user/wenxing/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_94X/180126_123750/0000:
+/pnfs/iihe/cms/store/user/wenxing/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_94X/180126_123750/0001:
+/pnfs/iihe/cms/store/user/wenxing/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_94X/180126_123750/0002:
+/pnfs/iihe/cms/store/user/wenxing/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_ext_94X/180126_123738/0000:
+/pnfs/iihe/cms/store/user/wenxing/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_ext_94X/180126_123738/0001:
+/pnfs/iihe/cms/store/user/wenxing/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_ext_94X/180126_123738/0002:

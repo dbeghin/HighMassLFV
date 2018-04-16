@@ -1,0 +1,1 @@
+qstat -u dbeghin | awk '{print "qdel "$1}' > del_jobs.sh
