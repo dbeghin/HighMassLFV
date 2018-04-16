@@ -51,42 +51,34 @@ int main(int argc, char** argv) {
 
   TString folder_in = "";
   TString name_out = "";
-  if (CR == "CR0") {
+  if (CR == "CR0" || CR == "CR00") {
     folder_in = "HighMassLFVMuTau/OSisomuisotau_CR0"; 
-    name_out = "histos_highmassmutau_CR0";
   }
   else if (CR == "CR1") {
     folder_in = "HighMassLFVMuTau/SSisomuisotau_CR1"; 
-    name_out = "histos_highmassmutau_CR1";
   }
   else if (CR == "CR2") {
     folder_in = "HighMassLFVMuTau/OSisomuantitau_CR2"; 
-    name_out = "histos_highmassmutau_CR2";
   }
   else if (CR == "CR3") {
     folder_in = "HighMassLFVMuTau/SSisomuantitau_CR3"; 
-    name_out = "histos_highmassmutau_CR3";
   }
   else if (CR == "CR4") {
     folder_in = "HighMassLFVMuTau/OSantimuantitau_CR4"; 
-    name_out = "histos_highmassmutau_CR4";
   }
   else if (CR == "CR5") {
     folder_in = "HighMassLFVMuTau/SSantimuantitau_CR5";
-    name_out = "histos_highmassmutau_CR5";
   }
   else if (CR == "CR7") {
     folder_in = "HighMassLFVMuTau/Wjets_CR7";
-    name_out = "histos_highmassmutau_CR7";
   }
   else if (CR == "CR9") {
     folder_in = "HighMassLFVMuTau/Wjets_CR9";
-    name_out = "histos_highmassmutau_CR9";
   }
   else {
     cout << "unrecognised argument!!!" << endl;
   }
-
+  name_out = "histos_highmassmutau_"+CR;
 
   TFile* file_out = new TFile("Figures/"+name_out+".root", "RECREATE");
 
@@ -99,6 +91,8 @@ int main(int argc, char** argv) {
   TFile* file_in_DY_1000to1500 = new TFile(folder_in+"/Arranged_DY/DY_1000to1500.root", "R");	     DY_files.push_back(file_in_DY_1000to1500);
   TFile* file_in_DY_1500to2000 = new TFile(folder_in+"/Arranged_DY/DY_1500to2000.root", "R");	     DY_files.push_back(file_in_DY_1500to2000);
   TFile* file_in_DY_2000to3000 = new TFile(folder_in+"/Arranged_DY/DY_2000to3000.root", "R");        DY_files.push_back(file_in_DY_2000to3000);
+
+  TFile* file_in_faketau = new TFile("HighMassLFVMuTau/QCDWJets_CR0.root", "R");
 
   TFile* file_in_QCD = new TFile(folder_in+"/Arranged_QCD/QCD.root", "R");
   vector<TFile*> QCD_files;
@@ -162,7 +156,7 @@ int main(int argc, char** argv) {
   vars.push_back("ev_MET"); 
   vars.push_back("ev_Mcol"); 
   if (CR == "CR7") vars.push_back("ev_Mt"); 
-  //if (CR == "CR9") vars.push_back("ev_Mt"); 
+  if (CR == "CR9") vars.push_back("ev_Mt"); 
 
 
 
@@ -290,39 +284,43 @@ int main(int argc, char** argv) {
     }
     h_DY->Write();
 
-
-    if (CR == "CR0" || CR == "CR2") {
-      TH1F* h_QCD = (TH1F*) file_in_QCD->Get("QCD_"+var_in);
-      h_QCD->Write();
+    if (CR == "CR00") {
+      TH1F* h_faketau = (TH1F*) file_in_faketau->Get("faketau_"+var_in);
+      h_faketau->Write();
     }
     else {
-      vector<TH1F*> h_QCD_vector;
-      for (unsigned int iBin = 0; iBin<QCD_files.size(); ++iBin) {
-	h_QCD_vector.push_back( MC_histo(var_in, QCD_files[iBin], xs_QCD[iBin], N_QCD[iBin], rebin) ); 
+      if (CR == "CR0" || CR == "CR2") {
+        TH1F* h_QCD = (TH1F*) file_in_QCD->Get("QCD_"+var_in);
+        h_QCD->Write();
       }
-      TH1F* h_QCD = (TH1F*) h_QCD_vector[0]->Clone("QCD_"+var_in);
-      for (unsigned int iBin = 1; iBin<QCD_files.size(); ++iBin) {
-	h_QCD->Add(h_QCD_vector[iBin]);
+      else {
+        vector<TH1F*> h_QCD_vector;
+        for (unsigned int iBin = 0; iBin<QCD_files.size(); ++iBin) {
+      	h_QCD_vector.push_back( MC_histo(var_in, QCD_files[iBin], xs_QCD[iBin], N_QCD[iBin], rebin) ); 
+        }
+        TH1F* h_QCD = (TH1F*) h_QCD_vector[0]->Clone("QCD_"+var_in);
+        for (unsigned int iBin = 1; iBin<QCD_files.size(); ++iBin) {
+      	h_QCD->Add(h_QCD_vector[iBin]);
+        }
+        h_QCD->Write();
       }
-      h_QCD->Write();
+      
+      if (CR == "CR0") {
+        TH1F* h_WJets = (TH1F*) file_in_WJets->Get("WJets_"+var_in);
+        h_WJets->Write();
+      }
+      else {
+        vector<TH1F*> h_WJets_vector;
+        for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
+      	h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
+        }
+        TH1F* h_WJets = (TH1F*) h_WJets_vector[0]->Clone("WJets_"+var_in);
+        for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
+      	h_WJets->Add(h_WJets_vector[iBin]);
+        }
+        h_WJets->Write();
+      }
     }
-
-    if (CR == "CR0") {
-      TH1F* h_WJets = (TH1F*) file_in_WJets->Get("WJets_"+var_in);
-      h_WJets->Write();
-    }
-    else {
-      vector<TH1F*> h_WJets_vector;
-      for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
-	h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
-      }
-      TH1F* h_WJets = (TH1F*) h_WJets_vector[0]->Clone("WJets_"+var_in);
-      for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
-	h_WJets->Add(h_WJets_vector[iBin]);
-      }
-      h_WJets->Write();
-    }
-
 
     vector<TH1F*> h_TT_vector;
     for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) {
