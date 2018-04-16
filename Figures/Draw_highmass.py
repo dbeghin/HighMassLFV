@@ -69,22 +69,20 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 #ncat=2
 
 var=[]
-var.append("ev_Mvis")          
-var.append("ev_Mtot")          
+#var.append("ev_Mvis")          
+#var.append("ev_Mtot")          
 var.append("tau_pt")           
-'''
-var.append("tau_eta")          
-var.append("tau_phi")          
-var.append("mu_pt")            
-var.append("mu_eta")           
-var.append("mu_phi")           
-var.append("ev_DRmutau")       
-var.append("ev_DeltaPhimutau") 
-var.append("ev_DeltaPhiMETtau")
-var.append("ev_Mt_raw")        
-var.append("ev_Pzeta") 
-'''
-var.append("ev_Mcol")
+#var.append("tau_eta")          
+#var.append("tau_phi")          
+#var.append("mu_pt")            
+#var.append("mu_eta")           
+#var.append("mu_phi")           
+#var.append("ev_DRmutau")       
+#var.append("ev_DeltaPhimutau") 
+#var.append("ev_DeltaPhiMETtau")
+#var.append("ev_MET") 
+#var.append("ev_Mcol")
+##var.append("ev_Mt")
 
 var_log_dic = {
 "ev_Mvis"          : True,           
@@ -98,17 +96,17 @@ var_log_dic = {
 "ev_DRmutau"       : False, 
 "ev_DeltaPhimutau" : False,
 "ev_DeltaPhiMETtau": False,
-"ev_Mt_raw"        : False,  
-"ev_Pzeta"         : False,
+"ev_MET"           : False,
 "ev_Mcol"          : True,
+"ev_Mt"            : False,
 }
 
 nvar=len(var)
 print nvar
 
 photogenic_var=[]
-photogenic_var.append("m_{vis} (GeV)")
-photogenic_var.append("m_{tot} (GeV)")
+#photogenic_var.append("m_{vis} (GeV)")
+#photogenic_var.append("m_{tot} (GeV)")
 photogenic_var.append("#tau p_{T} (GeV)")
 #photogenic_var.append("#tau #eta")
 #photogenic_var.append("#tau #phi")
@@ -118,9 +116,9 @@ photogenic_var.append("#tau p_{T} (GeV)")
 #photogenic_var.append("#DeltaR (#mu #tau)")
 #photogenic_var.append("#Delta#Phi (#mu #tau)")
 #photogenic_var.append("#Delta#Phi (E_{T}^{miss} #tau)")
-#photogenic_var.append("m_{T} (#mu E_{T}^{miss}) (GeV)")
-#photogenic_var.append("P_{#zeta} (GeV)")
-photogenic_var.append("ev_Mcol")
+#photogenic_var.append("E_{T}^{miss} (GeV)")
+#photogenic_var.append("m_{col}")
+##photogenic_var.append("m_{T}")
 
 
 for k in range (0,nvar):
@@ -147,7 +145,6 @@ for k in range (0,nvar):
         nevents_file.write("data        " + str(Data.Integral()) + "\n")
         nevents_file.close()
     
-    W.Add(VV)
 
 
     Data.GetXaxis().SetTitle("")
@@ -163,6 +160,7 @@ for k in range (0,nvar):
     
     QCD.SetFillColor(ROOT.TColor.GetColor("#ffccff"))
     W.SetFillColor(ROOT.TColor.GetColor("#de5a6a"))
+    VV.SetFillColor(ROOT.TColor.GetColor("#d89a6a"))
     TT.SetFillColor(ROOT.TColor.GetColor("#9999cc"))
     DY.SetFillColor(ROOT.TColor.GetColor("#ffcc66"))
     ST.SetFillColor(ROOT.TColor.GetColor("#c338e2"))
@@ -171,6 +169,7 @@ for k in range (0,nvar):
     Data.SetMarkerSize(1)
     QCD.SetLineColor(1)
     W.SetLineColor(1)
+    VV.SetLineColor(1)
     TT.SetLineColor(1)
     DY.SetLineColor(1)
     ST.SetLineColor(1)
@@ -182,13 +181,16 @@ for k in range (0,nvar):
     stack.Add(ST)
     stack.Add(QCD)
     stack.Add(W)
+    stack.Add(VV)
     stack.Add(TT)
     stack.Add(DY)
     
     errorBand = W.Clone()
     errorBand.Add(QCD)
     errorBand.Add(TT)
+    errorBand.Add(ST)
     errorBand.Add(DY)
+    errorBand.Add(VV)
     errorBand.SetMarkerSize(0)
     errorBand.SetFillColor(new_idx)
     errorBand.SetFillStyle(3001)
@@ -217,7 +219,7 @@ for k in range (0,nvar):
     if (var_log_dic[var[k]]):
         Data.SetMaximum(Data.GetMaximum()*1000)#1.5)#FIXME
     else:
-        Data.SetMaximum(Data.GetMaximum()*2.5)#1.5)#FIXME
+        Data.SetMaximum(Data.GetMaximum()*1.2)#2.5)#FIXME
     Data.SetMinimum(0.1)
     Data.Draw("e")
     stack.Draw("histsame")
@@ -235,7 +237,8 @@ for k in range (0,nvar):
     legende.AddEntry(Signal,"RPV#rightarrow #mu #tau","f")
     legende.AddEntry(DY,"Z#rightarrow#tau #tau","f")
     legende.AddEntry(TT,"t#bar{t}+jets","f")
-    legende.AddEntry(W,"Electroweak","f")
+    legende.AddEntry(W,"W+jets","f")
+    legende.AddEntry(VV,"Diboson","f")
     legende.AddEntry(QCD,"QCD multijet","f")
     legende.AddEntry(ST,"Single Top","f")
     legende.AddEntry(errorBand,"Uncertainty","f")
@@ -325,4 +328,5 @@ for k in range (0,nvar):
     
     c.Modified()
     c.SaveAs(var_in+".pdf")
+
 
