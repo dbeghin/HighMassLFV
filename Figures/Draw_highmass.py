@@ -124,14 +124,35 @@ photogenic_var.append("#tau p_{T} (GeV)")
 for k in range (0,nvar):
     var_in = var[k]
     print var_in
-    Data=file.Get("data_"+var_in)
-    QCD=file.Get("QCD_"+var_in)
-    W=file.Get("WJets_"+var_in)
-    TT=file.Get("TT_"+var_in)
-    VV=file.Get("VV_"+var_in)
-    DY=file.Get("DY_"+var_in)
-    ST=file.Get("ST_"+var_in)
-    Signal=file.Get("Signal_"+var_in)
+    Data=file.Get("data_"+var_in+"_taubarrel")
+    QCD=file.Get("QCD_"+var_in+"_taubarrel")
+    W=file.Get("WJets_"+var_in+"_taubarrel")
+    TT=file.Get("TT_"+var_in+"_taubarrel")
+    VV=file.Get("VV_"+var_in+"_taubarrel")
+    DY=file.Get("DY_"+var_in+"_taubarrel")
+    ST=file.Get("ST_"+var_in+"_taubarrel")
+    Signal=file.Get("Signal_"+var_in+"_taubarrel")
+
+    Data2=file.Get("data_"+var_in+"_tauendcap")
+    QCD2=file.Get("QCD_"+var_in+"_tauendcap")
+    W2=file.Get("WJets_"+var_in+"_tauendcap")
+    TT2=file.Get("TT_"+var_in+"_tauendcap")
+    VV2=file.Get("VV_"+var_in+"_tauendcap")
+    DY2=file.Get("DY_"+var_in+"_tauendcap")
+    ST2=file.Get("ST_"+var_in+"_tauendcap")
+    Signal2=file.Get("Signal_"+var_in+"_tauendcap")
+
+    Data.GetXaxis().SetTitle("")
+    Data.GetXaxis().SetTitleSize(0)
+    Data.GetXaxis().SetNdivisions(505)
+    Data.GetYaxis().SetLabelFont(42)
+    Data.GetYaxis().SetLabelOffset(0.01)
+    Data.GetYaxis().SetLabelSize(0.06)
+    Data.GetYaxis().SetTitleSize(0.075)
+    Data.GetYaxis().SetTitleOffset(1.04)
+    Data.SetTitle("")
+    Data.GetYaxis().SetTitle("Events/bin")
+    
 
     #Write number of events
     if k == nvar-1:
@@ -147,17 +168,15 @@ for k in range (0,nvar):
     
 
 
-    Data.GetXaxis().SetTitle("")
-    Data.GetXaxis().SetTitleSize(0)
-    Data.GetXaxis().SetNdivisions(505)
-    Data.GetYaxis().SetLabelFont(42)
-    Data.GetYaxis().SetLabelOffset(0.01)
-    Data.GetYaxis().SetLabelSize(0.06)
-    Data.GetYaxis().SetTitleSize(0.075)
-    Data.GetYaxis().SetTitleOffset(1.04)
-    Data.SetTitle("")
-    Data.GetYaxis().SetTitle("Events/bin")
-    
+    Data.Add(Data2)
+    QCD.Add(QCD2)
+    W.Add(W2)
+    TT.Add(TT2)
+    VV.Add(VV2)
+    DY.Add(DY2)
+    ST.Add(ST2)
+    Signal.Add(Signal2)
+
     QCD.SetFillColor(ROOT.TColor.GetColor("#ffccff"))
     W.SetFillColor(ROOT.TColor.GetColor("#de5a6a"))
     VV.SetFillColor(ROOT.TColor.GetColor("#d89a6a"))
