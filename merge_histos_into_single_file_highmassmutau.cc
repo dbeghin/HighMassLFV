@@ -127,7 +127,13 @@ int main(int argc, char** argv) {
   TFile* file_in_TT_1200to1800 = new TFile(folder_in+"/Arranged_TT/TT_1200to1800.root", "R");	     TT_files.push_back(file_in_TT_1200to1800);
   TFile* file_in_TT_1800toInf = new TFile(folder_in+"/Arranged_TT/TT_1800toInf.root", "R");          TT_files.push_back(file_in_TT_1800toInf);
 
-  TFile* file_in_WW = new TFile(folder_in+"/Arranged_WW/WW.root", "R");
+  vector<TFile*> WW_files;
+  TFile* file_in_WW_lowmll = new TFile(folder_in+"/Arranged_WW/WW_inclusive.root", "R");             WW_files.push_back(file_in_WW_lowmll);
+  TFile* file_in_WW_200to600 = new TFile(folder_in+"/Arranged_WW/WW_200to600.root", "R");	     WW_files.push_back(file_in_WW_200to600);
+  TFile* file_in_WW_600to1200 = new TFile(folder_in+"/Arranged_WW/WW_600to1200.root", "R");	     WW_files.push_back(file_in_WW_600to1200);
+  TFile* file_in_WW_1200to2500 = new TFile(folder_in+"/Arranged_WW/WW_1200to2500.root", "R");	     WW_files.push_back(file_in_WW_1200to2500);
+  TFile* file_in_WW_2500toInf = new TFile(folder_in+"/Arranged_WW/WW_2500toInf.root", "R");          WW_files.push_back(file_in_WW_2500toInf);
+
   TFile* file_in_WZ = new TFile(folder_in+"/Arranged_WZ/WZ.root", "R");
   TFile* file_in_ZZ = new TFile(folder_in+"/Arranged_ZZ/ZZ.root", "R");
 
@@ -207,9 +213,14 @@ int main(int argc, char** argv) {
   double xs_TT_1200to1800 = 3.557e-3;	     xs_TT.push_back(xs_TT_1200to1800); 
   double xs_TT_1800toInf = 5.395e-5;         xs_TT.push_back(xs_TT_1800toInf); 
 
+  vector<double> xs_WW;
+  double xs_WW = 63.21;                      xs_WW.push_back(xs_WW);
+  double xs_WW_200to600 = 1.39;              xs_WW.push_back(xs_WW_200to600); 
+  double xs_WW_600to1200 = 5.7e-2;	     xs_WW.push_back(xs_WW_600to1200); 
+  double xs_WW_1200to2500 = 3.6e-3;	     xs_WW.push_back(xs_WW_1200to2500); 
+  double xs_WW_2500toInf = 5.4e-5;           xs_WW.push_back(xs_WW_2500toInf); 
 
   double xs_ST = 38.09;
-  double xs_WW = 63.21;
   double xs_WZ = 22.82;
   double xs_ZZ = 10.32;
   double xs_signal = 20;
@@ -258,10 +269,16 @@ int main(int argc, char** argv) {
   double N_TT_1200to1800 = 199956;	      N_TT.push_back(N_TT_1200to1800);
   double N_TT_1800toInf = 40816;	      N_TT.push_back(N_TT_1800toInf);
 
+  vector<double> N_WW;
+  double N_WW = 993997;                      N_WW.push_back(N_WW);
+  double N_WW_200to600 = 0.326;             N_WW.push_back(N_WW_200to600); 
+  double N_WW_600to1200 = 5.66665e-2;	     N_WW.push_back(N_WW_600to1200); 
+  double N_WW_1200to2500 = 3.557e-3;	     N_WW.push_back(N_WW_1200to2500); 
+  double N_WW_2500toInf = 5.395e-5;         N_WW.push_back(N_WW_2500toInf); 
+
   double N_ST_top = 3256548;
   double N_ST_antitop = 3256309;
 
-  double N_WW = 993997;
   double N_WZ = 921116;
   double N_ZZ = 990051;
 
@@ -338,7 +355,17 @@ int main(int argc, char** argv) {
       h_TT->Write();
       
         
-      TH1F* h_WW = MC_histo(var_in, file_in_WW, xs_WW, N_WW, rebin);
+      vector<TH1F*> h_WW_vector;
+      for (unsigned int iBin = 0; iBin<WW_files.size(); ++iBin) {
+        h_WW_vector.push_back( MC_histo(var_in, WW_files[iBin], xs_WW[iBin], N_WW[iBin], rebin) ); 
+      }
+      TH1F* h_WW = (TH1F*) h_WW_vector[0]->Clone("WW_"+var_in);
+      for (unsigned int iBin = 1; iBin<WW_files.size(); ++iBin) {
+        h_WW->Add(h_WW_vector[iBin]);
+      }
+      h_WW->Write();
+      
+        
       TH1F* h_WZ = MC_histo(var_in, file_in_WZ, xs_WZ, N_WZ, rebin);
       TH1F* h_ZZ = MC_histo(var_in, file_in_ZZ, xs_ZZ, N_ZZ, rebin);
       TH1F* h_VV = (TH1F*) h_WW->Clone("VV_"+var_in);

@@ -32,13 +32,14 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    if (fChain == 0) return;
 
 
-   bool Signal, data, DYinc, WJetsinc, TTinc;
+   bool Signal, data, DYinc, WJetsinc, TTinc, WWinc;
    if (type_of_data == "Signal" || type_of_data == "signal") {
      Signal = true;
      data = false;
      DYinc = false;
      WJetsinc = false;
      TTinc = false;
+     WWinc = false;
    }
    else if (type_of_data == "Data" || type_of_data == "data") {
      Signal = false;
@@ -46,6 +47,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = false;
      WJetsinc = false;
      TTinc = false;
+     WWinc = false;
    }
    else if (type_of_data == "DYinc") {
      Signal = false;
@@ -53,6 +55,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = true;
      WJetsinc = false;
      TTinc = false;
+     WWinc = false;
    }
    else if (type_of_data == "WJetsinc") {
      Signal = false;
@@ -60,6 +63,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = false;
      WJetsinc = true;
      TTinc = false;
+     WWinc = false;
    }
    else if (type_of_data == "TTinc") {
      Signal = false;
@@ -67,6 +71,15 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = false;
      WJetsinc = false;
      TTinc = true;
+     WWinc = false;
+   }
+   else if (type_of_data == "WW") {
+     Signal = false;
+     data = false;
+     DYinc = false;
+     WJetsinc = false;
+     TTinc = false;
+     WWinc = true;
    }
    else {
      Signal = false;
@@ -74,6 +87,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = false;
      WJetsinc = false;
      TTinc = false;
+     WWinc = false;
    }
 
 
@@ -259,7 +273,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           cout << "??" << endl;
         }
       }//close the is this WJets inclusive question
-      else if (TTinc) {
+      else if (TTinc || WWinc) {
         TLorentzVector l1_p4, l2_p4, ll_p4;
 	l1_p4.SetPxPyPzE(0, 0, 0, 0);
 	l2_p4.SetPxPyPzE(0, 0, 0, 0);
@@ -284,7 +298,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
               l2_pdgid = LHE_pdgid->at(jLHE);
             }
             ll_p4 = l1_p4 + l2_p4;
-            if (ll_p4.M() > 500) reject_event = true;
+	    if (TTinc) {
+	      if (ll_p4.M() > 500) reject_event = true;
+	    }
+	    else if (WWinc) {
+	      if (ll_p4.M() > 200) reject_event = true;
+	    }	      
 	    if (reject_event) break;
           }
 	  if (reject_event) break;

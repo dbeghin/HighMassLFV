@@ -308,6 +308,26 @@ myname.append("WW_inclusive")
 myoption.append("WW")
 filesperjob.append("100")
 
+pnfn.append("/pnfs/iihe/cms/store/user/dbeghin/Skims/Out_WW_200to600/")
+myname.append("WW_200to600")
+myoption.append("WWMll")
+filesperjob.append("100")
+
+pnfn.append("/pnfs/iihe/cms/store/user/dbeghin/Skims/Out_WW_600to1200/")
+myname.append("WW_600to1200")
+myoption.append("WWMll")
+filesperjob.append("100")
+
+pnfn.append("/pnfs/iihe/cms/store/user/dbeghin/Skims/Out_WW_1200to2500/")
+myname.append("WW_1200to2500")
+myoption.append("WWMll")
+filesperjob.append("100")
+
+pnfn.append("/pnfs/iihe/cms/store/user/dbeghin/Skims/Out_WW_2500toInf/")
+myname.append("WW_2500toInf")
+myoption.append("WWMll")
+filesperjob.append("100")
+
 pnfn.append("/pnfs/iihe/cms/store/user/dbeghin/Skims/Out_WZ_inclusive/")
 myname.append("WZ_inclusive")
 myoption.append("WZ")

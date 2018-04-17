@@ -80,16 +80,16 @@ int main(/*int argc, char** argv*/) {
 
 
   //Get WJets SF in SS iso mu, anti-iso tau CR
-  TH1F* h_data = (TH1F*) h[i_CR7][0][0]->Clone("data_wjetsCR7");
-  for (unsigned int j=2; j<names.size(); ++j) h_data->Add(h[i_CR7][j][0], -1);
+  TH1F* h_data_CR7 = (TH1F*) h[i_CR7][0][0]->Clone("data_wjetsCR7");
+  for (unsigned int j=2; j<names.size(); ++j) h_data_CR7->Add(h[i_CR7][j][0], -1);
   float data_error_sq = 0;
   float MC_error_sq = 0;
-  for (unsigned int iBin=1; iBin<h_data->GetNbinsX()+1; ++iBin) {
-    data_error_sq += pow(h_data->GetBinError(iBin), 2);
+  for (unsigned int iBin=1; iBin<h_data_CR7->GetNbinsX()+1; ++iBin) {
+    data_error_sq += pow(h_data_CR7->GetBinError(iBin), 2);
     MC_error_sq += pow(h[i_CR7][1][0]->GetBinError(iBin), 2);
   }
-  float WJets_SF_CR7 = h_data->Integral()/h[i_CR7][1][0]->Integral();
-  float WJets_SF_CR7_err = sqrt( data_error_sq/pow(h_data->Integral(), 2) + MC_error_sq/pow(h[i_CR7][1][0]->Integral(), 2) ) * WJets_SF_CR7;
+  float WJets_SF_CR7 = h_data_CR7->Integral()/h[i_CR7][1][0]->Integral();
+  float WJets_SF_CR7_err = sqrt( data_error_sq/pow(h_data_CR7->Integral(), 2) + MC_error_sq/pow(h[i_CR7][1][0]->Integral(), 2) ) * WJets_SF_CR7;
   cout << "WJets SF CR7 " << WJets_SF_CR7 << "  stat err " << WJets_SF_CR7_err << "  QCD err " << 0.5*h[i_CR7][2][0]->Integral()/h[i_CR7][1][0]->Integral() << endl << endl;
 
 
@@ -144,7 +144,8 @@ int main(/*int argc, char** argv*/) {
   denominator->SetBinError(jBin, sqrt(bin_error_den));
 
   //flat SF
-  cout << "WJets flat 3to1 SF " << ptratio->Integral()/denominator->Integral() << endl;
+  cout << "WJets flat 3to1 SF             " << ptratio->Integral()/denominator->Integral() << endl;
+  cout << "WJets data-driven flat 7to9 SF " << h_data_CR9->Integral()/h_data_CR7->Integral() << endl;
 
   //pt-dependent SF
   ptratio->Divide(denominator);

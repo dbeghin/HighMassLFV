@@ -48,6 +48,10 @@ hadd -f Arranged_QCD/QCD_2400to3200.root Out_QCD_2400to3200*/Con*.root
 
 mkdir -p Arranged_WW
 hadd -f Arranged_WW/WW.root Out_WW_inclusive/Con*WW_inclusive.root 
+hadd -f Arranged_WW/WW.root Out_WW_200to600/Con*WW*.root 
+hadd -f Arranged_WW/WW.root Out_WW_600to1200/Con*WW*.root 
+hadd -f Arranged_WW/WW.root Out_WW_1200to2500/Con*WW*.root 
+hadd -f Arranged_WW/WW.root Out_WW_2500toInf/Con*WW*.root 
 
 
 mkdir -p Arranged_ZZ
