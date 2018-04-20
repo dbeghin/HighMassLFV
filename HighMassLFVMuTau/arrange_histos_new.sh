@@ -71,4 +71,4 @@ hadd -f Arranged_ST_antitop/ST_antitop.root Out_ST_antitop/Con*ST_antitop.root
 
 
 mkdir -p Arranged_data
-hadd -f Arranged_data/data.root Out_SingleMu*/*.root
+hadd -f Arranged_data/data.root Out_SMu*/*.root
