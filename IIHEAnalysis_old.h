@@ -32,6 +32,26 @@ float norm_F(float x, float y){
 }
 
 
+double FakeRate(double taupt) {
+  double SF=1;
+  if( taupt >= 30. && taupt < 40.)  { SF=0.528744;}
+  else if( taupt >= 40. && taupt < 50.)  { SF=0.541827;}
+  else if( taupt >= 50. && taupt < 60.)  { SF=0.558633;}
+  else if( taupt >= 60. && taupt < 70.)  { SF=0.537469;}
+  else if( taupt >= 70. && taupt < 80.)  { SF=0.525533;}
+  else if( taupt >= 80. && taupt < 90.)  { SF=0.487401;}
+  else if( taupt >= 90. && taupt < 100.)  { SF=0.426368;}
+  else if( taupt >= 100. && taupt < 150.)  { SF=0.404024;}
+  else if( taupt >= 150. && taupt < 250.)  { SF=0.403159;}
+  else if( taupt >= 250. && taupt < 1000.)  { SF=0.279411;}
+
+  double reweight = SF/(1-SF);
+
+  return reweight;
+
+}
+
+
 double GetCollinearMass(TLorentzVector tau, TLorentzVector mu,  TLorentzVector MET) {
 
   double METproj=fabs((MET.Px()*tau.Px()+MET.Py()*tau.Py())/tau.Pt());

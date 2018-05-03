@@ -76,7 +76,7 @@ int main(/*int argc, char** argv*/) {
     for (unsigned int j=0; j<names.size(); ++j) {
       for (unsigned int k=0; k<vars.size(); ++k) {
 	if (k>0 && i != i_CR4) break;
-	for (unsigned int l=0; k<eta.size(); ++l) {
+	for (unsigned int l=0; l<eta.size(); ++l) {
 	  h[i][j][l].push_back( (TH1F*) file_in[i]->Get(names[j]+vars[k]+eta[l]) );
 	  h[i][j][l][k]->SetName(CR_list[i]+"_"+names[j]+vars[k]+eta[l]);
 	}
@@ -291,7 +291,6 @@ int main(/*int argc, char** argv*/) {
       h_QCD_CR2->Scale(mu_iso_SF);
       h_QCD_CR2->Write();
     }
-    file_out_CR2->Close();
     
     
     file_out_CR0->cd();
@@ -306,8 +305,9 @@ int main(/*int argc, char** argv*/) {
       h_QCD_CR0->Scale(mutau_iso_SF);
       h_QCD_CR0->Write();
     }
-    file_out_CR0->Close();
   }
+  file_out_CR0->Close();
+  file_out_CR2->Close();
 
 
   return 0;

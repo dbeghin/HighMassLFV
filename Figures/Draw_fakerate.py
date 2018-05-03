@@ -59,7 +59,7 @@ c=ROOT.TCanvas("canvas","",0,0,600,600)
 c.cd()
 
 #file=ROOT.TFile("final.root","r")
-file=ROOT.TFile("histos_highmassmutau.root","r")
+file=ROOT.TFile("histos_fakerate.root","r")
 
 adapt=ROOT.gROOT.GetColor(12)
 new_idx=ROOT.gROOT.GetListOfColors().GetSize() + 1
@@ -70,35 +70,19 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 
 var=[]
 var.append("ev_Mvis")          
-var.append("ev_Mtot")          
-var.append("tau_pt")           
-var.append("tau_eta")          
-var.append("tau_phi")          
 var.append("mu_pt")            
 var.append("mu_eta")           
 var.append("mu_phi")           
-var.append("ev_DRmutau")       
-var.append("ev_DeltaPhimutau") 
-var.append("ev_DeltaPhiMETtau")
-var.append("ev_MET") 
-var.append("ev_Mcol")
-#var.append("ev_Mt")
+var.append("taupt_pass")
+var.append("taupt_fail")
 
 var_log_dic = {
 "ev_Mvis"          : True,           
-"ev_Mtot"          : True,      
-"tau_pt"           : True,       
-"tau_eta"          : False,      
-"tau_phi"          : False,     
 "mu_pt"            : True,       
 "mu_eta"           : False,       
 "mu_phi"           : False,       
-"ev_DRmutau"       : False, 
-"ev_DeltaPhimutau" : False,
-"ev_DeltaPhiMETtau": False,
-"ev_MET"           : False,
-"ev_Mcol"          : True,
-"ev_Mt"            : False,
+"taupt_pass"       : True,
+"taupt_fail"       : True,
 }
 
 nvar=len(var)
@@ -106,41 +90,24 @@ print nvar
 
 photogenic_var=[]
 photogenic_var.append("m_{vis} (GeV)")
-photogenic_var.append("m_{tot} (GeV)")
-photogenic_var.append("#tau p_{T} (GeV)")
-photogenic_var.append("#tau #eta")
-photogenic_var.append("#tau #phi")
 photogenic_var.append("#mu p_{T} (GeV)")
 photogenic_var.append("#mu #eta")
 photogenic_var.append("#mu #phi")
-photogenic_var.append("#DeltaR (#mu #tau)")
-photogenic_var.append("#Delta#Phi (#mu #tau)")
-photogenic_var.append("#Delta#Phi (E_{T}^{miss} #tau)")
-photogenic_var.append("E_{T}^{miss} (GeV)")
-photogenic_var.append("m_{col}")
-#photogenic_var.append("m_{T}")
+photogenic_var.append("#tau p_{T} (GeV) - pass")
+photogenic_var.append("#tau p_{T} (GeV) - fail")
 
 
 for k in range (0,nvar):
     var_in = var[k]
     print var_in
-    Data=file.Get("data_"+var_in+"_taubarrel")
-    QCD=file.Get("QCD_"+var_in+"_taubarrel")
-    W=file.Get("WJets_"+var_in+"_taubarrel")
-    TT=file.Get("TT_"+var_in+"_taubarrel")
-    VV=file.Get("VV_"+var_in+"_taubarrel")
-    DY=file.Get("DY_"+var_in+"_taubarrel")
-    ST=file.Get("ST_"+var_in+"_taubarrel")
-    Signal=file.Get("Signal_"+var_in+"_taubarrel")
-
-    Data2=file.Get("data_"+var_in+"_tauendcap")
-    QCD2=file.Get("QCD_"+var_in+"_tauendcap")
-    W2=file.Get("WJets_"+var_in+"_tauendcap")
-    TT2=file.Get("TT_"+var_in+"_tauendcap")
-    VV2=file.Get("VV_"+var_in+"_tauendcap")
-    DY2=file.Get("DY_"+var_in+"_tauendcap")
-    ST2=file.Get("ST_"+var_in+"_tauendcap")
-    Signal2=file.Get("Signal_"+var_in+"_tauendcap")
+    Data=file.Get("data_"+var_in)
+    QCD=file.Get("QCD_"+var_in)
+    W=file.Get("WJets_"+var_in)
+    TT=file.Get("TT_"+var_in)
+    VV=file.Get("VV_"+var_in)
+    DY=file.Get("DY_"+var_in)
+    ST=file.Get("ST_"+var_in)
+    Signal=file.Get("Signal_"+var_in)
 
     Data.GetXaxis().SetTitle("")
     Data.GetXaxis().SetTitleSize(0)
@@ -167,15 +134,6 @@ for k in range (0,nvar):
         nevents_file.close()
     
 
-
-    Data.Add(Data2)
-    QCD.Add(QCD2)
-    W.Add(W2)
-    TT.Add(TT2)
-    VV.Add(VV2)
-    DY.Add(DY2)
-    ST.Add(ST2)
-    Signal.Add(Signal2)
 
     QCD.SetFillColor(ROOT.TColor.GetColor("#ffccff"))
     W.SetFillColor(ROOT.TColor.GetColor("#de5a6a"))

@@ -16,8 +16,11 @@
 using namespace std;
 int main(/*int argc, char** argv*/) {
   //tau iso SF (3to1 SF) (approx. of 2to0)
-  float tau_iso_SF = 0.609718;//0.0129414; //WJets 3to1 SF
-  cout << "tau iso SF               " << tau_iso_SF << endl;
+  vector<float> tau_iso_SF;
+  tau_iso_SF.push_back( 0.50 );
+  tau_iso_SF.push_back( 1.40 );
+  cout << "tau iso SF barrel        " << tau_iso_SF[0] << endl;
+  cout << "tau iso SF endcap        " << tau_iso_SF[1] << endl;
 
 
   TFile* file_out = new TFile("HighMassLFVMuTau/Wjets_CR0.root", "RECREATE");
@@ -49,25 +52,33 @@ int main(/*int argc, char** argv*/) {
   vars.push_back("ev_MET");
   vars.push_back("ev_Mcol");
 
+  vector<TString> eta;
+  eta.push_back("_taubarrel");
+  eta.push_back("_tauendcap");
+
   //retrieve histograms from all control regions
-  vector<TH1F*> h[names.size()];
+  vector<TH1F*> h[names.size()][eta.size()];
   for (unsigned int j=0; j<names.size(); ++j) {
     for (unsigned int k=0; k<vars.size(); ++k) {
-      h[j].push_back( (TH1F*) file_in->Get(names[j]+vars[k]) );
-      h[j][k]->SetName(names[j]+vars[k]);
+      for (unsigned int l=0; l<eta.size(); ++l) {
+	h[j][l].push_back( (TH1F*) file_in->Get(names[j]+vars[k]+eta[l]) );
+	h[j][l][k]->SetName(names[j]+vars[k]+eta[l]);
+      }
     }
   }
 
   file_out->cd();
   for (unsigned int k=0; k<vars.size(); ++k) {
-    TH1F* h_WJets = (TH1F*) h[0][k]->Clone("WJets_"+vars[k]);
-    for (unsigned int j=2; j<names.size(); ++j) h_WJets->Add(h[j][k], -1);
+    for (unsigned int l=0; l<eta.size(); ++l) {
+      TH1F* h_WJets = (TH1F*) h[0][l][k]->Clone("WJets_"+vars[k]+eta[l]);
+      for (unsigned int j=2; j<names.size(); ++j) h_WJets->Add(h[j][l][k], -1);
 
-    for (unsigned int iBin = 0; iBin<h_WJets->GetNbinsX(); ++iBin) {
-      if (h_WJets->GetBinContent(iBin) < 0) h_WJets->SetBinContent(iBin,0);
+      for (unsigned int iBin = 0; iBin<h_WJets->GetNbinsX(); ++iBin) {
+	if (h_WJets->GetBinContent(iBin) < 0) h_WJets->SetBinContent(iBin,0);
+      }
+      h_WJets->Scale(tau_iso_SF[l]);
+      h_WJets->Write();
     }
-    h_WJets->Scale(tau_iso_SF);
-    h_WJets->Write();
   }
   file_out->Close();
 

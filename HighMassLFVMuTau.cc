@@ -124,7 +124,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      //SS, iso mu, iso tau, mt restricted
      CR_number = 9;
    }
-
+   else if (controlregion == "CR101") {
+     //no sign requirement, iso mu, anti-iso tau, estimate fake tau bg
+     CR_number = 101;
+   }
 
    //string out_name = "out_"+type_of_data+".root";
    TFile* file_out = new TFile(out_name.c_str(),"RECREATE");
@@ -172,20 +175,20 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    histo_names.push_back("ev_DeltaPhimutau"); nBins.push_back(64);   x_min.push_back(0);    x_max.push_back(3.2);
    histo_names.push_back("ev_DeltaPhiMETtau");nBins.push_back(64);   x_min.push_back(0);    x_max.push_back(3.2);
    histo_names.push_back("ev_Mt_raw");        nBins.push_back(150);  x_min.push_back(0);    x_max.push_back(150);
-   histo_names.push_back("ev_MET");           nBins.push_back(1000);  x_min.push_back(0);    x_max.push_back(1000);
+   histo_names.push_back("ev_MET");           nBins.push_back(1000); x_min.push_back(0);    x_max.push_back(1000);
    histo_names.push_back("ev_weight");        nBins.push_back(400);  x_min.push_back(-2);   x_max.push_back(2);
    histo_names.push_back("ev_deltaMET");      nBins.push_back(200);  x_min.push_back(-100); x_max.push_back(100);
    histo_names.push_back("ev_Mcol");          nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(1000);
    histo_names.push_back("ev_Mt");            nBins.push_back(1000); x_min.push_back(0);    x_max.push_back(1000);
 
-   vector<TString> pseudorapidity;
-   pseudorapidity.push_back("taubarrel");
-   pseudorapidity.push_back("tauendcap");
+   vector<TString> taun;
+   taun.push_back("realtau");
+   taun.push_back("faketau");
 
-   vector<TH1F*> h[pseudorapidity.size()];
+   vector<TH1F*> h[taun.size()];
    for (unsigned int i = 0; i<histo_names.size(); ++i) {
-     for (unsigned int j = 0; j<pseudorapidity.size(); ++j) {
-       h[j].push_back( new TH1F(histo_names[i]+"_"+pseudorapidity[j], histo_names[i]+"_"+pseudorapidity[j], nBins[i], x_min[i], x_max[i]) ); 
+     for (unsigned int j = 0; j<taun.size(); ++j) {
+       h[j].push_back( new TH1F(histo_names[i]+"_"+taun[j], histo_names[i]+"_"+taun[j], nBins[i], x_min[i], x_max[i]) ); 
        h[j][i]->Sumw2();
      }
    }
@@ -326,6 +329,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	tauvisp4.clear();
 	bool foundmu = false, foundtau = false;
 	vector<bool> tauh;
+	int n_nus = 0;
 	for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
 
 	  moth_ind = mc_mother_index->at(iMC).at(0);
@@ -346,6 +350,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 		if (abs(mc_pdgId->at(iMC)) == 16) {
 		  nutaup4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
 		  tauvisp4[iTau] = taup4[iTau] - nutaup4;
+		  ++n_nus;
 		}
 		else if (abs(mc_pdgId->at(iMC)) == 11 || abs(mc_pdgId->at(iMC)) == 13) {
 		  //not a hadron
@@ -359,10 +364,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  if (tauh[iTau]) tauhp4.push_back(tauvisp4[iTau]);
 	}
 
+
+
 	if (print_count < 20 && foundtau) {
 	  ++print_count;
 	  cout << endl;
-	  for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << endl;
+	  //for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << endl;
 	}
       }//end is this not-data? condition
 
@@ -492,6 +499,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  total_p4 = vis_p4 + met_p4;
 	  metmu_p4 = met_p4 + mu_p4;
 	  
+	  if (tau_pt->at(iTau) < 0) continue;
 	  if (tau_p4.Pt() < 30.0) continue;
 	  if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
@@ -507,31 +515,40 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    break;
 	  }
 	  
-	  //sign selection
-	  if (CR_number%2 == 0) {
-	    if (tau_charge->at(iTau) * mu_ibt_charge->at(iMu) > 0) continue; //OS selection
-	  }
-	  else {
-	    if (tau_charge->at(iTau) * mu_ibt_charge->at(iMu) < 0) continue; //SS selection
-	  }
-
-	  //muon isolation
 	  float reliso = mu_isoTrackerBased03->at(iMu); //use instead sumofpts divided by muon ibt pt
-	  //float reliso = mu_pfIsoDbCorrected04->at(iMu);
-	  if (CR_number < 4 || CR_number >= 7) {
-	    if (reliso > 0.1) continue;
-	  }
-	  else {
-	    if (reliso < 0.1) continue;
-	  }
+	  if (CR_number<100) {
+	    //sign selection
+	    if (CR_number%2 == 0) {
+	      if (tau_charge->at(iTau) * mu_ibt_charge->at(iMu) > 0) continue; //OS selection
+	    }
+	    else {
+	      if (tau_charge->at(iTau) * mu_ibt_charge->at(iMu) < 0) continue; //SS selection
+	    }
 	    
-	  //tau isolation
-	  if (CR_number < 2 || CR_number == 9) {
-	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    //muon isolation
+	    //float reliso = mu_pfIsoDbCorrected04->at(iMu);
+	    if (CR_number < 4 || CR_number >= 7) {
+	      if (reliso > 0.1) continue;
+	    }
+	    else {
+	      if (reliso < 0.1) continue;
+	    }
+	      
+	    //tau isolation
+	    if (CR_number < 2 || CR_number == 9) {
+	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    }
+	    else {
+	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
+	      if (tau_byLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    }
 	  }
 	  else {
-	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
-	    if (tau_byLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    if (CR_number == 101) {
+	      if (reliso > 0.1) continue;
+	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
+	      if (tau_byLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    }	      
 	  }
 
 	  //MET recalculation because we're using the high-pt muon ID
@@ -551,10 +568,9 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  met_p4 = met_p4 + mu_gt_transp4 - mu_ibt_transp4;
 	  //cout << "MET after corr. " << met_p4.Pt() << endl << endl;
 
-	  //separate histos by tau eta
-	  int jEta=0;
-	  if (fabs(tau_p4.Eta()) > 1.444) jEta=1;
 
+	  //separate histos by tau realness
+	  int jReal=0;
 	  if (!data) {
 	    bool tau_match = false;
 	    if (tauhp4.size() != 0) {
@@ -562,12 +578,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.5) tau_match = true;
 	      }
 	    }
+	    if (!tau_match) jReal=1;
 	    if (CR_number >= 2) tau_match = false;
 	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match);
-	    h[jEta][13]->Fill(reweight);
+	    h[jReal][13]->Fill(reweight);
 	    final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match) * 1.0 * mc_w_sign;
 	  }
-	  
 
 	  if (CR_number >= 7) {
 	    float Mt = -1;
@@ -577,7 +593,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
             else {
               Mt = sqrt(2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) );
             }
-	    h[jEta][16]->Fill(Mt, final_weight);
+	    h[jReal][16]->Fill(Mt, final_weight);
 	    if (Mt < 80 || Mt > 120) continue;
 	  }
 
@@ -635,27 +651,27 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
-
-
-	  h[jEta][9]->Fill(dphi_mutau, final_weight);
-	  h[jEta][10]->Fill(dphi_METtau, final_weight);
-
-	  if (dR < 0.5) continue;
 	  filled_histos = true;
-	  h[jEta][0]->Fill(vis_p4.M(), final_weight);
-	  h[jEta][1]->Fill(total_p4.M(), final_weight);
-	  h[jEta][2]->Fill(tau_p4.Pt(), final_weight);
-	  h[jEta][3]->Fill(tau_p4.Eta(), final_weight);
-	  h[jEta][4]->Fill(tau_p4.Phi(), final_weight);
-	  h[jEta][5]->Fill(mu_p4.Pt(), final_weight);
-	  h[jEta][6]->Fill(mu_p4.Eta(), final_weight);
-	  h[jEta][7]->Fill(mu_p4.Phi(), final_weight);
-	  h[jEta][8]->Fill(dR, final_weight);
-	  //h[jEta][11]->Fill(Mt, final_weight);
-	  h[jEta][12]->Fill(met_p4.Pt(), final_weight);
-	  //h[jEta][13]->Fill(mc_w_sign);
-	  h[jEta][14]->Fill(met_p4.Px()-met_px, final_weight);
-	  h[jEta][15]->Fill(Mcol, final_weight);
+	  if (CR_number == 101) final_weight *= FakeRate(tau_p4.Pt());
+
+	  h[jReal][9]->Fill(dphi_mutau, final_weight);
+	  h[jReal][10]->Fill(dphi_METtau, final_weight);
+
+	  //if (dR < 0.5) continue;
+	  h[jReal][0]->Fill(vis_p4.M(), final_weight);
+	  h[jReal][1]->Fill(total_p4.M(), final_weight);
+	  h[jReal][2]->Fill(tau_p4.Pt(), final_weight);
+	  h[jReal][3]->Fill(tau_p4.Eta(), final_weight);
+	  h[jReal][4]->Fill(tau_p4.Phi(), final_weight);
+	  h[jReal][5]->Fill(mu_p4.Pt(), final_weight);
+	  h[jReal][6]->Fill(mu_p4.Eta(), final_weight);
+	  h[jReal][7]->Fill(mu_p4.Phi(), final_weight);
+	  h[jReal][8]->Fill(dR, final_weight);
+	  //h[jReal][11]->Fill(Mt, final_weight);
+	  h[jReal][12]->Fill(met_p4.Pt(), final_weight);
+	  //h[jReal][13]->Fill(mc_w_sign);
+	  h[jReal][14]->Fill(met_p4.Px()-met_px, final_weight);
+	  h[jReal][15]->Fill(Mcol, final_weight);
 
 	  //if (cut_zeta < -25) continue;
 
@@ -664,7 +680,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    }//loop over events
 
    file_out->cd();
-   for (unsigned int i = 0; i<histo_names.size(); ++i) for (unsigned int j = 0; j<pseudorapidity.size(); ++j) h[j][i]->Write();
+   for (unsigned int i = 0; i<histo_names.size(); ++i) for (unsigned int j = 0; j<taun.size(); ++j) h[j][i]->Write();
    for (unsigned int i = 0; i<hgen.size(); ++i) hgen[i]->Write();
    file_out->Close();
 }
