@@ -74,32 +74,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
       if (!PassMuonTrigger) continue;
 
 
-      //start muon counting loop
-      int Nmu = 0;
-      /*for (unsigned int iMu = 0; iMu < mu_gt_pt->size(); ++iMu) {
-	if(mu_isPFMuon->at(iMu) && mu_gt_pt->at(iMu) > 20 && fabs(mu_gt_eta->at(iMu)) < 2.4 && fabs(mu_gt_dxy_firstPVtx->at(iMu)) < 0.045 && fabs(mu_gt_dz_firstPVtx->at(iMu)) < 0.2 && mu_pfIsoDbCorrected04->at(iMu) < 0.1 && mu_isMediumMuon->at(iMu)) ++Nmu;
-	if (Nmu > 2) break;
-      }
-      if (Nmu > 2) continue; //3rd muon veto
-      //There will be a veto on the presence of a 2nd muon in mutau case
-
-      //electron veto
-      bool electron = false;
-      for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
-	if (gsf_VIDLoose->at(iEle) && gsf_pt->at(iEle) > 20 && fabs(gsf_eta->at(iEle)) < 2.5 && fabs(gsf_dxy_firstPVtx->at(iEle)) < 0.045 && fabs(gsf_dz_firstPVtx->at(iEle)) < 0.2 && gsf_passConversionVeto->at(iEle) && gsf_nLostInnerHits->at(iEle) <= 1 && gsf_relIso->at(iEle) < 0.1) electron = true;
-	if (electron) break;
-       }
-       if (electron) continue;*/
-
-      //bjet veto (medium WP for the bjet)
-      /*bool bjet = false;
-      for (unsigned int iJet = 0; iJet < jet_pt->size(); ++iJet) {
-	if (jet_CSVv2->at(iJet) > 0.800 && jet_pt->at(iJet) > 20 && fabs(jet_eta->at(iJet)) < 2.4) bjet = true;
-	if (bjet) break;
-      }
-      if (bjet) continue;*/
-
-      
       //start loop over reconstructed muons
       bool tightmuon = false; //for the tag-and-probe and the High Mass LFV analysis, we need a tight muon
       TLorentzVector tightmu_p4;
@@ -110,9 +84,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	if (mu_gt_pt->at(iMu) < 24.0) continue;
 	if (fabs(mu_gt_eta->at(iMu)) > 2.4) continue;
 	if (!(mu_isPFMuon->at(iMu) || mu_isHighPtMuon->at(iMu) || mu_isMediumMuon->at(iMu))) continue; //medium ID or HighPt
-	if (fabs(mu_gt_dxy_firstPVtx->at(iMu)) > 0.045) continue;
-	if (fabs(mu_gt_dz_firstPVtx->at(iMu)) > 0.2) continue;
-	//if (mu_pfIsoDbCorrected04->at(iMu) > 0.3) continue;
 	
 	tightmu_p4.SetPtEtaPhiM(mu_gt_pt->at(iMu), mu_gt_eta->at(iMu), mu_gt_phi->at(iMu), mu_mass);
 	tightmuon = true;
@@ -123,21 +94,9 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	  if (iMu2 == iMu) continue; 
 	  if (mu_gt_pt->at(iMu2) < 20.0) continue;
 	  if (fabs(mu_gt_eta->at(iMu2)) > 2.4) continue;
-	  if (mu_pfIsoDbCorrected04->at(iMu2) > 0.15) continue;
+	  if (!(mu_isPFMuon->at(iMu) || mu_isHighPtMuon->at(iMu) || mu_isMediumMuon->at(iMu))) continue; //medium ID or HighPt
 
 	  tauormu = true;
-	  event_weight = 1.0;
-
-          if (!data) {
-            int PU = mc_trueNumInteractions;
-
-	    if (mc_weight != 0) {
-	      event_weight = GetReweight_mumu(PU, mu_gt_pt->at(iMu), mu_gt_eta->at(iMu), mu_gt_pt->at(iMu2), mu_gt_eta->at(iMu2)) * 1.0 * mc_weight/fabs(mc_weight);
-	    }
-	    else {
-	      event_weight = 0;
-	    }
-          }
 	  if (tauormu) break;
 	}//second muon loop
 	if (tightmuon && tauormu) break;
@@ -149,23 +108,8 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
 	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
 	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-	  if (tau_ptLeadChargedCand->at(iTau) < 5) continue;
-	  if (Nmu > 1) continue;
 
 	  tauormu = true;
-	  event_weight = 1.0;
-          if (!data) {
-            int PU = mc_trueNumInteractions;
-
-	    if (mc_weight != 0) {
-	      event_weight = GetReweight(PU, mu_gt_pt->at(iMu), mu_gt_eta->at(iMu)) * 1.0 * mc_weight/fabs(mc_weight);
-	    }
-	    else {
-	      event_weight = 0;
-	    }
-          }
-
-
 	  if (tauormu) break;
 	}//loop over taus
 	if (tightmuon && tauormu) break;
