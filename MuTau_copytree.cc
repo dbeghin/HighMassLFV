@@ -105,7 +105,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	for (unsigned int iTau = 0; iTau < tau_pt->size(); ++iTau) {
 	  if (tau_pt->at(iTau) < 20.0) continue;
 	  if (fabs(tau_eta->at(iTau)) > 2.3) continue;
-	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
 	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
 	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
 
