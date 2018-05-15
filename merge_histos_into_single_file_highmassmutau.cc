@@ -27,13 +27,13 @@ TH1F* MC_histo(TString var, TFile* file_in, double xs, long Nevents, int rebin) 
   double e_xs = 0.01*xs;
 
   //Weight
-  double w = xs*lumi/Nevents;
-  cout << "Events in data/events in MC " << xs*lumi/Nevents << endl;
+  double w = 0;
+  if (Nevents != 0) w = xs*lumi/Nevents;
+  cout << "Events in data/events in MC " << w << endl;
   
   TH1F* h;
   h = (TH1F*) file_in -> Get(var);
 
-  h -> Sumw2();
   h -> Scale(w);
   h -> Rebin(rebin);
   
@@ -74,6 +74,12 @@ int main(int argc, char** argv) {
   }
   else if (CR == "CR9") {
     folder_in = "HighMassLFVMuTau/Wjets_CR9";
+  }
+  else if (CR == "CR100") {
+    folder_in = "HighMassLFVMuTau/OSisomuisotau_CR0";
+  }
+  else if (CR == "CR101") {
+    folder_in = "HighMassLFVMuTau/Faketaus_CR101";
   }
   else {
     cout << "unrecognised argument!!!" << endl;
@@ -144,7 +150,7 @@ int main(int argc, char** argv) {
   TFile* file_in_signal = new TFile(folder_in+"/Arranged_RPV/RPV.root", "R");
   TFile* file_in_data = new TFile(folder_in+"/Arranged_data/data.root", "R");
   
-  
+  TFile* file_in_faketaus = new TFile("HighMassLFVMuTau/Faketaus_CR0.root", "R");
 
   vector<TString> vars;
   vars.push_back("ev_Mvis");          
@@ -165,9 +171,10 @@ int main(int argc, char** argv) {
   if (CR == "CR9") vars.push_back("ev_Mt"); 
 
 
-  vector<TString> pseudorapidity;
-  pseudorapidity.push_back("taubarrel");
-  pseudorapidity.push_back("tauendcap");
+  vector<TString> taun;
+  taun.push_back("Zmumu");
+  taun.push_back("realtau");
+  if (CR!="CR100") taun.push_back("faketau");
 
 
   //cross-sections
@@ -214,7 +221,7 @@ int main(int argc, char** argv) {
   double xs_TT_1800toInf = 5.395e-5;         xs_TT.push_back(xs_TT_1800toInf); 
 
   vector<double> xs_WW;
-  double xs_WW = 63.21;                      xs_WW.push_back(xs_WW);
+  double xs_WW_lowm = 63.21;                 xs_WW.push_back(xs_WW_lowm);
   double xs_WW_200to600 = 1.39;              xs_WW.push_back(xs_WW_200to600); 
   double xs_WW_600to1200 = 5.7e-2;	     xs_WW.push_back(xs_WW_600to1200); 
   double xs_WW_1200to2500 = 3.6e-3;	     xs_WW.push_back(xs_WW_1200to2500); 
@@ -270,10 +277,10 @@ int main(int argc, char** argv) {
   double N_TT_1800toInf = 40816;	      N_TT.push_back(N_TT_1800toInf);
 
   vector<double> N_WW;
-  double N_WW = 993997;                      N_WW.push_back(N_WW);
+  double N_WW_lowm = 993997;                N_WW.push_back(N_WW_lowm);
   double N_WW_200to600 = 0.326;             N_WW.push_back(N_WW_200to600); 
-  double N_WW_600to1200 = 5.66665e-2;	     N_WW.push_back(N_WW_600to1200); 
-  double N_WW_1200to2500 = 3.557e-3;	     N_WW.push_back(N_WW_1200to2500); 
+  double N_WW_600to1200 = 5.66665e-2;       N_WW.push_back(N_WW_600to1200); 
+  double N_WW_1200to2500 = 3.557e-3;        N_WW.push_back(N_WW_1200to2500); 
   double N_WW_2500toInf = 5.395e-5;         N_WW.push_back(N_WW_2500toInf); 
 
   double N_ST_top = 3256548;
@@ -289,9 +296,9 @@ int main(int argc, char** argv) {
   file_out->cd();
   //options = is it the DY Sig?, variable name, which file to get the histo from, process cross-section
   for (unsigned int i = 0; i<vars.size(); ++i) {
-    for (unsigned int j = 0; j<pseudorapidity.size(); ++j) {
+    for (unsigned int j = 0; j<taun.size(); ++j) {
 
-      var_in = vars[i]+"_"+pseudorapidity[j];
+      var_in = vars[i]+"_"+taun[j];
       //if (var_in == "ev_MET") rebin = 20;
       
       cout << endl << endl <<var_in << endl;
@@ -302,6 +309,7 @@ int main(int argc, char** argv) {
       }
       TH1F* h_DY = (TH1F*) h_DY_vector[0]->Clone("DY_"+var_in);
       for (unsigned int iBin = 1; iBin<DY_files.size(); ++iBin) {
+	if (iBin > 2) continue;
         h_DY->Add(h_DY_vector[iBin]);
       }
       h_DY->Write();
@@ -363,7 +371,6 @@ int main(int argc, char** argv) {
       for (unsigned int iBin = 1; iBin<WW_files.size(); ++iBin) {
         h_WW->Add(h_WW_vector[iBin]);
       }
-      h_WW->Write();
       
         
       TH1F* h_WZ = MC_histo(var_in, file_in_WZ, xs_WZ, N_WZ, rebin);
@@ -388,6 +395,11 @@ int main(int argc, char** argv) {
       h_data -> SetName("data_"+var_in);
       h_data->Rebin(rebin);
       h_data->Write();
+    }
+    if (CR == "CR100") {
+      TH1F* h_faketaus = (TH1F*) file_in_faketaus -> Get("faketau_"+vars[i]);
+      //h_faketaus->Rebin(rebin);
+      h_faketaus->Write();
     }
   }
   file_out->Close();

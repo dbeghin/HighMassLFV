@@ -124,6 +124,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      //SS, iso mu, iso tau, mt restricted
      CR_number = 9;
    }
+   else if (controlregion == "CR100") {
+     //no sign requirement, iso mu, anti-iso tau, estimate fake tau bg
+     CR_number = 100;
+   }
    else if (controlregion == "CR101") {
      //no sign requirement, iso mu, anti-iso tau, estimate fake tau bg
      CR_number = 101;
@@ -137,23 +141,14 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
    //list here the names and x-axis ranges of all gen-level histos we wish to create :
    vector<TString> histo_gen_names;                vector<int> nBins_gen;     vector<float> x_min_gen,    x_max_gen; 
-   histo_gen_names.push_back("gen_tauh_pt");       nBins_gen.push_back(100);  x_min_gen.push_back(0);     x_max_gen.push_back(100);
-   histo_gen_names.push_back("gen_tauh_eta");      nBins_gen.push_back(50);   x_min_gen.push_back(-2.5);  x_max_gen.push_back(2.5);
-   histo_gen_names.push_back("gen_tauh_phi");      nBins_gen.push_back(64);   x_min_gen.push_back(-3.2);  x_max_gen.push_back(3.2);
-   histo_gen_names.push_back("gen_tauh_vispt");    nBins_gen.push_back(100);  x_min_gen.push_back(0);     x_max_gen.push_back(100);
-   histo_gen_names.push_back("gen_tauh_viseta");   nBins_gen.push_back(50);   x_min_gen.push_back(-2.5);  x_max_gen.push_back(2.5);
-   histo_gen_names.push_back("gen_tauh_visphi");   nBins_gen.push_back(64);   x_min_gen.push_back(-3.2);  x_max_gen.push_back(3.2);
-   histo_gen_names.push_back("gen_taumu_pt");      nBins_gen.push_back(100);  x_min_gen.push_back(0);     x_max_gen.push_back(100);
-   histo_gen_names.push_back("gen_taumu_eta");     nBins_gen.push_back(50);   x_min_gen.push_back(-2.5);  x_max_gen.push_back(2.5);
-   histo_gen_names.push_back("gen_taumu_phi");     nBins_gen.push_back(64);   x_min_gen.push_back(-3.2);  x_max_gen.push_back(3.2);
-   histo_gen_names.push_back("gen_taumu_vispt");   nBins_gen.push_back(100);  x_min_gen.push_back(0);     x_max_gen.push_back(100);
-   histo_gen_names.push_back("gen_taumu_viseta");  nBins_gen.push_back(50);   x_min_gen.push_back(-2.5);  x_max_gen.push_back(2.5);
-   histo_gen_names.push_back("gen_taumu_visphi");  nBins_gen.push_back(64);   x_min_gen.push_back(-3.2);  x_max_gen.push_back(3.2);
+   histo_gen_names.push_back("gen_tau_pt");       nBins_gen.push_back(100);  x_min_gen.push_back(0);     x_max_gen.push_back(100);
+   histo_gen_names.push_back("gen_tau_eta");      nBins_gen.push_back(50);   x_min_gen.push_back(-2.5);  x_max_gen.push_back(2.5);
+   histo_gen_names.push_back("gen_tau_phi");      nBins_gen.push_back(64);   x_min_gen.push_back(-3.2);  x_max_gen.push_back(3.2);
    histo_gen_names.push_back("gen_ev_DR2l");       nBins_gen.push_back(100);  x_min_gen.push_back(0);     x_max_gen.push_back(10);
    histo_gen_names.push_back("gen_ev_M");          nBins_gen.push_back(100);  x_min_gen.push_back(995);   x_max_gen.push_back(1005);
    histo_gen_names.push_back("gen_ev_visDR2l");    nBins_gen.push_back(100);  x_min_gen.push_back(0);     x_max_gen.push_back(10);
    histo_gen_names.push_back("gen_ev_Mvis");       nBins_gen.push_back(200);  x_min_gen.push_back(700);   x_max_gen.push_back(1100);
-   histo_gen_names.push_back("gen_ev_MwithMET");   nBins_gen.push_back(200);  x_min_gen.push_back(700);   x_max_gen.push_back(1100);
+   histo_gen_names.push_back("gen_ev_ntaus");      nBins_gen.push_back(10);  x_min_gen.push_back(0);   x_max_gen.push_back(10);
    histo_gen_names.push_back("gen_tau_decaymode");    nBins_gen.push_back(3);  x_min_gen.push_back(-0.5); x_max_gen.push_back(2.5);
    histo_gen_names.push_back("gen_tautau_decaymode"); nBins_gen.push_back(9);  x_min_gen.push_back(-0.5); x_max_gen.push_back(8.5);
 
@@ -184,6 +179,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    vector<TString> taun;
    taun.push_back("realtau");
    taun.push_back("faketau");
+   taun.push_back("Zmumu");
 
    vector<TH1F*> h[taun.size()];
    for (unsigned int i = 0; i<histo_names.size(); ++i) {
@@ -213,7 +209,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       
 
       //Do not consider events which should be rejected
-      bool reject_event = false;
+      bool reject_event = false, Zmumu = false;
       if (DYinc) {
         TLorentzVector l1_p4, l2_p4, ll_p4;
 	l1_p4.SetPxPyPzE(0, 0, 0, 0);
@@ -236,6 +232,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
             l2_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
             l2_pdgid = LHE_pdgid->at(iLHE);
           }
+	  if (abs(LHE_pdgid->at(iLHE)) == 13) Zmumu = true;
         }
         if (l1_pdgid == -l2_pdgid) {
           ll_p4 = l1_p4 + l2_p4;
@@ -318,15 +315,15 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       
       vector<TLorentzVector> tauhp4;
       tauhp4.clear();
+      vector<TLorentzVector> taup4, tauvisp4;
+      taup4.clear();
+      tauvisp4.clear();
+      vector<int> tau_ind, tau_dm;
+      tau_ind.clear(), tau_dm.clear();
       if (!data) {
 	//start loop over all simulated particules
 	int moth_ind = -1;
-	vector<int> tau_ind;
-	tau_ind.clear();
 	TLorentzVector mup4, nutaup4, totalp4, totalvisp4, totalvismetp4, p4;
-	vector<TLorentzVector> taup4, tauvisp4;
-	taup4.clear();
-	tauvisp4.clear();
 	bool foundmu = false, foundtau = false;
 	vector<bool> tauh;
 	int n_nus = 0;
@@ -341,6 +338,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      tauvisp4.push_back(p4);
 	      tau_ind.push_back(iMC);
 	      tauh.push_back(true);
+	      tau_dm.push_back(2);
 	    }
 	  }
 	  if (moth_ind < 0) continue;
@@ -352,9 +350,16 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 		  tauvisp4[iTau] = taup4[iTau] - nutaup4;
 		  ++n_nus;
 		}
-		else if (abs(mc_pdgId->at(iMC)) == 11 || abs(mc_pdgId->at(iMC)) == 13) {
+		else if (abs(mc_pdgId->at(iMC)) == 11) {
 		  //not a hadron
 		  tauh[iTau] = false;
+		  tau_dm[iTau] = 0;
+		}
+		else if (abs(mc_pdgId->at(iMC)) == 13) {
+		  //not a hadron
+		  tauh[iTau] = false;
+		  tau_dm[iTau] = 1;
+		  //n2++;
 		}
 	      }
 	    }
@@ -363,8 +368,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	for (unsigned int iTau = 0; iTau<tau_ind.size(); ++iTau) {
 	  if (tauh[iTau]) tauhp4.push_back(tauvisp4[iTau]);
 	}
-
-
+	n1 += tau_ind.size();
+	//n2 += tauhp4.size();
 
 	if (print_count < 20 && foundtau) {
 	  ++print_count;
@@ -544,6 +549,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    }
 	  }
 	  else {
+	    if (CR_number == 100) {
+	      if (reliso > 0.1) continue;
+	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    }	      
 	    if (CR_number == 101) {
 	      if (reliso > 0.1) continue;
 	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
@@ -570,22 +579,34 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 
 	  //separate histos by tau realness
-	  int jReal=0;
+	  int jTauN=0;
 	  if (!data) {
+	    //fill gen histos to understand wth is going on
+	    hgen[7]->Fill(taup4.size(), mc_w_sign);
+	    for (unsigned int iGen = 0; iGen<taup4.size(); ++iGen) {
+	      hgen[0]->Fill(taup4[iTau].Pt(), mc_w_sign);
+	      hgen[1]->Fill(taup4[iTau].Eta(), mc_w_sign);
+	      hgen[2]->Fill(taup4[iTau].Phi(), mc_w_sign);
+	      hgen[8]->Fill(tau_dm[iTau], mc_w_sign);
+	    }
+
 	    bool tau_match = false;
 	    if (tauhp4.size() != 0) {
+	      cout << tau_p4.Pt() << tau_p4.Eta() << tau_p4.Phi() << endl;
 	      for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
+		cout << tauhp4[iGen].Pt() << tauhp4[iGen].Eta() << tauhp4[iGen].Phi() << endl;
 		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.5) tau_match = true;
 	      }
 	    }
-	    if (!tau_match) jReal=1;
+	    if (!tau_match) jTauN=1;
+	    if (Zmumu) jTauN=2;
 	    if (CR_number >= 2) tau_match = false;
 	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match);
-	    h[jReal][13]->Fill(reweight);
+	    h[jTauN][13]->Fill(reweight);
 	    final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match) * 1.0 * mc_w_sign;
 	  }
 
-	  if (CR_number >= 7) {
+	  if (CR_number == 7 || CR_number == 9) {
 	    float Mt = -1;
 	    if (2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) < 0) {
               Mt = 0;
@@ -593,7 +614,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
             else {
               Mt = sqrt(2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) );
             }
-	    h[jReal][16]->Fill(Mt, final_weight);
+	    h[jTauN][16]->Fill(Mt, final_weight);
 	    if (Mt < 80 || Mt > 120) continue;
 	  }
 
@@ -654,30 +675,32 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  filled_histos = true;
 	  if (CR_number == 101) final_weight *= FakeRate(tau_p4.Pt());
 
-	  h[jReal][9]->Fill(dphi_mutau, final_weight);
-	  h[jReal][10]->Fill(dphi_METtau, final_weight);
+	  h[jTauN][9]->Fill(dphi_mutau, final_weight);
+	  h[jTauN][10]->Fill(dphi_METtau, final_weight);
 
 	  //if (dR < 0.5) continue;
-	  h[jReal][0]->Fill(vis_p4.M(), final_weight);
-	  h[jReal][1]->Fill(total_p4.M(), final_weight);
-	  h[jReal][2]->Fill(tau_p4.Pt(), final_weight);
-	  h[jReal][3]->Fill(tau_p4.Eta(), final_weight);
-	  h[jReal][4]->Fill(tau_p4.Phi(), final_weight);
-	  h[jReal][5]->Fill(mu_p4.Pt(), final_weight);
-	  h[jReal][6]->Fill(mu_p4.Eta(), final_weight);
-	  h[jReal][7]->Fill(mu_p4.Phi(), final_weight);
-	  h[jReal][8]->Fill(dR, final_weight);
-	  //h[jReal][11]->Fill(Mt, final_weight);
-	  h[jReal][12]->Fill(met_p4.Pt(), final_weight);
-	  //h[jReal][13]->Fill(mc_w_sign);
-	  h[jReal][14]->Fill(met_p4.Px()-met_px, final_weight);
-	  h[jReal][15]->Fill(Mcol, final_weight);
+	  h[jTauN][0]->Fill(vis_p4.M(), final_weight);
+	  h[jTauN][1]->Fill(total_p4.M(), final_weight);
+	  h[jTauN][2]->Fill(tau_p4.Pt(), final_weight);
+	  h[jTauN][3]->Fill(tau_p4.Eta(), final_weight);
+	  h[jTauN][4]->Fill(tau_p4.Phi(), final_weight);
+	  h[jTauN][5]->Fill(mu_p4.Pt(), final_weight);
+	  h[jTauN][6]->Fill(mu_p4.Eta(), final_weight);
+	  h[jTauN][7]->Fill(mu_p4.Phi(), final_weight);
+	  h[jTauN][8]->Fill(dR, final_weight);
+	  //h[jTauN][11]->Fill(Mt, final_weight);
+	  h[jTauN][12]->Fill(met_p4.Pt(), final_weight);
+	  //h[jTauN][13]->Fill(mc_w_sign);
+	  h[jTauN][14]->Fill(met_p4.Px()-met_px, final_weight);
+	  h[jTauN][15]->Fill(Mcol, final_weight);
 
 	  //if (cut_zeta < -25) continue;
 
 	}//loop over taus
       }//loop over muons
    }//loop over events
+
+   cout << endl << "Total taus " << n1 << "  Had taus " << n2 << endl;
 
    file_out->cd();
    for (unsigned int i = 0; i<histo_names.size(); ++i) for (unsigned int j = 0; j<taun.size(); ++j) h[j][i]->Write();
