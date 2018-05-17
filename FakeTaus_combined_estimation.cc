@@ -50,8 +50,6 @@ int main(/*int argc, char** argv*/) {
   for (unsigned int j=0; j<names.size(); ++j) {
     for (unsigned int k=0; k<vars.size(); ++k) {
       h[j].push_back( (TH1F*) file_in->Get(names[j]+vars[k]+"_realtau") );
-      TH1F* h2 = (TH1f*) file_in->Get(names[j]+vars[k]+"_Zmumu");
-      h[j][k]->Add(h2);
       h[j][k]->SetName(names[j]+vars[k]);
     }
   }

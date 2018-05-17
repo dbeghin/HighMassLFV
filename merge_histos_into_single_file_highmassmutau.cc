@@ -172,7 +172,6 @@ int main(int argc, char** argv) {
 
 
   vector<TString> taun;
-  taun.push_back("Zmumu");
   taun.push_back("realtau");
   if (CR!="CR100") taun.push_back("faketau");
 

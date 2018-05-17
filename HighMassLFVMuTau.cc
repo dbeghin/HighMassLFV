@@ -179,7 +179,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    vector<TString> taun;
    taun.push_back("realtau");
    taun.push_back("faketau");
-   taun.push_back("Zmumu");
 
    vector<TH1F*> h[taun.size()];
    for (unsigned int i = 0; i<histo_names.size(); ++i) {
@@ -315,9 +314,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       
       vector<TLorentzVector> tauhp4;
       tauhp4.clear();
-      vector<TLorentzVector> taup4, tauvisp4;
+      vector<TLorentzVector> taup4, tauvisp4, jetp4;
       taup4.clear();
       tauvisp4.clear();
+      jetp4.clear();
       vector<int> tau_ind, tau_dm;
       tau_ind.clear(), tau_dm.clear();
       if (!data) {
@@ -340,6 +340,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      tauh.push_back(true);
 	      tau_dm.push_back(2);
 	    }
+	  }
+	  if (abs(mc_pdgId->at(iMC)) <= 10 || abs(mc_pdgId->at(iMC)) >= 100) {
+	    p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
+	    jetp4.push_back(p4);
 	  }
 	  if (moth_ind < 0) continue;
 	  if (abs(mc_pdgId->at(moth_ind)) == 15) {
@@ -371,10 +375,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	n1 += tau_ind.size();
 	//n2 += tauhp4.size();
 
-	if (print_count < 20 && foundtau) {
+	if (print_count < 20 /*&& foundtau*/) {
 	  ++print_count;
 	  cout << endl;
-	  //for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << endl;
+	  for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << endl;
 	}
       }//end is this not-data? condition
 
@@ -590,16 +594,13 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      hgen[8]->Fill(tau_dm[iTau], mc_w_sign);
 	    }
 
-	    bool tau_match = false;
-	    if (tauhp4.size() != 0) {
-	      cout << tau_p4.Pt() << tau_p4.Eta() << tau_p4.Phi() << endl;
-	      for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
-		cout << tauhp4[iGen].Pt() << tauhp4[iGen].Eta() << tauhp4[iGen].Phi() << endl;
-		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.5) tau_match = true;
+	    bool jet_match = false;
+	    if (jetp4.size() != 0) {
+	      for (unsigned int iGen = 0; iGen < jetp4.size(); ++iGen) {
+		if (tau_p4.DeltaR(jetp4[iGen]) < 0.5) jet_match = true;
 	      }
 	    }
-	    if (!tau_match) jTauN=1;
-	    if (Zmumu) jTauN=2;
+	    if (jet_match) jTauN=1;
 	    if (CR_number >= 2) tau_match = false;
 	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match);
 	    h[jTauN][13]->Fill(reweight);

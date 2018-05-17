@@ -305,33 +305,29 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
       bool found_mumu_pair = false;
       for (unsigned int ii = 0; ii < orderedMu.size(); ++ii) {
 	if (found_mumu_pair) break;
-	int iMuA = orderedMu[ii];
+	int iMu1 = orderedMu[ii];
 	//start 2nd loop over reconstructed mus
 	for (unsigned int jj = 0; jj < orderedMu.size(); ++jj) {
 	  if (found_mumu_pair) break;
-	  int iMuB = orderedMu[jj];
-	  int iMu1 = -1, iMu2 = -1;
-	  if (mu_gt_pt->at(iMuA) > mu_gt_pt->at(iMuB)) {
-	    iMu1 = iMuA;
-	    iMu2 = iMuB;
-	  }
-	  else {
-	    iMu1 = iMuB;
-	    iMu2 = iMuA;
-	  }
+	  int iMu2 = orderedMu[jj];
 
 	  if (mu_gt_pt->at(iMu1) < 25.0) continue;
-	  if (fabs(mu_gt_eta->at(iMu1)) > 2.1) continue;
-	  if (!mu_isPFMuon->at(iMu1)) continue; //medium ID
+	  if (fabs(mu_gt_eta->at(iMu1)) > 2.4) continue;
+	  if (!mu_isPFMuon->at(iMu1)) continue;
+	  if (!mu_isMediumMuon->at(iMu2)) continue; //medium ID
 	  if (fabs(mu_gt_dxy_firstPVtx->at(iMu1)) > 0.045) continue;
 	  if (fabs(mu_gt_dz_firstPVtx->at(iMu1)) > 0.2) continue;
 	  float reliso = mu_pfIsoDbCorrected04->at(iMu1);
 	  if (reliso > 0.1) continue;
 
-	  if (mu_gt_pt->at(iMu2) < 20.0) continue;
-	  if (fabs(mu_gt_eta->at(iMu2)) > 2.3) continue;
+	  if (mu_gt_pt->at(iMu2) < 25.0) continue;
+	  if (fabs(mu_gt_eta->at(iMu2)) > 2.4) continue;
 	  if (!mu_isPFMuon->at(iMu2)) continue; //medium ID
 	  if (!mu_isMediumMuon->at(iMu2)) continue; //medium ID
+	  if (fabs(mu_gt_dxy_firstPVtx->at(iMu2)) > 0.045) continue;
+	  if (fabs(mu_gt_dz_firstPVtx->at(iMu2)) > 0.2) continue;
+	  reliso = mu_pfIsoDbCorrected04->at(iMu2);
+	  if (reliso > 0.1) continue;
 
 	  TLorentzVector mu1_p4, mu2_p4, total_p4, met_p4, metmu_p4;
 	  mu1_p4.SetPtEtaPhiM(mu_gt_pt->at(iMu1), mu_gt_eta->at(iMu1), mu_gt_phi->at(iMu1), mu_mass);
