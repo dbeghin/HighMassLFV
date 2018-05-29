@@ -128,6 +128,7 @@ int main(int argc, char** argv) {
   vars.push_back("mu_phi");           
   vars.push_back("taupt_pass");
   vars.push_back("taupt_fail");
+  vars.push_back("tau_MVA");
 
 
   //cross-sections

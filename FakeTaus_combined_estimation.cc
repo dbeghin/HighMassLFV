@@ -58,7 +58,7 @@ int main(/*int argc, char** argv*/) {
   file_out->cd();
   for (unsigned int k=0; k<vars.size(); ++k) {
     TH1F* h_faketau = (TH1F*) h[0][k]->Clone("faketau_"+vars[k]);
-    for (unsigned int j=3; j<names.size(); ++j) h_faketau->Add(h[j][k], -1);//subtract all real tau bg
+    for (unsigned int j=1; j<names.size(); ++j) h_faketau->Add(h[j][k], -1);//subtract all real tau bg
 
     for (unsigned int iBin = 0; iBin<h_faketau->GetNbinsX(); ++iBin) {
       if (h_faketau->GetBinContent(iBin) < 0) h_faketau->SetBinContent(iBin,0);

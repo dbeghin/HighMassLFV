@@ -601,6 +601,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      }
 	    }
 	    if (jet_match) jTauN=1;
+	    bool tau_match = false;
+	    if (tauhp4.size() != 0) {
+	      for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
+		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.5) tau_match = true;
+	      }
+	    }
 	    if (CR_number >= 2) tau_match = false;
 	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match);
 	    h[jTauN][13]->Fill(reweight);
@@ -675,6 +681,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
 	  filled_histos = true;
 	  if (CR_number == 101) final_weight *= FakeRate(tau_p4.Pt());
+	  cout << FakeRate(tau_p4.Pt()) << endl;
 
 	  h[jTauN][9]->Fill(dphi_mutau, final_weight);
 	  h[jTauN][10]->Fill(dphi_METtau, final_weight);
