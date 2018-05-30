@@ -109,6 +109,9 @@ for k in range (0,nvar):
     ST=file.Get("ST_"+var_in)
     Signal=file.Get("Signal_"+var_in)
 
+    rebin = 1
+    if "taupt" in var_in: rebin=10
+
     Data.GetXaxis().SetTitle("")
     Data.GetXaxis().SetTitleSize(0)
     Data.GetXaxis().SetNdivisions(505)
@@ -144,12 +147,19 @@ for k in range (0,nvar):
 
     Data.SetMarkerStyle(20)
     Data.SetMarkerSize(1)
+    Data.Rebin(rebin)
     QCD.SetLineColor(1)
+    QCD.Rebin(rebin)
     W.SetLineColor(1)
+    W.Rebin(rebin)
     VV.SetLineColor(1)
+    VV.Rebin(rebin)
     TT.SetLineColor(1)
+    TT.Rebin(rebin)
     DY.SetLineColor(1)
+    DY.Rebin(rebin)
     ST.SetLineColor(1)
+    ST.Rebin(rebin)
     Data.SetLineColor(1)
     Data.SetLineWidth(2)
 
@@ -212,7 +222,7 @@ for k in range (0,nvar):
     legende=make_legend()
     legende.AddEntry(Data,"Observed","elp")
     legende.AddEntry(Signal,"RPV#rightarrow #mu #tau","f")
-    legende.AddEntry(DY,"Z#rightarrow#tau #tau","f")
+    legende.AddEntry(DY,"Drell-Yann","f")
     legende.AddEntry(TT,"t#bar{t}+jets","f")
     legende.AddEntry(W,"W+jets","f")
     legende.AddEntry(VV,"Diboson","f")
@@ -284,7 +294,7 @@ for k in range (0,nvar):
     h1.GetYaxis().SetLabelSize(0.08)
     h1.GetYaxis().SetTitle("Obs./Exp.")
     h1.GetXaxis().SetNdivisions(505)
-    h1.GetYaxis().SetNdivisions(5)
+    h1.GetYaxis().SetNdivisions(10)
 
     h1.GetXaxis().SetTitleSize(0.15)
     h1.GetYaxis().SetTitleSize(0.15)

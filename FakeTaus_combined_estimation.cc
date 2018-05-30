@@ -50,8 +50,6 @@ int main(/*int argc, char** argv*/) {
   for (unsigned int j=0; j<names.size(); ++j) {
     for (unsigned int k=0; k<vars.size(); ++k) {
       h[j].push_back( (TH1F*) file_in->Get(names[j]+vars[k]+"_realtau") );
-      TH1F* h2 = (TH1f*) file_in->Get(names[j]+vars[k]+"_Zmumu");
-      h[j][k]->Add(h2);
       h[j][k]->SetName(names[j]+vars[k]);
     }
   }
@@ -60,7 +58,7 @@ int main(/*int argc, char** argv*/) {
   file_out->cd();
   for (unsigned int k=0; k<vars.size(); ++k) {
     TH1F* h_faketau = (TH1F*) h[0][k]->Clone("faketau_"+vars[k]);
-    for (unsigned int j=3; j<names.size(); ++j) h_faketau->Add(h[j][k], -1);//subtract all real tau bg
+    for (unsigned int j=1; j<names.size(); ++j) h_faketau->Add(h[j][k], -1);//subtract all real tau bg
 
     for (unsigned int iBin = 0; iBin<h_faketau->GetNbinsX(); ++iBin) {
       if (h_faketau->GetBinContent(iBin) < 0) h_faketau->SetBinContent(iBin,0);

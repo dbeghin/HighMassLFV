@@ -172,7 +172,6 @@ int main(int argc, char** argv) {
 
 
   vector<TString> taun;
-  taun.push_back("Zmumu");
   taun.push_back("realtau");
   if (CR!="CR100") taun.push_back("faketau");
 
@@ -354,10 +353,11 @@ int main(int argc, char** argv) {
       
       vector<TH1F*> h_TT_vector;
       for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) {
+	if (iBin == 1 || iBin == 2) continue;
         h_TT_vector.push_back( MC_histo(var_in, TT_files[iBin], xs_TT[iBin], N_TT[iBin], rebin) ); 
       }
       TH1F* h_TT = (TH1F*) h_TT_vector[0]->Clone("TT_"+var_in);
-      for (unsigned int iBin = 1; iBin<TT_files.size(); ++iBin) {
+      for (unsigned int iBin = 1; iBin<h_TT_vector.size(); ++iBin) {
         h_TT->Add(h_TT_vector[iBin]);
       }
       h_TT->Write();
@@ -365,10 +365,11 @@ int main(int argc, char** argv) {
         
       vector<TH1F*> h_WW_vector;
       for (unsigned int iBin = 0; iBin<WW_files.size(); ++iBin) {
+	if (iBin == 2 || iBin == 4) continue;
         h_WW_vector.push_back( MC_histo(var_in, WW_files[iBin], xs_WW[iBin], N_WW[iBin], rebin) ); 
       }
       TH1F* h_WW = (TH1F*) h_WW_vector[0]->Clone("WW_"+var_in);
-      for (unsigned int iBin = 1; iBin<WW_files.size(); ++iBin) {
+      for (unsigned int iBin = 1; iBin<h_WW_vector.size(); ++iBin) {
         h_WW->Add(h_WW_vector[iBin]);
       }
       
