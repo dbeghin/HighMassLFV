@@ -14,9 +14,21 @@
 #include "TStyle.h"
 
 using namespace std;
-int main(/*int argc, char** argv*/) {
-  TFile* file_out = new TFile("HighMassLFVMuTau/Faketaus_CR0.root", "RECREATE");
-  TFile* file_in = new TFile("Figures/histos_highmassmutau_CR101.root", "R");
+int main(int argc, char** argv) {
+  string nature = *(argv + 1);
+
+  TFile* file_out;
+  TFile* file_in;
+
+  if (nature == "signal") {
+    file_out = new TFile("HighMassLFVMuTau/Faketaus_CR0.root", "RECREATE");
+    file_in = new TFile("Figures/histos_highmassmutau_CR101.root", "R");
+  }
+  else if (nature == "Wjets") {
+    file_out = new TFile("HighMassLFVMuTau/Faketaus_CR102.root", "RECREATE");
+    file_in = new TFile("Figures/histos_highmassmutau_CR103.root", "R");
+  }
+  
 
   vector<TString> names;
   names.push_back("data_");//0

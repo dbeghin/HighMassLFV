@@ -81,6 +81,15 @@ int main(int argc, char** argv) {
   else if (CR == "CR101") {
     folder_in = "HighMassLFVMuTau/Faketaus_CR101";
   }
+  else if (CR == "CR102") {
+    folder_in = "HighMassLFVMuTau/WjetsTest_CR102";
+  }
+  else if (CR == "CR102b") {
+    folder_in = "HighMassLFVMuTau/WjetsTest_CR102";
+  }
+  else if (CR == "CR103") {
+    folder_in = "HighMassLFVMuTau/WjetsTest_CR103";
+  }
   else {
     cout << "unrecognised argument!!!" << endl;
   }
@@ -98,7 +107,13 @@ int main(int argc, char** argv) {
   TFile* file_in_DY_1500to2000 = new TFile(folder_in+"/Arranged_DY/DY_1500to2000.root", "R");	     DY_files.push_back(file_in_DY_1500to2000);
   TFile* file_in_DY_2000to3000 = new TFile(folder_in+"/Arranged_DY/DY_2000to3000.root", "R");        DY_files.push_back(file_in_DY_2000to3000);
 
-  TFile* file_in_faketau = new TFile("HighMassLFVMuTau/QCDWJets_CR0.root", "R");
+  TFile* file_in_faketau;
+  if (CR == "CR100") {
+    file_in_faketau = new TFile("HighMassLFVMuTau/Faketaus_CR0.root", "R");
+  }
+  else if (CR == "CR102") {
+    file_in_faketau = new TFile("HighMassLFVMuTau/Faketaus_CR102.root", "R");
+  }
 
   TFile* file_in_QCD = new TFile(folder_in+"/Arranged_QCD/QCD.root", "R");
   vector<TFile*> QCD_files;
@@ -150,7 +165,6 @@ int main(int argc, char** argv) {
   TFile* file_in_signal = new TFile(folder_in+"/Arranged_RPV/RPV.root", "R");
   TFile* file_in_data = new TFile(folder_in+"/Arranged_data/data.root", "R");
   
-  TFile* file_in_faketaus = new TFile("HighMassLFVMuTau/Faketaus_CR0.root", "R");
 
   vector<TString> vars;
   vars.push_back("ev_Mvis");          
@@ -397,8 +411,9 @@ int main(int argc, char** argv) {
       h_data->Rebin(rebin);
       h_data->Write();
     }
-    if (CR == "CR100") {
-      TH1F* h_faketaus = (TH1F*) file_in_faketaus -> Get("faketau_"+vars[i]);
+    if ((CR == "CR100") || (CR == "CR102")) {
+      cout << file_in_faketau->GetName() << endl;
+      TH1F* h_faketaus = (TH1F*) file_in_faketau -> Get("faketau_"+vars[i]);
       //h_faketaus->Rebin(rebin);
       h_faketaus->Write();
     }

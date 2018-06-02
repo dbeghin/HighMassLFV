@@ -132,6 +132,14 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      //no sign requirement, iso mu, anti-iso tau, estimate fake tau bg
      CR_number = 101;
    }
+   else if (controlregion == "CR102") {
+     //no sign requirement, iso mu, iso tau, Mt>80 GeV, W+Jets enriched CR
+     CR_number = 102;
+   }
+   else if (controlregion == "CR103") {
+     //no sign requirement, iso mu, anti-iso tau, Mt>80 GeV, W+Jets enriched CR
+     CR_number = 103;
+   }
 
    //string out_name = "out_"+type_of_data+".root";
    TFile* file_out = new TFile(out_name.c_str(),"RECREATE");
@@ -525,6 +533,16 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 	  
 	  float reliso = mu_isoTrackerBased03->at(iMu); //use instead sumofpts divided by muon ibt pt
+
+
+	  float Mt = -1;
+	  if (2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) < 0) {
+	    Mt = 0;
+	  }
+	  else {
+	    Mt = sqrt(2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) );
+	  }
+
 	  if (CR_number<100) {
 	    //sign selection
 	    if (CR_number%2 == 0) {
@@ -561,6 +579,17 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      if (reliso > 0.1) continue;
 	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
 	      if (tau_byLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    }	      
+	    if (CR_number == 102) {
+	      if (reliso > 0.1) continue;
+	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	      if (Mt<80) continue;
+	    }	      
+	    if (CR_number == 103) {
+	      if (reliso > 0.1) continue;
+	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
+	      if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	      if (Mt<80) continue;
 	    }	      
 	  }
 
@@ -614,13 +643,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 
 	  if (CR_number == 7 || CR_number == 9) {
-	    float Mt = -1;
-	    if (2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) < 0) {
-              Mt = 0;
-            }
-            else {
-              Mt = sqrt(2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) );
-            }
 	    h[jTauN][16]->Fill(Mt, final_weight);
 	    if (Mt < 80 || Mt > 120) continue;
 	  }
@@ -680,7 +702,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
 	  filled_histos = true;
-	  if (CR_number == 101) final_weight *= FakeRate(tau_p4.Pt());
+	  if ((CR_number == 101) || (CR_number == 103)) final_weight *= FakeRate(tau_p4.Pt());
 	  cout << FakeRate(tau_p4.Pt()) << endl;
 
 	  h[jTauN][9]->Fill(dphi_mutau, final_weight);
