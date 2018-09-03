@@ -64,7 +64,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
    histo_names.push_back("ev_DRmumu");      nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(10);
    histo_names.push_back("ev_Mt_raw");      nBins.push_back(150);  x_min.push_back(0);    x_max.push_back(150);
    histo_names.push_back("ev_Mt");          nBins.push_back(150);  x_min.push_back(0);    x_max.push_back(150);
-   histo_names.push_back("ev_Mvis");        nBins.push_back(150);  x_min.push_back(0);    x_max.push_back(150);
+   histo_names.push_back("ev_Mvis");        nBins.push_back(40);   x_min.push_back(70);   x_max.push_back(110);
    histo_names.push_back("ev_METmumass");   nBins.push_back(150);  x_min.push_back(0);    x_max.push_back(150);
    histo_names.push_back("ev_MET");         nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(100);
    histo_names.push_back("ev_METphi");      nBins.push_back(64);   x_min.push_back(-3.2); x_max.push_back(3.2);
@@ -89,16 +89,20 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
    eta.push_back("barrel");
    eta.push_back("endcap");
 
-   vector<TH1F*> htau[histo_names.size()][dms.size()];
+   vector<TString> trigger;
+   trigger.push_back("tautrfired");
+   trigger.push_back("tautrindiff");
+
+   vector<TH1F*> htau[histo_names.size()][dms.size()][eta.size()];
    for (unsigned int i = 0; i<htau_names.size(); ++i) {
      for (unsigned int j = 0; j<dms.size(); ++j) {
        for (unsigned int k = 0; k<eta.size(); ++k) {
-	 htau[i][j].push_back( new TH1F(htau_names[i]+"_"+dms[j]+"_"+eta[k], htau_names[i]+"_"+dms[j]+"_"+eta[k], nBins_tau[i], x_min_tau[i], x_max_tau[i]) ); 
+	 for (unsigned int l = 0; l<trigger.size(); ++l) {
+	   htau[i][j][k].push_back( new TH1F(htau_names[i]+"_"+dms[j]+"_"+eta[k]+"_"+trigger[l], htau_names[i]+"_"+dms[j]+"_"+eta[k]+"_"+trigger[l], nBins_tau[i], x_min_tau[i], x_max_tau[i]) ); 
+	 }
        }
      }
    }
-   int dafs = 1/0.;
-   int hgasg = dafs*2;
 
 
    TH1F* h_reweight = new TH1F("h_r", "h_r", 100, -2, 2);
@@ -250,7 +254,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 
       //Is one of the triggers fired?
       bool PassMuonTrigger = false;
-      if (trig_HLT_IsoMu24_accept || trig_HLT_IsoTkMu24_accept) PassMuonTrigger = true;
+      if (trig_HLT_IsoMu24_accept || trig_HLT_IsoTkMu24_accept || trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept) PassMuonTrigger = true;
       if (!PassMuonTrigger) continue;
 
 
@@ -327,14 +331,14 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	if (found_mumu_pair) break;
 	int iMu1 = orderedMu[ii];
 	//start 2nd loop over reconstructed mus
-	for (unsigned int jj = 0; jj < orderedMu.size(); ++jj) {
+	for (unsigned int jj = 0; jj < ii; ++jj) {
 	  if (found_mumu_pair) break;
 	  int iMu2 = orderedMu[jj];
 
 	  if (mu_gt_pt->at(iMu1) < 26.0) continue;
 	  if (fabs(mu_gt_eta->at(iMu1)) > 2.4) continue;
 	  if (!mu_isPFMuon->at(iMu1)) continue;
-	  if (!mu_isMediumMuon->at(iMu2)) continue; //medium ID
+	  if (!mu_isMediumMuon->at(iMu1)) continue; //medium ID
 	  if (fabs(mu_gt_dxy_firstPVtx->at(iMu1)) > 0.045) continue;
 	  if (fabs(mu_gt_dz_firstPVtx->at(iMu1)) > 0.2) continue;
 	  float reliso = mu_pfIsoDbCorrected04->at(iMu1);
@@ -360,7 +364,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    final_weight = mc_w_sign*GetReweight_mumu(mc_trueNumInteractions, mu1_p4.Pt(), mu1_p4.Eta(), mu2_p4.Pt(), mu2_p4.Eta());
 	  }
 	  
-	  met_p4.SetPtEtaPhiM(MET_Pt, 0, MET_phi, 0);
+	  met_p4.SetPtEtaPhiM(MET_T1Txy_Pt, 0, MET_T1Txy_phi, 0);
 	  metmu_p4 = met_p4 + mu1_p4;
 
 	  //check if there's a DY match
@@ -389,6 +393,11 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
 	    if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
 	    if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+
+	    TLorentzVector tau_p4;
+	    tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));
+	    if (tau_p4.DeltaR(mu1_p4) < 0.5) continue;
+	    if (tau_p4.DeltaR(mu2_p4) < 0.5) continue;
 	    
 	    //mu histos
 	    h[0]->Fill(mu_gt_pt->at(iMu1), final_weight);
@@ -415,11 +424,11 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    
 	    //misc. hitos
 	    h[12]->Fill(total_p4.M(), final_weight);
-	    h[14]->Fill(MET_Pt, final_weight);
-	    h[15]->Fill(MET_phi, final_weight);
+	    h[14]->Fill(met_p4.Pt(), final_weight);
+	    h[15]->Fill(met_p4.Phi(), final_weight);
 	    h[16]->Fill(pv_n, final_weight);
 
-	    int j_dm = -1, k_eta = -1;
+	    int j_dm = -1, k_eta = -1, l_trigger = 1;
 	    if (tau_decayMode->at(iTau) == 0) {
 	      j_dm = 0;
 	    }
@@ -429,6 +438,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    else if (tau_decayMode->at(iTau) == 10) {
 	      j_dm = 2;
 	    }
+
 	    if (fabs(tau_eta->at(iTau)) < 1.5) {
 	      k_eta = 0;
 	    }
@@ -436,10 +446,14 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	      k_eta = 1;
 	    }
 
+	    if (trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept) {
+	      l_trigger = 0;
+	    }
+
 	    //Tau histos
-	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) htau[0][j_dm][k_eta]->Fill(tau_pt->at(iTau), final_weight);
-	    if ((tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) && (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5)) htau[1][j_dm][k_eta]->Fill(tau_pt->at(iTau), final_weight);
-	    htau[2][j_dm][k_eta]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) htau[0][j_dm][k_eta][l_trigger]->Fill(tau_pt->at(iTau), final_weight);
+	    if ((tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) && (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5)) htau[1][j_dm][k_eta][l_trigger]->Fill(tau_pt->at(iTau), final_weight);
+	    htau[2][j_dm][k_eta][l_trigger]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
 	  }//loop over taus
 	}//loop over mus
       }//loop over muons
@@ -450,7 +464,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
    //hCounter2->Write();
    h_reweight->Write();
    for (unsigned int i = 0; i<histo_names.size(); ++i) h[i]->Write();
-   for (unsigned int i=0; i<htau_names.size(); ++i) for (unsigned int j=0; j<dms.size(); ++j) for (unsigned int k=0; k<eta.size(); ++k) htau[i][j][k]->Write();
+   for (unsigned int i=0; i<htau_names.size(); ++i) for (unsigned int j=0; j<dms.size(); ++j) for (unsigned int k=0; k<eta.size(); ++k) for (unsigned int l=0; l<trigger.size(); ++l) htau[i][j][k][l]->Write();
    file_out->Close();
 
 }
