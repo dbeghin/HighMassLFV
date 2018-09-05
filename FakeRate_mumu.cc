@@ -89,9 +89,9 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
    eta.push_back("barrel");
    eta.push_back("endcap");
 
-   vector<TString> trigger;
-   trigger.push_back("tautrfired");
-   trigger.push_back("tautrindiff");
+   vector<TString> trigger;                int indiff_number, fired_number;
+   trigger.push_back("tautrfired");        fired_number = 0;
+   trigger.push_back("tautrindiff");       indiff_number = 1;
 
    vector<TH1F*> htau[histo_names.size()][dms.size()][eta.size()];
    for (unsigned int i = 0; i<htau_names.size(); ++i) {
@@ -259,6 +259,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 
 
       //start muon counting loop
+      //FIXME
       int Nmu = 0;
       for (unsigned int iMu = 0; iMu < mu_gt_pt->size(); ++iMu) {
         if(mu_isPFMuon->at(iMu) && mu_gt_pt->at(iMu) > 10 && fabs(mu_gt_eta->at(iMu)) < 2.4 && fabs(mu_gt_dxy_firstPVtx->at(iMu)) < 0.045 && fabs(mu_gt_dz_firstPVtx->at(iMu)) < 0.2 && mu_pfIsoDbCorrected04->at(iMu) < 0.3 && mu_isMediumMuon->at(iMu)) ++Nmu;
@@ -292,7 +293,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
       bool interesting = false;
 
 
-      //sorting muons                                                                                                                                                             
+      //sorting muons                                                                                                                  
       for (unsigned int ii = 0; ii < mu_gt_pt->size(); ++ii) {
         rest.push_back(ii);
       }
@@ -391,8 +392,8 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    if (tau_pt->at(iTau) < 30.0) continue;
 	    if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	    if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
-	    if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	    //if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
+	    //if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
 
 	    TLorentzVector tau_p4;
 	    tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));
@@ -428,7 +429,8 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    h[15]->Fill(met_p4.Phi(), final_weight);
 	    h[16]->Fill(pv_n, final_weight);
 
-	    int j_dm = -1, k_eta = -1, l_trigger = 1;
+	    int j_dm = -1, k_eta = -1;
+	    bool bTautrigger = false;
 	    if (tau_decayMode->at(iTau) == 0) {
 	      j_dm = 0;
 	    }
@@ -447,13 +449,20 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    }
 
 	    if (trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept) {
-	      l_trigger = 0;
+	      bTautrigger = true;
 	    }
 
 	    //Tau histos
-	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) htau[0][j_dm][k_eta][l_trigger]->Fill(tau_pt->at(iTau), final_weight);
-	    if ((tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) && (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5)) htau[1][j_dm][k_eta][l_trigger]->Fill(tau_pt->at(iTau), final_weight);
-	    htau[2][j_dm][k_eta][l_trigger]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) {
+	      htau[0][j_dm][k_eta][indiff_number]->Fill(tau_pt->at(iTau), final_weight);
+	      if (bTautrigger) htau[0][j_dm][k_eta][fired_number]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
+	    }
+	    if ((tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) && (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5)) {
+	      htau[1][j_dm][k_eta][indiff_number]->Fill(tau_pt->at(iTau), final_weight);
+	      if (bTautrigger) htau[1][j_dm][k_eta][fired_number]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
+	    }
+	    htau[2][j_dm][k_eta][indiff_number]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
+	    if (bTautrigger) htau[2][j_dm][k_eta][fired_number]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
 	  }//loop over taus
 	}//loop over mus
       }//loop over muons
