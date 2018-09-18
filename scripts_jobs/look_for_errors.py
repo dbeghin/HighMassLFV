@@ -11,7 +11,9 @@ for i in f.readlines():
         error = False
         counter = -1
         for line in error_file.readlines():
-            if line.startswith("There was a crash") or line.startswith("globus") or line.startswith("=>> PBS: job killed"):
+            if ("unknown branch" in line) or ("bytes" in line) or ("mkdir" in line) or ("records" in line):
+                continue
+            else:
                 summary_file.write(i + "\n")
                 if not in_list: 
                     list_of_files.write(i)
