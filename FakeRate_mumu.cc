@@ -260,7 +260,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 
       //start muon counting loop
       //FIXME
-      int Nmu = 0;
+      /*int Nmu = 0;
       for (unsigned int iMu = 0; iMu < mu_gt_pt->size(); ++iMu) {
         if(mu_isPFMuon->at(iMu) && mu_gt_pt->at(iMu) > 10 && fabs(mu_gt_eta->at(iMu)) < 2.4 && fabs(mu_gt_dxy_firstPVtx->at(iMu)) < 0.045 && fabs(mu_gt_dz_firstPVtx->at(iMu)) < 0.2 && mu_pfIsoDbCorrected04->at(iMu) < 0.3 && mu_isMediumMuon->at(iMu)) ++Nmu;
         if (Nmu > 2) break;
@@ -273,7 +273,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
         if (gsf_VIDLoose->at(iEle) && gsf_pt->at(iEle) > 10 && fabs(gsf_eta->at(iEle)) < 2.5 && fabs(gsf_dxy_firstPVtx->at(iEle)) < 0.045 && fabs(gsf_dz_firstPVtx->at(iEle)) < 0.2 && gsf_passConversionVeto->at(iEle) && gsf_nLostInnerHits->at(iEle) <= 1 && gsf_relIso->at(iEle) < 0.3) electron = true;
         if (electron) break;
       }
-      if (electron) continue;
+      if (electron) continue;*/
 
       //bjet veto (medium WP for the bjet)                                                                                                                           
       /*bool bjet = false;
@@ -340,8 +340,8 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	  if (fabs(mu_gt_eta->at(iMu1)) > 2.4) continue;
 	  if (!mu_isPFMuon->at(iMu1)) continue;
 	  if (!mu_isMediumMuon->at(iMu1)) continue; //medium ID
-	  if (fabs(mu_gt_dxy_firstPVtx->at(iMu1)) > 0.045) continue;
-	  if (fabs(mu_gt_dz_firstPVtx->at(iMu1)) > 0.2) continue;
+	  //if (fabs(mu_gt_dxy_firstPVtx->at(iMu1)) > 0.045) continue;
+	  //if (fabs(mu_gt_dz_firstPVtx->at(iMu1)) > 0.2) continue;
 	  float reliso = mu_pfIsoDbCorrected04->at(iMu1);
 	  if (reliso > 0.15) continue;
 
@@ -349,8 +349,8 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	  if (fabs(mu_gt_eta->at(iMu2)) > 2.4) continue;
 	  if (!mu_isPFMuon->at(iMu2)) continue; //medium ID
 	  if (!mu_isMediumMuon->at(iMu2)) continue; //medium ID
-	  if (fabs(mu_gt_dxy_firstPVtx->at(iMu2)) > 0.045) continue;
-	  if (fabs(mu_gt_dz_firstPVtx->at(iMu2)) > 0.2) continue;
+	  //if (fabs(mu_gt_dxy_firstPVtx->at(iMu2)) > 0.045) continue;
+	  //if (fabs(mu_gt_dz_firstPVtx->at(iMu2)) > 0.2) continue;
 	  reliso = mu_pfIsoDbCorrected04->at(iMu2);
 	  if (reliso > 0.15) continue;
 
@@ -392,8 +392,8 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    if (tau_pt->at(iTau) < 30.0) continue;
 	    if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	    //if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
-	    //if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	    if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
+	    if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
 
 	    TLorentzVector tau_p4;
 	    tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));

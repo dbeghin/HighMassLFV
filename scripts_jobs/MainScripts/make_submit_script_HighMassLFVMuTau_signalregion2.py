@@ -10,8 +10,8 @@ if __name__ == "__main__":
     location=os.getcwd();
     #name of your *compiled* code (omit the .exe extension)
     code_name = "HighMassLFVMuTau"
-    region = "CR101"
-    folder = "HighMassLFVMuTau/Faketaus_CR101"
+    region = "CR100"
+    folder = "HighMassLFVMuTau/SignalRegion_CR100"
 
     for jj in range(0, len(pnfn)):    
         #Main file, which you'll use to submit the jobs
