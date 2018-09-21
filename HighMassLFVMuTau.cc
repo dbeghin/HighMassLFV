@@ -177,7 +177,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    histo_names.push_back("ev_DRmutau");       nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(10);
    histo_names.push_back("ev_DeltaPhimutau"); nBins.push_back(64);   x_min.push_back(0);    x_max.push_back(3.2);
    histo_names.push_back("ev_DeltaPhiMETtau");nBins.push_back(64);   x_min.push_back(0);    x_max.push_back(3.2);
-   histo_names.push_back("ev_Mt_raw");        nBins.push_back(150);  x_min.push_back(0);    x_max.push_back(150);
    histo_names.push_back("ev_MET");           nBins.push_back(1000); x_min.push_back(0);    x_max.push_back(1000);
    histo_names.push_back("ev_weight");        nBins.push_back(400);  x_min.push_back(-2);   x_max.push_back(2);
    histo_names.push_back("ev_deltaMET");      nBins.push_back(200);  x_min.push_back(-100); x_max.push_back(100);
@@ -403,12 +402,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 
       //Is one of the triggers fired?
-      cout << "0" << endl;
       bool PassMuonTrigger = false;
       if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassMuonTrigger = true;
       //if (trig_HLT_IsoMu27_accept || trig_HLT_IsoTkMu27_accept) PassMuonTrigger = true;
       if (!PassMuonTrigger) continue;
-      cout << "1" << endl;
 
 
       //start muon counting loop
@@ -418,7 +415,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         if (Nmu > 1) break;
       }
       if (Nmu > 1) continue; //2nd muon veto                                                                                                                                                                
-      cout << "2" << endl;
 
       //electron veto
       bool electron = false;
@@ -436,7 +432,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       }
       if (bjet) continue;*/
 
-      cout << "3" << endl;
 
 
       //Sort muons, taus by decreasing pt
@@ -506,7 +501,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	bool isMedium2016 = mu_isLooseMuon->at(iMu) && mu_innerTrack_validFraction->at(iMu) > 0.49 && mu_segmentCompatibility->at(iMu) > (goodGlob ? 0.303 : 0.451);
 
 
-	cout << "a" << endl;
 	TLorentzVector mu_p4, mu_ibt_transp4;
 	mu_p4.SetPtEtaPhiM(mu_ibt_pt->at(iMu), mu_ibt_eta->at(iMu), mu_ibt_phi->at(iMu), mu_mass);
 	mu_ibt_transp4.SetPxPyPzE(mu_ibt_px->at(iMu), mu_ibt_py->at(iMu), 0, mu_ibt_pt->at(iMu));
@@ -613,9 +607,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  for (unsigned int kk=0; kk<mu_gt_pt->size(); ++kk) {
 	    if (!mu_isPFMuon->at(kk)) continue;
 	    mu_gt_p4.SetPtEtaPhiM(mu_gt_pt->at(kk), mu_gt_eta->at(kk), mu_gt_phi->at(kk), mu_mass);
+	    if ( (abs(mu_gt_p4.Pt()) >= 998.99) && (abs(mu_gt_p4.Pt()) <= 999.01) )continue;
 	    if (mu_gt_p4.DeltaR(mu_p4) > min_dR) continue;
 	    min_dR = mu_gt_p4.DeltaR(mu_p4);
-	    mu_gt_transp4.SetPxPyPzE(mu_gt_px->at(kk), mu_gt_py->at(kk), 0, mu_gt_pt->at(kk));
+	    mu_gt_transp4.SetPtEtaPhiM(mu_gt_pt->at(kk), 0, mu_gt_phi->at(kk), mu_mass);
 	  }
 	  met_p4 = met_p4 + mu_gt_transp4 - mu_ibt_transp4;
 
@@ -660,7 +655,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (Mt < 80 || Mt > 120) continue;
 	  }
 
-	  cout << "b" << endl;
+
 	  //Pzeta calculation
 	  float norm_zeta= norm_F( tau_p4.Px()/tau_p4.Pt()+mu_p4.Px()/mu_p4.Pt(), tau_p4.Py()/tau_p4.Pt()+mu_p4.Py()/mu_p4.Pt() );
 	  //cout << norm_zeta << endl;
@@ -712,7 +707,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  else {
 	    dphi_METtau = fabs(large_phi-small_phi);
 	  }
-	  cout << "c" << endl;
 
 
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
@@ -723,7 +717,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  h[kMth][jTauN][10]->Fill(dphi_METtau, final_weight);
 
 	  if (dR < 0.5) continue;
-	  cout << "d" << endl;
 	  h[kMth][jTauN][0]->Fill(vis_p4.M(), final_weight);
 	  h[kMth][jTauN][1]->Fill(total_p4.M(), final_weight);
 	  h[kMth][jTauN][2]->Fill(tau_p4.Pt(), final_weight);
