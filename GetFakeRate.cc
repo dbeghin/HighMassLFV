@@ -99,6 +99,7 @@ int main(/*int argc, char** argv*/) {
     int jBin = 1;
     float bin_content_num = 0, bin_error_num=0, bin_content_num2 = 0, bin_error_num2=0;
     float bin_content_den = 0, bin_error_den=0, bin_content_den2 = 0, bin_error_den2=0;
+    cout << endl << endl << ptratio_MC[i]->GetName() << endl;
     for (unsigned int iBin=1; iBin < h_MC_pass[i]->GetNbinsX()+1; ++iBin) {
       if (h_MC_pass[i]->GetBinCenter(iBin) < x[jBin]) {
 	bin_content_num += h_MC_pass[i]->GetBinContent(iBin);
@@ -114,6 +115,7 @@ int main(/*int argc, char** argv*/) {
 	
 	denominator_MC[i]->SetBinContent(jBin, bin_content_den);
 	denominator_MC[i]->SetBinError(jBin, sqrt(bin_error_den));
+	cout << x[jBin] << " " << bin_error_den << endl;
 	bin_content_den = h_MC_fail[i]->GetBinContent(iBin);
 	bin_error_den = pow(h_MC_fail[i]->GetBinError(iBin), 2);
 	++jBin;

@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 
   vector<TString> names;
   names.push_back("data_");//0
-  names.push_back("WJets_");//1
+  //names.push_back("WJets_");//1
   //names.push_back("QCD_");//2
   names.push_back("DY_");
   names.push_back("TT_");

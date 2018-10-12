@@ -37,7 +37,7 @@ TH1F* MC_histo(TString var, TFile* file_in, double xs, long Nevents, int rebin) 
   h = (TH1F*) file_in -> Get(var);
   cout << "eh?" << endl;
 
-  h -> Sumw2();
+  //h -> Sumw2();
   h -> Scale(w);
   h -> Rebin(rebin);
   

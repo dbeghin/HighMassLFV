@@ -73,6 +73,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
    vector<TH1F*> h;
    for (unsigned int i = 0; i<histo_names.size(); ++i) {
      h.push_back( new TH1F(histo_names[i], histo_names[i], nBins[i], x_min[i], x_max[i]) ); 
+     h[i]->Sumw2();
    }
 
    vector<TString> htau_names;              vector<int> nBins_tau;     vector<float> x_min_tau,   x_max_tau; 
@@ -99,6 +100,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
        for (unsigned int k = 0; k<eta.size(); ++k) {
 	 for (unsigned int l = 0; l<trigger.size(); ++l) {
 	   htau[i][j][k].push_back( new TH1F(htau_names[i]+"_"+dms[j]+"_"+eta[k]+"_"+trigger[l], htau_names[i]+"_"+dms[j]+"_"+eta[k]+"_"+trigger[l], nBins_tau[i], x_min_tau[i], x_max_tau[i]) ); 
+	   htau[i][j][k][l]->Sumw2();
 	 }
        }
      }
@@ -122,135 +124,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
       float final_weight = 1;
 
       
-      bool gen_mutau = false;
-      bool DYtomumu = false;
-      TLorentzVector gentau_p4;
-      if (DY) {
-	int moth_ind = -1, tau1_ind = -1, tau2_ind = -1, mu1_ind = -1, mu2_ind = -1, tau1_dm = -1, tau2_dm = -1;
-	TLorentzVector mu1_p4, mu2_p4, tau1_p4, tau2_p4, tau1_visp4, tau2_visp4, gen_mumu_p4, nutau1_p4, nutau2_p4;
-	//start loop over all simulated particules
-	for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
-
-          //Find 2 mus whose mothers are either photons or Z bosons
-          if (abs(mc_pdgId->at(iMC)) == 13) {
-            moth_ind = mc_mother_index->at(iMC).at(0);
-            if (moth_ind < 0) continue;
-            if (abs(mc_pdgId->at(moth_ind)) == 22 || abs(mc_pdgId->at(moth_ind)) == 23) {
-              if (mu1_ind == -1) {
-                mu1_ind = iMC;
-                mu1_p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-                if (mu1_p4.Pt() < 15) mu1_ind = -1;
-              }
-              else if (mu1_ind > -1 && mu2_ind == -1) {
-                mu2_ind = iMC;
-                mu2_p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-                if (mu2_p4.Pt() < 15) mu2_ind = -1;
-              }
-              else if (mu1_ind > -1 && mu2_ind > -1) {
-                cout << "!!!!!!!!!!!!!!!" << endl << "Error : more than 2 mus" << endl << "!!!!!!!!!!!!!!!" << endl << endl;
-                break;
-              }//end locating 1st and 2nd gen taus
-            }//end condition on taus' mothers
-          }//end condition on particle's id = tau
-
-          //Find 2 taus whose mothers are either photons or Z bosons
-          if (abs(mc_pdgId->at(iMC)) == 15) {
-            moth_ind = mc_mother_index->at(iMC).at(0);
-            if (moth_ind < 0) continue;
-            if (abs(mc_pdgId->at(moth_ind)) == 22 || abs(mc_pdgId->at(moth_ind)) == 23) {
-              if (tau1_ind == -1) {
-                tau1_ind = iMC;
-                tau1_p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-                if (tau1_p4.Pt() < 15) tau1_ind = -1;
-              }
-              else if (tau1_ind > -1 && tau2_ind == -1) {
-                tau2_ind = iMC;
-                tau2_p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-                if (tau2_p4.Pt() < 15) tau2_ind = -1;
-              }
-              else if (tau1_ind > -1 && tau2_ind > -1) {
-                cout << "!!!!!!!!!!!!!!!" << endl << "Error : more than 2 taus" << endl << "!!!!!!!!!!!!!!!" << endl << endl;
-                break;
-              }//end locating 1st and 2nd gen taus
-            }//end condition on taus' mothers
-          }//end condition on particle's id = tau
-
-          //check whether the gen particle is a neutrino
-          bool neutrino;
-          if (abs(mc_pdgId->at(iMC)) == 12 || abs(mc_pdgId->at(iMC)) == 14 || abs(mc_pdgId->at(iMC)) == 16) {
-            neutrino = true;
-          }
-          else {
-            neutrino = false;
-          }
-
-          if (!neutrino) {
-            //Find one decay product of the tau (neutrinos excluded because they complicate things) and deduce the decay mode
-            if (mc_mother_index->at(iMC).at(0) == tau1_ind) {
-              if (abs(mc_pdgId->at(iMC)) == 11) {
-                tau1_dm = 0;
-                tau1_visp4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-              }
-              else if (abs(mc_pdgId->at(iMC)) == 13) {
-                tau1_dm = 1;
-                tau1_visp4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-              }
-              else if (abs(mc_pdgId->at(iMC)) < 7 || abs(mc_pdgId->at(iMC)) > 999) {
-                tau1_dm = 2;
-              }
-            }
-            else if (mc_mother_index->at(iMC).at(0) == tau2_ind) {
-              if (abs(mc_pdgId->at(iMC)) == 11) {
-                tau2_dm = 0;
-                tau2_visp4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-              }
-              else if (abs(mc_pdgId->at(iMC)) == 13) {
-                tau2_dm = 1;
-                tau2_visp4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-              }
-              else if (abs(mc_pdgId->at(iMC)) < 7 || abs(mc_pdgId->at(iMC)) > 999) {
-                tau1_dm = 2;
-              }//end condition on gen particle's pdgId                                                                                                          
-            }//end condition on mother's index                                                                                                                                                                   
-	  }//neutrino condition
-          else if (abs(mc_pdgId->at(iMC)) == 16) {
-            //If we have a tau neutrino, we want to save its 4-momentum, so we can calculate the visible 4-momentum of the hadronic tau later
-            if (mc_mother_index->at(iMC).at(0) == tau1_ind) {
-              nutau1_p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-            }
-            else if (mc_mother_index->at(iMC).at(0) == tau2_ind) {
-              nutau2_p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-            }
-          }//end neutrino condition	  
-	}//loop over sim particules
-
-	if (tau1_ind != -1 && tau2_ind != -1) {
-	  if (print_count < 20) {
-	    ++print_count;
-	    cout << endl;
-	    for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  PDG ID " << mc_pdgId->at(iMC) << "  Mother PDG ID " << mc_mother_index->at(iMC).at(0) << "  Pt " << mc_pt->at(iMC) << endl;
-	    cout << endl << endl;
-	  }
-	  
-	  if (tau1_dm == -1) tau1_dm = 2;
-          if (tau2_dm == -1) tau2_dm = 2;
-
-	  if (tau1_dm == 2 && tau2_dm == 1) {
-	    gen_mutau = true;
-	    gentau_p4 = tau1_p4 - nutau1_p4;
-	  }
-	  else if (tau1_dm == 1 && tau2_dm == 2) {
-	    gen_mutau = true;
-	    gentau_p4 = tau2_p4 - nutau2_p4;
-	  }
-	    
-	  /*gen_mumu_p4 = mu1_p4 + mu2_p4;
-
-	    if (gen_mumu_p4.M() > 50) DYtomumu = true;*/
-	}
-      }//end is this DY? condition
-
-
 
       //Is one of the triggers fired?
       bool PassMuonTrigger = false;
@@ -274,15 +147,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
         if (electron) break;
       }
       if (electron) continue;*/
-
-      //bjet veto (medium WP for the bjet)                                                                                                                           
-      /*bool bjet = false;
-      for (unsigned int iJet = 0; iJet < jet_pt->size(); ++iJet) {
-        if (jet_CSVv2->at(iJet) > 0.800 && jet_pt->at(iJet) > 20 && fabs(jet_eta->at(iJet)) < 2.4) bjet = true;
-        if (bjet) break;
-      }
-      if (bjet) continue;*/
-
 
 
       //Sort muons, taus, by increasing isolation/decreasing pt                                                                                                                   
@@ -361,6 +225,8 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 
 	  if (total_p4.M() < 70 || total_p4.M() > 110) continue;
 
+	  if (mu_gt_charge->at(iMu1) * mu_gt_charge->at(iMu2) > 0) continue; //SS veto
+
 	  if (!data) {
 	    final_weight = mc_w_sign*GetReweight_mumu(mc_trueNumInteractions, mu1_p4.Pt(), mu1_p4.Eta(), mu2_p4.Pt(), mu2_p4.Eta());
 	  }
@@ -368,14 +234,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	  met_p4.SetPtEtaPhiM(MET_T1Txy_Pt, 0, MET_T1Txy_phi, 0);
 	  metmu_p4 = met_p4 + mu1_p4;
 
-	  //check if there's a DY match
-	  bool DY_match = false;
-	  if (DY) {
-	    //we need to have a mumu pair at gen-level, Mu1 must have same sign and be DeltaR-compatible with one gen mu
-	    if (gen_mutau &&  /*tau_charge->at(iTau)*gentau_charge > 0  &&*/  (mu1_p4.DeltaR(gentau_p4) < 0.5 || mu2_p4.DeltaR(gentau_p4) < 0.5) ){
-	      DY_match = true;
-	    }
-	  }
 
 	  if (final_weight != final_weight) continue;
 
@@ -434,10 +292,10 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    if (tau_decayMode->at(iTau) == 0) {
 	      j_dm = 0;
 	    }
-	    else if (tau_decayMode->at(iTau) == 1) {
+	    else if (tau_decayMode->at(iTau) == 1 || tau_decayMode->at(iTau) == 2) {
 	      j_dm = 1;
 	    }
-	    else if (tau_decayMode->at(iTau) == 10) {
+	    else if (tau_decayMode->at(iTau) == 10 || tau_decayMode->at(iTau) == 11) {
 	      j_dm = 2;
 	    }
 

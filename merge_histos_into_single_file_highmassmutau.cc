@@ -231,14 +231,14 @@ int main(int argc, char** argv) {
   double xs_QCD_2400to3200 = 6.74*pow(10,-3); xs_QCD.push_back(xs_QCD_2400to3200);
 
   vector<double> xs_TT;
-  double xs_TT_lowmll = 831.76;              xs_TT.push_back(xs_TT_lowmll);   
-  double xs_TT_500to800 = 0.326;             xs_TT.push_back(xs_TT_500to800); 
-  double xs_TT_800to1200 = 5.66665e-2;	     xs_TT.push_back(xs_TT_800to1200); 
-  double xs_TT_1200to1800 = 3.557e-3;	     xs_TT.push_back(xs_TT_1200to1800); 
-  double xs_TT_1800toInf = 5.395e-5;         xs_TT.push_back(xs_TT_1800toInf); 
+  double xs_TT_lowmll = 85.5/*831.76*/;      xs_TT.push_back(xs_TT_lowmll);   
+  double xs_TT_500to800 = 0.319;             xs_TT.push_back(xs_TT_500to800); 
+  double xs_TT_800to1200 = 3.196e-2;	     xs_TT.push_back(xs_TT_800to1200); 
+  double xs_TT_1200to1800 = 2.987e-3;	     xs_TT.push_back(xs_TT_1200to1800); 
+  double xs_TT_1800toInf = 1.711e-4;         xs_TT.push_back(xs_TT_1800toInf); 
 
   vector<double> xs_WW;
-  double xs_WW_lowm = 63.21;                 xs_WW.push_back(xs_WW_lowm);
+  double xs_WW_lowm = /*63.21*/12.178;       xs_WW.push_back(xs_WW_lowm);
   double xs_WW_200to600 = 1.39;              xs_WW.push_back(xs_WW_200to600); 
   double xs_WW_600to1200 = 5.7e-2;	     xs_WW.push_back(xs_WW_600to1200); 
   double xs_WW_1200to2500 = 3.6e-3;	     xs_WW.push_back(xs_WW_1200to2500); 
@@ -294,11 +294,11 @@ int main(int argc, char** argv) {
   double N_TT_1800toInf = 40816;	      N_TT.push_back(N_TT_1800toInf);
 
   vector<double> N_WW;
-  double N_WW_lowm = 993997;                N_WW.push_back(N_WW_lowm);
-  double N_WW_200to600 = 0.326;             N_WW.push_back(N_WW_200to600); 
-  double N_WW_600to1200 = 5.66665e-2;       N_WW.push_back(N_WW_600to1200); 
-  double N_WW_1200to2500 = 3.557e-3;        N_WW.push_back(N_WW_1200to2500); 
-  double N_WW_2500toInf = 5.395e-5;         N_WW.push_back(N_WW_2500toInf); 
+  double N_WW_lowm = 1021000;                N_WW.push_back(N_WW_lowm);
+  double N_WW_200to600 = 199991;             N_WW.push_back(N_WW_200to600); 
+  double N_WW_600to1200 = 74997;             N_WW.push_back(N_WW_600to1200); 
+  double N_WW_1200to2500 = 99992;            N_WW.push_back(N_WW_1200to2500); 
+  double N_WW_2500toInf = 13968;             N_WW.push_back(N_WW_2500toInf); 
 
   double N_ST_top = 3256548;
   double N_ST_antitop = 3256309;
@@ -378,7 +378,7 @@ int main(int argc, char** argv) {
           
         vector<TH1F*> h_WW_vector;
         for (unsigned int iBin = 0; iBin<WW_files.size(); ++iBin) {
-	  if (iBin > 0) break;
+	  //if (iBin > 0) break;
           h_WW_vector.push_back( MC_histo(var_in, WW_files[iBin], xs_WW[iBin], N_WW[iBin], rebin) ); 
         }
         TH1F* h_WW = (TH1F*) h_WW_vector[0]->Clone("WW_"+var_out);

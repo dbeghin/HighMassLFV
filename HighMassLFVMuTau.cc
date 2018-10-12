@@ -32,13 +32,14 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    if (fChain == 0) return;
 
 
-   bool Signal, data, DYinc, WJetsinc, TTinc, WWinc;
+   bool Signal, data, DYinc, WJetsinc, TTinc, WWinc, TT;
    if (type_of_data == "Signal" || type_of_data == "signal") {
      Signal = true;
      data = false;
      DYinc = false;
      WJetsinc = false;
      TTinc = false;
+     TT = false;
      WWinc = false;
    }
    else if (type_of_data == "Data" || type_of_data == "data") {
@@ -47,6 +48,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = false;
      WJetsinc = false;
      TTinc = false;
+     TT = false;
      WWinc = false;
    }
    else if (type_of_data == "DYinc") {
@@ -55,6 +57,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = true;
      WJetsinc = false;
      TTinc = false;
+     TT = false;
      WWinc = false;
    }
    else if (type_of_data == "WJetsinc") {
@@ -63,6 +66,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = false;
      WJetsinc = true;
      TTinc = false;
+     TT = false;
      WWinc = false;
    }
    else if (type_of_data == "TTinc") {
@@ -71,14 +75,25 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = false;
      WJetsinc = false;
      TTinc = true;
+     TT = true;
      WWinc = false;
    }
-   else if (type_of_data == "WW") {
+   else if (type_of_data == "TT") {
      Signal = false;
      data = false;
      DYinc = false;
      WJetsinc = false;
      TTinc = false;
+     TT = true;
+     WWinc = false;
+   }
+   else if (type_of_data == "WWinc") {
+     Signal = false;
+     data = false;
+     DYinc = false;
+     WJetsinc = false;
+     TTinc = false;
+     TT = false;
      WWinc = true;
    }
    else {
@@ -87,6 +102,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DYinc = false;
      WJetsinc = false;
      TTinc = false;
+     TT = false;
      WWinc = false;
    }
 
@@ -277,7 +293,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
             nu_pdgid = LHE_pdgid->at(iLHE);
           }
         }
-        if (l_pdgid == nu_pdgid-1) {
+        if (abs(l_pdgid) == abs(nu_pdgid)-1) {
           lnu_p4 = l_p4 + nu_p4;
           if (lnu_p4.Pt() > 100) reject_event = true;
         }
@@ -324,13 +340,28 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       //close the is this TT inclusive question
       if (reject_event) continue;
 
-      
+      double TT_ptreweight = 1;
+      if (TT) {
+	double w_top = 1, w_antitop = 1;
+        for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
+	  if (LHE_pdgid->at(iLHE) == 6) {
+	    w_top = topPtReweight(LHE_Pt->at(iLHE));
+	  }
+	  else if (LHE_pdgid->at(iLHE) == -6) {
+	    w_antitop = topPtReweight(LHE_Pt->at(iLHE));
+	  }
+	}
+	TT_ptreweight = sqrt(w_top*w_antitop);
+      }
+
       vector<TLorentzVector> tauhp4;
       tauhp4.clear();
-      vector<TLorentzVector> taup4, tauvisp4, anyleptonp4;
+      vector<TLorentzVector> taup4, tauvisp4, anyleptonp4, genmup4, genelep4;
       taup4.clear();
       tauvisp4.clear();
       anyleptonp4.clear();
+      genmup4.clear();
+      genelep4.clear();
       vector<int> tau_ind, tau_dm;
       tau_ind.clear(), tau_dm.clear();
       if (!data) {
@@ -341,8 +372,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	vector<bool> tauh;
 	int n_nus = 0;
 	for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
-
-	  moth_ind = mc_mother_index->at(iMC).at(0);
 	  if (abs(mc_pdgId->at(iMC)) == 15) {
 	    p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
 	    if (mc_pt->at(iMC) > 20) {	
@@ -362,7 +391,13 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (p4.Pt() < 10) continue;
 	    if (p4.Pt() > 10000) continue;
 	    anyleptonp4.push_back(p4);
+	    if (abs(mc_pdgId->at(iMC)) == 13) genmup4.push_back(p4);
+	    if (abs(mc_pdgId->at(iMC)) == 11) genelep4.push_back(p4);
 	  }
+	}
+	//find out about the tau daughters
+	for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
+	  moth_ind = mc_mother_index->at(iMC).at(0);
 	  if (moth_ind < 0) continue;
 	  if (abs(mc_pdgId->at(moth_ind)) == 15) {
 	    for (unsigned int iTau = 0; iTau<tau_ind.size(); ++iTau) {
@@ -383,12 +418,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 		  tau_dm[iTau] = 1;
 		}
 	      }
-	      anyleptonp4.push_back(tauvisp4[iTau]);
 	    }
 	  }
 	}
 	for (unsigned int iTau = 0; iTau<tau_ind.size(); ++iTau) {
-	  if (tauh[iTau]) tauhp4.push_back(tauvisp4[iTau]);
+	  if (tauh[iTau]) tauhp4.push_back(tauvisp4[iTau]), anyleptonp4.push_back(tauvisp4[iTau]);
 	}
 	//n2 += tauhp4.size();
 
@@ -439,7 +473,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       int highest = -1;
       vector<int> orderedMu, orderedTau;
       vector<int> rest, rest2;
-
 
 
       //sorting muons
@@ -616,7 +649,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 	  int kMth = 0;
 	  if (Mt > 120) kMth = 1;
-	  
+
+	  double lepToTauFR = 1;
 
 	  //separate histos by tau realness
 	  int jTauN=0;
@@ -629,6 +663,26 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      hgen[2]->Fill(taup4[iGen].Phi(), mc_w_sign);
 	      hgen[8]->Fill(tau_dm[iGen], mc_w_sign);
 	    }
+
+	    bool ele_match = false;
+	    if (genelep4.size() != 0) {
+	      for (unsigned int iGen = 0; iGen < genelep4.size(); ++iGen) {
+		if (tau_p4.DeltaR(genelep4[iGen]) < 0.5) ele_match = true;
+	      }
+	    }
+	    bool mu_match = false;
+	    if (genmup4.size() != 0) {
+	      for (unsigned int iGen = 0; iGen < genmup4.size(); ++iGen) {
+		if (tau_p4.DeltaR(genmup4[iGen]) < 0.5) mu_match = true;
+	      }
+	    }
+	    if (ele_match && mu_match) {
+	      cout << "gen electron AND muon both match to same tau !!!" << endl << endl << endl;
+	      continue;
+	    }
+	    if (ele_match) lepToTauFR = GetLepToTauFR("ele", tau_p4.Eta());
+	    if (mu_match)  lepToTauFR = GetLepToTauFR("mu", tau_p4.Eta());
+
 
 	    bool jet_match = true;
 	    if (anyleptonp4.size() != 0) {
@@ -646,7 +700,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (CR_number >= 2) tau_match = false;
 	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match);
 	    h[kMth][jTauN][13]->Fill(reweight);
-	    final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match) * 1.0 * mc_w_sign;
+	    final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match) * 1.0 * mc_w_sign * TT_ptreweight;
 	  }
 
 
@@ -726,11 +780,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  h[kMth][jTauN][6]->Fill(mu_p4.Eta(), final_weight);
 	  h[kMth][jTauN][7]->Fill(mu_p4.Phi(), final_weight);
 	  h[kMth][jTauN][8]->Fill(dR, final_weight);
-	  h[kMth][jTauN][12]->Fill(met_p4.Pt(), final_weight);
-	  //h[kMth][jTauN][13]->Fill(mc_w_sign);
-	  h[kMth][jTauN][14]->Fill(met_p4.Px()-met_px, final_weight);
-	  h[kMth][jTauN][15]->Fill(Mcol, final_weight);
-	  h[kMth][jTauN][16]->Fill(Mt, final_weight);
+	  h[kMth][jTauN][11]->Fill(met_p4.Pt(), final_weight);
+	  //h[kMth][jTauN][12]->Fill(mc_w_sign);
+	  h[kMth][jTauN][13]->Fill(met_p4.Px()-met_px, final_weight);
+	  h[kMth][jTauN][14]->Fill(Mcol, final_weight);
+	  h[kMth][jTauN][15]->Fill(Mt, final_weight);
 	  //h[kMth][jTauN][11]->Fill(Mt, final_weight);
 	  //if (cut_zeta < -25) continue;
 

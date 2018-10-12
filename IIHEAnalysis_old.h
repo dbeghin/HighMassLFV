@@ -37,13 +37,24 @@ double FakeRate(double taupt) {
   else if( taupt >= 50. && taupt < 70.)  {     SF=0.209887;}    //SF=0.2007598;}
   else if( taupt >= 70. && taupt < 100.)  {    SF=0.197047;}    //SF=0.199132;}
   else if( taupt >= 100. && taupt < 200.)  {   SF=0.194307;}    //SF=0.167925;}
-  else if( taupt >= 200. && taupt < 500.)  {   SF=0.190000;}    //SF=0.214286;}
-  else if( taupt >= 500. && taupt < 1500.)  {  SF=0.190000;}    //SF=0.20000;}
+  else if( taupt >= 200. && taupt < 500.)  {   SF=0.166667;}    //SF=0.214286;}
+  else if( taupt >= 500. && taupt < 1500.)  {  SF=0.166667;}    //SF=0.20000;}
 
   double reweight = SF/(1-SF);
 
   return reweight;
 
+}
+
+
+double topPtReweight(double pt) {
+  double aa = 1.08872;
+  double bb = 0.0119998;
+  double cc = 0.895139;
+
+  double w_top = exp(-aa-bb*pt) + cc;
+
+  return w_top;
 }
 
 
@@ -54,6 +65,25 @@ double GetCollinearMass(TLorentzVector tau, TLorentzVector mu,  TLorentzVector M
   if((tau.Pt()+METproj)!=0) xth=tau.Pt()/(tau.Pt()+METproj);
   double mass_vis=(tau+mu).M();
   return mass_vis/sqrt(xth);
+}
+
+
+double GetLepToTauFR(TString lep, double eta) {
+
+  double reweight = 1;
+  if (lep == "mu") {
+    if (fabs(eta) < 0.4) reweight = 1.17;
+    else if (fabs(eta) < 0.8 && fabs(eta) > 0.4) reweight = 1.29;
+    else if (fabs(eta) < 1.2 && fabs(eta) > 0.8) reweight = 1.14;
+    else if (fabs(eta) < 1.7 && fabs(eta) > 1.2) reweight = 0.93;
+    else if (fabs(eta) < 2.3 && fabs(eta) > 1.7) reweight = 1.61;
+  }
+  else if (lep == "ele") {
+    if (fabs(eta) < 1.460) reweight = 1.09;
+    else if (fabs(eta) > 1.558) reweight = 1.19;
+  }
+  return reweight;
+
 }
 
 
