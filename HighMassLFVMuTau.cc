@@ -700,7 +700,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (CR_number >= 2) tau_match = false;
 	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match);
 	    h[kMth][jTauN][13]->Fill(reweight);
-	    final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match) * 1.0 * mc_w_sign * TT_ptreweight;
+	    final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match) * 1.0 * mc_w_sign * TT_ptreweight * lepToTauFR;
 	  }
 
 
