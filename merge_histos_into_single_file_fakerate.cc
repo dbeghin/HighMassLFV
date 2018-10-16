@@ -316,7 +316,7 @@ int main(int argc, char** argv) {
           
           vector<TH1F*> h_TT_vector;
           for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) {
-	    if (iBin > 0) continue;
+	    //if (iBin > 0) continue;
             h_TT_vector.push_back( MC_histo(var_in, TT_files[iBin], xs_TT[iBin], N_TT[iBin], rebin) ); 
           }
           TH1F* h_TT = (TH1F*) h_TT_vector[0]->Clone("TT_"+var_in);
@@ -326,7 +326,7 @@ int main(int argc, char** argv) {
           h_TT->Write();
           
             
-          /*vector<TH1F*> h_WW_vector;
+          vector<TH1F*> h_WW_vector;
           for (unsigned int iBin = 0; iBin<WW_files.size(); ++iBin) {
 	    if (iBin>0) continue;
             h_WW_vector.push_back( MC_histo(var_in, WW_files[iBin], xs_WW[iBin], N_WW[iBin], rebin) ); 
@@ -342,7 +342,7 @@ int main(int argc, char** argv) {
           h_VV->Add(h_WZ);
           h_VV->Add(h_ZZ);
           //h_VV -> SetName("VV_"+var_in);
-          h_VV->Write();*/
+          h_VV->Write();
           
           TH1F* h_ST_top = MC_histo(var_in, file_in_ST_top, xs_ST, N_ST_top, rebin);
           TH1F* h_ST_antitop = MC_histo(var_in, file_in_ST_antitop, xs_ST, N_ST_antitop, rebin);

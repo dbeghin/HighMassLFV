@@ -244,6 +244,8 @@ double GetReweight_highmass(int PU, float mu_pt, float mu_eta, bool tau_match) {
 
 
 double GetReweight_mumu(int PU, float mu1_pt, float mu1_eta, float mu2_pt, float mu2_eta) {
+  if (mu1_pt >= 120) mu1_pt = 100;
+  if (mu2_pt >= 120) mu2_pt = 100;
   //scale factor files that need to be open
   TFile* ID_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_id.root","R");
   TFile* ID_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_id.root","R");

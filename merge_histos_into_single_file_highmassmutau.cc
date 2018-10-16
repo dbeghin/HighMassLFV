@@ -352,7 +352,7 @@ int main(int argc, char** argv) {
             h_WJets->Write();
           }
           else {
-            vector<TH1F*> h_WJets_vector;
+            /*vector<TH1F*> h_WJets_vector;
             for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
 	      h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
             }
@@ -360,7 +360,7 @@ int main(int argc, char** argv) {
             for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
 	      h_WJets->Add(h_WJets_vector[iBin]);
             }
-            h_WJets->Write();
+            h_WJets->Write();*/
           }
         }
       

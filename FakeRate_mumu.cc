@@ -27,6 +27,10 @@ int main(int argc, char** argv) {
   return 0;
 }
 
+/////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//Currently set up to calculate fake rates in the etau region
+////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F* hCounter, TH1F* hCounter2) {
    if (fChain == 0) return;
 
@@ -52,13 +56,13 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 
    //list here the names and x-axis ranges of all reco-level histos we wish to create :
    vector<TString> histo_names;             vector<int> nBins;     vector<float> x_min,   x_max; 
-   histo_names.push_back("mu_pt");          nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(100);
+   histo_names.push_back("mu_pt");          nBins.push_back(500);  x_min.push_back(0);    x_max.push_back(500);
    histo_names.push_back("mu_eta");         nBins.push_back(50);   x_min.push_back(-2.5); x_max.push_back(2.5);
    histo_names.push_back("mu_phi");         nBins.push_back(64);   x_min.push_back(-3.2); x_max.push_back(3.2);
-   histo_names.push_back("mu1_pt");         nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(100);
+   histo_names.push_back("mu1_pt");         nBins.push_back(500);  x_min.push_back(0);    x_max.push_back(500);
    histo_names.push_back("mu1_eta");        nBins.push_back(50);   x_min.push_back(-2.5); x_max.push_back(2.5);
    histo_names.push_back("mu1_phi");        nBins.push_back(64);   x_min.push_back(-3.2); x_max.push_back(3.2);
-   histo_names.push_back("mu2_pt");         nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(100);
+   histo_names.push_back("mu2_pt");         nBins.push_back(500);  x_min.push_back(0);    x_max.push_back(500);
    histo_names.push_back("mu2_eta");        nBins.push_back(50);   x_min.push_back(-2.5); x_max.push_back(2.5);
    histo_names.push_back("mu2_phi");        nBins.push_back(64);   x_min.push_back(-3.2); x_max.push_back(3.2);
    histo_names.push_back("ev_DRmumu");      nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(10);
@@ -250,8 +254,10 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
 	    if (tau_pt->at(iTau) < 30.0) continue;
 	    if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	    if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
-	    if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	    //if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
+	    //if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	    if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;  //FIXME
+	    if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
 
 	    TLorentzVector tau_p4;
 	    tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));
