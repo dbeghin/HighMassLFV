@@ -162,7 +162,7 @@ double GetReweight(int PU, float mu_pt, float mu_eta) {
 }
 
 
-double GetReweight_highmass(int PU, float mu_pt, float mu_eta, bool tau_match) {
+double GetReweight_highmass(int PU, float mu_pt, float mu_eta, bool tau_match, bool singlephoton) {
   //scale factor files that need to be open
   TFile* ID_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_id.root","R");
   TFile* ID_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_id.root","R");
@@ -226,6 +226,8 @@ double GetReweight_highmass(int PU, float mu_pt, float mu_eta, bool tau_match) {
   if (trigger_sf == 0) trigger_sf = 1.0;
   if (tracker_sf == 0) tracker_sf = 1.0;
   if (pu_reweight == 0) pu_reweight = 1.0;
+
+  if (singlephoton) trigger_sf = 1.0;
   double reweight = highPtID_sf * tkLooseISO_sf * trigger_sf * tracker_sf * pu_reweight;
   if (tau_match) reweight = reweight*0.95;
 
@@ -9402,7 +9404,7 @@ void IIHEAnalysis::Init(TTree *tree)
    //fChain->SetBranchAddress("trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50_phi", &trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50_phi, &b_trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50_phi);
    //fChain->SetBranchAddress("trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50LooseAbsOrRelVLooseIso_eta", &trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50LooseAbsOrRelVLooseIso_eta, &b_trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50LooseAbsOrRelVLooseIso_eta);
    //fChain->SetBranchAddress("trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50LooseAbsOrRelVLooseIso_phi", &trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50LooseAbsOrRelVLooseIso_phi, &b_trig_HLT_VLooseIsoPFTau120_Trk50_eta2p1_hltPFTau120TrackPt50LooseAbsOrRelVLooseIso_phi);
-   fChain->SetBranchAddress("trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept", &trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept, &b_trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept);
+   //fChain->SetBranchAddress("trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept", &trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept, &b_trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept);
    //fChain->SetBranchAddress("trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltL1sSingleTau100erIorSingleTau120er_eta", &trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltL1sSingleTau100erIorSingleTau120er_eta, &b_trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltL1sSingleTau100erIorSingleTau120er_eta);
    //fChain->SetBranchAddress("trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltL1sSingleTau100erIorSingleTau120er_phi", &trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltL1sSingleTau100erIorSingleTau120er_phi, &b_trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltL1sSingleTau100erIorSingleTau120er_phi);
    //fChain->SetBranchAddress("trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltSingleL2Tau80eta2p2_eta", &trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltSingleL2Tau80eta2p2_eta, &b_trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_hltSingleL2Tau80eta2p2_eta);
@@ -9795,7 +9797,7 @@ void IIHEAnalysis::Init(TTree *tree)
    //fChain->SetBranchAddress("trig_HLT_Photon75_accept", &trig_HLT_Photon75_accept, &b_trig_HLT_Photon75_accept);
    //fChain->SetBranchAddress("trig_HLT_Photon90_accept", &trig_HLT_Photon90_accept, &b_trig_HLT_Photon90_accept);
    //fChain->SetBranchAddress("trig_HLT_Photon120_accept", &trig_HLT_Photon120_accept, &b_trig_HLT_Photon120_accept);
-   //fChain->SetBranchAddress("trig_HLT_Photon175_accept", &trig_HLT_Photon175_accept, &b_trig_HLT_Photon175_accept);
+   fChain->SetBranchAddress("trig_HLT_Photon175_accept", &trig_HLT_Photon175_accept, &b_trig_HLT_Photon175_accept);
    //fChain->SetBranchAddress("trig_HLT_Photon165_HE10_accept", &trig_HLT_Photon165_HE10_accept, &b_trig_HLT_Photon165_HE10_accept);
    //fChain->SetBranchAddress("trig_HLT_Photon22_R9Id90_HE10_IsoM_accept", &trig_HLT_Photon22_R9Id90_HE10_IsoM_accept, &b_trig_HLT_Photon22_R9Id90_HE10_IsoM_accept);
    //fChain->SetBranchAddress("trig_HLT_Photon30_R9Id90_HE10_IsoM_accept", &trig_HLT_Photon30_R9Id90_HE10_IsoM_accept, &b_trig_HLT_Photon30_R9Id90_HE10_IsoM_accept);

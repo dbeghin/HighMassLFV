@@ -32,7 +32,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    if (fChain == 0) return;
 
 
-   bool Signal, data, DYinc, WJetsinc, TTinc, WWinc, TT;
+   bool Signal, data, singlephoton, singlemu, DYinc, WJetsinc, TTinc, WWinc, TT;
    if (type_of_data == "Signal" || type_of_data == "signal") {
      Signal = true;
      data = false;
@@ -42,7 +42,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      TT = false;
      WWinc = false;
    }
-   else if (type_of_data == "Data" || type_of_data == "data") {
+   else if (type_of_data == "Data" || type_of_data == "data" || type_of_data == "singlephoton" || type_of_data == "SinglePhoton" || type_of_data == "singlemu" || type_of_data == "SingleMu") {
      Signal = false;
      data = true;
      DYinc = false;
@@ -105,6 +105,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      TT = false;
      WWinc = false;
    }
+
+   if (type_of_data == "singlephoton" || type_of_data == "SinglePhoton") singlephoton = true;
+   if (type_of_data == "singlemu" || type_of_data == "SingleMu") singlemu = true;
+
 
 
    int CR_number = -1;
@@ -309,7 +313,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         int l1_pdgid = 0, l2_pdgid = 0;
         if (print_count < 20) {
           ++print_count;
-          cout << endl << "LHE info" << endl;
+          cout << endl << jEntry << endl << "LHE info" << endl;
         }
         for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
           if (print_count < 20) {
@@ -429,21 +433,23 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	if (print_count < 20 /*&& foundtau*/) {
 	  ++print_count;
 	  cout << endl;
-	  for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << endl;
+	  for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << "  " << mc_eta->at(iMC) << "  " << mc_phi->at(iMC) << endl;
 	}
       }//end is this not-data? condition
 
 
 
       //Is one of the triggers fired?
-      bool PassMuonTrigger = false;
-      if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassMuonTrigger = true;
-      //if (trig_HLT_IsoMu27_accept || trig_HLT_IsoTkMu27_accept) PassMuonTrigger = true;
-      if (!PassMuonTrigger) continue;
+      bool PassTrigger = false;
+      if (singlemu) if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
+      //We can't double-count events. Events in the SinglePhoton dataset which trigger the SingleMu trigger already show in the SingleMu dataset
+      if (singlephoton) if (trig_HLT_Photon175_accept && !(trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept)) PassTrigger = true;
+      if (!data) if (trig_HLT_Photon175_accept || trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
+      if (!PassTrigger) continue;
 
 
       //start muon counting loop
-      int Nmu = 0;
+      /*int Nmu = 0;
       for (unsigned int iMu = 0; iMu < mu_gt_pt->size(); ++iMu) {
         if(mu_isPFMuon->at(iMu) && mu_gt_pt->at(iMu) > 20 && fabs(mu_gt_eta->at(iMu)) < 2.4 && fabs(mu_gt_dxy_firstPVtx->at(iMu)) < 0.045 && fabs(mu_gt_dz_firstPVtx->at(iMu)) < 0.2 && mu_pfIsoDbCorrected04->at(iMu) < 0.3 && mu_isMediumMuon->at(iMu)) ++Nmu;
         if (Nmu > 1) break;
@@ -456,7 +462,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	if (gsf_VIDLoose->at(iEle) && gsf_pt->at(iEle) > 20 && fabs(gsf_eta->at(iEle)) < 2.5 && fabs(gsf_dxy_firstPVtx->at(iEle)) < 0.045 && fabs(gsf_dz_firstPVtx->at(iEle)) < 0.2 && gsf_passConversionVeto->at(iEle) && gsf_nLostInnerHits->at(iEle) <= 1 && gsf_relIso->at(iEle) < 0.3) electron = true;
         if (electron) break;
       }
-      if (electron) continue;
+      if (electron) continue;*/
 
       //bjet veto (medium WP for the bjet)                                                                                                                           
       /*bool bjet = false;
@@ -572,6 +578,24 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  
 	  float reliso = mu_isoTrackerBased03->at(iMu); //use instead sumofpts divided by muon ibt pt
 
+
+	  //MET recalculation because we're using the high-pt muon ID
+	  TLorentzVector mu_gt_p4, mu_gt_transp4;
+	  mu_gt_p4.SetPxPyPzE(0, 0, 0, 0);
+	  mu_gt_transp4.SetPxPyPzE(0, 0, 0, 0);
+
+	  float min_dR = 0.2;
+	  for (unsigned int kk=0; kk<mu_gt_pt->size(); ++kk) {
+	    if (!mu_isPFMuon->at(kk)) continue;
+	    mu_gt_p4.SetPtEtaPhiM(mu_gt_pt->at(kk), mu_gt_eta->at(kk), mu_gt_phi->at(kk), mu_mass);
+	    if ( (abs(mu_gt_p4.Pt()) >= 998.99) && (abs(mu_gt_p4.Pt()) <= 999.01) )continue;
+	    if (mu_gt_p4.DeltaR(mu_p4) > min_dR) continue;
+	    min_dR = mu_gt_p4.DeltaR(mu_p4);
+	    mu_gt_transp4.SetPtEtaPhiM(mu_gt_pt->at(kk), 0, mu_gt_phi->at(kk), mu_mass);
+	  }
+	  met_p4 = met_p4 + mu_gt_transp4 - mu_ibt_transp4;
+
+
 	  
 	  float Mt = -1;
 	  if (2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) < 0) {
@@ -631,22 +655,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    }	      
 	  }
 
-	  //MET recalculation because we're using the high-pt muon ID
-	  TLorentzVector mu_gt_p4, mu_gt_transp4;
-	  mu_gt_p4.SetPxPyPzE(0, 0, 0, 0);
-	  mu_gt_transp4.SetPxPyPzE(0, 0, 0, 0);
-
-	  float min_dR = 0.2;
-	  for (unsigned int kk=0; kk<mu_gt_pt->size(); ++kk) {
-	    if (!mu_isPFMuon->at(kk)) continue;
-	    mu_gt_p4.SetPtEtaPhiM(mu_gt_pt->at(kk), mu_gt_eta->at(kk), mu_gt_phi->at(kk), mu_mass);
-	    if ( (abs(mu_gt_p4.Pt()) >= 998.99) && (abs(mu_gt_p4.Pt()) <= 999.01) )continue;
-	    if (mu_gt_p4.DeltaR(mu_p4) > min_dR) continue;
-	    min_dR = mu_gt_p4.DeltaR(mu_p4);
-	    mu_gt_transp4.SetPtEtaPhiM(mu_gt_pt->at(kk), 0, mu_gt_phi->at(kk), mu_mass);
-	  }
-	  met_p4 = met_p4 + mu_gt_transp4 - mu_ibt_transp4;
-
 	  int kMth = 0;
 	  if (Mt > 120) kMth = 1;
 
@@ -654,6 +662,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 	  //separate histos by tau realness
 	  int jTauN=0;
+	  bool tau_match = false;
 	  if (!data && !Signal) {
 	    //fill gen histos to understand wth is going on
 	    hgen[7]->Fill(taup4.size(), mc_w_sign);
@@ -691,17 +700,17 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      }
 	    }
 	    if (jet_match) jTauN=1;
-	    bool tau_match = false;
 	    if (tauhp4.size() != 0) {
 	      for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
 		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.5) tau_match = true;
 	      }
 	    }
 	    if (CR_number >= 2) tau_match = false;
-	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match);
+	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton);
 	    h[kMth][jTauN][13]->Fill(reweight);
-	    final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match) * 1.0 * mc_w_sign * TT_ptreweight * lepToTauFR;
 	  }
+	  //FIXME
+	  if (!data) final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton) * 1.0 * mc_w_sign * /*TT_ptreweight */ lepToTauFR;
 
 
 	  if (CR_number == 7 || CR_number == 9) {
