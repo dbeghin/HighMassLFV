@@ -35,7 +35,6 @@ TH1F* MC_histo(TString var, TFile* file_in, double xs, long Nevents, int rebin) 
   
   TH1F* h;
   h = (TH1F*) file_in -> Get(var);
-  cout << "eh?" << endl;
 
   //h -> Sumw2();
   h -> Scale(w);
@@ -53,8 +52,8 @@ int main(int argc, char** argv) {
   int rebin = 2;
   //string CR = *(argv + 1);
 
-  //TString folder_in = "HighMassLFVMuTau/FakeRate"; FIXME
-  TString folder_in = "HighMassLFVMuTau/FakeRate_EleTau";
+  TString folder_in = "HighMassLFVMuTau/FakeRate"; //FIXME
+  //TString folder_in = "HighMassLFVMuTau/FakeRate_EleTau";
   TString name_out = "histos_fakerate";
 
   TFile* file_out = new TFile("Figures/"+name_out+".root", "RECREATE");
@@ -132,6 +131,10 @@ int main(int argc, char** argv) {
   int tau_cutoff = vars.size();
   vars.push_back("taupt_pass");
   vars.push_back("taupt_fail");
+  vars.push_back("jetpt_pass");
+  vars.push_back("jetpt_fail");
+  vars.push_back("ptratio_pass");
+  vars.push_back("ptratio_fail");
   vars.push_back("tau_MVA");
 
 
@@ -149,6 +152,10 @@ int main(int argc, char** argv) {
   trigger.push_back("tautrfired");
   trigger.push_back("tautrindiff");
 
+  vector<TString> pt_range;
+  pt_range.push_back("tau_pt_30_50");
+  pt_range.push_back("tau_pt_50_100");
+  pt_range.push_back("tau_pt_100");
 
   //cross-sections
   vector<double> xs_DY;
@@ -274,87 +281,91 @@ int main(int argc, char** argv) {
       for (unsigned int k = 0; k<eta.size(); ++k) {
 	if ( (i<tau_cutoff) && (k>0) ) break;
 	for (unsigned int l = 0; l<trigger.size(); ++l) {
+	  if ( (i<tau_cutoff) && (l>0) ) break;
+	  for (unsigned int m = 0; m<pt_range.size(); ++m) {
 
-	  if (i < tau_cutoff) {
-	    var_in = vars[i];
-	    if (l>0) break;
-	  }
-	  else {
-	    var_in = vars[i]+"_"+dms[j]+"_"+eta[k]+"_"+trigger[l];
-	  }
-	  cout << endl << endl <<var_in << endl;
-    
-          vector<TH1F*> h_DY_vector;
-          for (unsigned int iBin = 0; iBin<DY_files.size(); ++iBin) {
-	    //if (iBin>0) continue; //FIXME
-            h_DY_vector.push_back( MC_histo(var_in, DY_files[iBin], xs_DY[iBin], N_DY[iBin], rebin) ); 
-          }
-          TH1F* h_DY = (TH1F*) h_DY_vector[0]->Clone("DY_"+var_in);
-          for (unsigned int iBin = 1; iBin<h_DY_vector.size(); ++iBin) {
-            h_DY->Add(h_DY_vector[iBin]);
-          }
-          h_DY->Write();
-          
-          /*vector<TH1F*> h_QCD_vector;
-          for (unsigned int iBin = 0; iBin<QCD_files.size(); ++iBin) {
-            h_QCD_vector.push_back( MC_histo(var_in, QCD_files[iBin], xs_QCD[iBin], N_QCD[iBin], rebin) ); 
-          }
-          TH1F* h_QCD = (TH1F*) h_QCD_vector[0]->Clone("QCD_"+var_in);
-          for (unsigned int iBin = 1; iBin<QCD_files.size(); ++iBin) {
-            h_QCD->Add(h_QCD_vector[iBin]);
-          }
-          h_QCD->Write();*/
-          
-          /*vector<TH1F*> h_WJets_vector;
-          for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
-            h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
-          }
-          TH1F* h_WJets = (TH1F*) h_WJets_vector[0]->Clone("WJets_"+var_in);
-          for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
-            h_WJets->Add(h_WJets_vector[iBin]);
-          }
-          h_WJets->Write();*/
-          
-          vector<TH1F*> h_TT_vector;
-          for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) {
-	    //if (iBin > 0) continue;
-            h_TT_vector.push_back( MC_histo(var_in, TT_files[iBin], xs_TT[iBin], N_TT[iBin], rebin) ); 
-          }
-          TH1F* h_TT = (TH1F*) h_TT_vector[0]->Clone("TT_"+var_in);
-          for (unsigned int iBin = 1; iBin<h_TT_vector.size(); ++iBin) {
-            h_TT->Add(h_TT_vector[iBin]);
-          }
-          h_TT->Write();
-          
+	    if (i < tau_cutoff) {
+	      if (m>0) break;
+	      var_in = vars[i];
+	    }
+	    else {
+	      var_in = vars[i]+"_"+dms[j]+"_"+eta[k]+"_"+trigger[l]+"_"+pt_range[m];
+	    }
+	    cout << endl << endl <<var_in << endl;
+    	    
+            vector<TH1F*> h_DY_vector;
+            for (unsigned int iBin = 0; iBin<DY_files.size(); ++iBin) {
+	      //if (iBin>0) continue; //FIXME
+              h_DY_vector.push_back( MC_histo(var_in, DY_files[iBin], xs_DY[iBin], N_DY[iBin], rebin) ); 
+            }
+            TH1F* h_DY = (TH1F*) h_DY_vector[0]->Clone("DY_"+var_in);
+            for (unsigned int iBin = 1; iBin<h_DY_vector.size(); ++iBin) {
+              h_DY->Add(h_DY_vector[iBin]);
+            }
+            h_DY->Write();
+	    cout << h_DY << endl;
             
-          vector<TH1F*> h_WW_vector;
-          for (unsigned int iBin = 0; iBin<WW_files.size(); ++iBin) {
-	    if (iBin>0) continue;
-            h_WW_vector.push_back( MC_histo(var_in, WW_files[iBin], xs_WW[iBin], N_WW[iBin], rebin) ); 
-          }
-          TH1F* h_WW = (TH1F*) h_WW_vector[0]->Clone("WW_"+var_in);
-          for (unsigned int iBin = 1; iBin<h_WW_vector.size(); ++iBin) {
-            h_WW->Add(h_WW_vector[iBin]);
-          }
+            /*vector<TH1F*> h_QCD_vector;
+            for (unsigned int iBin = 0; iBin<QCD_files.size(); ++iBin) {
+              h_QCD_vector.push_back( MC_histo(var_in, QCD_files[iBin], xs_QCD[iBin], N_QCD[iBin], rebin) ); 
+            }
+            TH1F* h_QCD = (TH1F*) h_QCD_vector[0]->Clone("QCD_"+var_in);
+            for (unsigned int iBin = 1; iBin<QCD_files.size(); ++iBin) {
+              h_QCD->Add(h_QCD_vector[iBin]);
+            }
+            h_QCD->Write();*/
             
-          TH1F* h_WZ = MC_histo(var_in, file_in_WZ, xs_WZ, N_WZ, rebin);
-          TH1F* h_ZZ = MC_histo(var_in, file_in_ZZ, xs_ZZ, N_ZZ, rebin);
-          TH1F* h_VV = (TH1F*) h_WW->Clone("VV_"+var_in);
-          h_VV->Add(h_WZ);
-          h_VV->Add(h_ZZ);
-          //h_VV -> SetName("VV_"+var_in);
-          h_VV->Write();
-          
-          TH1F* h_ST_top = MC_histo(var_in, file_in_ST_top, xs_ST, N_ST_top, rebin);
-          TH1F* h_ST_antitop = MC_histo(var_in, file_in_ST_antitop, xs_ST, N_ST_antitop, rebin);
-          TH1F* h_ST = (TH1F*) h_ST_top->Clone("ST_"+var_in);
-          h_ST->Add(h_ST_antitop);
-          h_ST->Write();
-          
-          TH1F* h_data = (TH1F*) file_in_data -> Get(var_in);//Data is, by definition, normalized
-          h_data -> SetName("data_"+var_in);
-          h_data->Rebin(rebin);
-          h_data->Write();
+            /*vector<TH1F*> h_WJets_vector;
+            for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
+              h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
+            }
+            TH1F* h_WJets = (TH1F*) h_WJets_vector[0]->Clone("WJets_"+var_in);
+            for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
+              h_WJets->Add(h_WJets_vector[iBin]);
+            }
+            h_WJets->Write();*/
+            
+            vector<TH1F*> h_TT_vector;
+            for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) {
+	      //if (iBin > 0) continue;
+              h_TT_vector.push_back( MC_histo(var_in, TT_files[iBin], xs_TT[iBin], N_TT[iBin], rebin) ); 
+            }
+            TH1F* h_TT = (TH1F*) h_TT_vector[0]->Clone("TT_"+var_in);
+            for (unsigned int iBin = 1; iBin<h_TT_vector.size(); ++iBin) {
+              h_TT->Add(h_TT_vector[iBin]);
+            }
+            h_TT->Write();
+            
+              
+            vector<TH1F*> h_WW_vector;
+            for (unsigned int iBin = 0; iBin<WW_files.size(); ++iBin) {
+	      if (iBin>0) continue;
+              h_WW_vector.push_back( MC_histo(var_in, WW_files[iBin], xs_WW[iBin], N_WW[iBin], rebin) ); 
+            }
+            TH1F* h_WW = (TH1F*) h_WW_vector[0]->Clone("WW_"+var_in);
+            for (unsigned int iBin = 1; iBin<h_WW_vector.size(); ++iBin) {
+              h_WW->Add(h_WW_vector[iBin]);
+            }
+              
+            TH1F* h_WZ = MC_histo(var_in, file_in_WZ, xs_WZ, N_WZ, rebin);
+            TH1F* h_ZZ = MC_histo(var_in, file_in_ZZ, xs_ZZ, N_ZZ, rebin);
+            TH1F* h_VV = (TH1F*) h_WW->Clone("VV_"+var_in);
+            h_VV->Add(h_WZ);
+            h_VV->Add(h_ZZ);
+            //h_VV -> SetName("VV_"+var_in);
+            h_VV->Write();
+            
+            TH1F* h_ST_top = MC_histo(var_in, file_in_ST_top, xs_ST, N_ST_top, rebin);
+            TH1F* h_ST_antitop = MC_histo(var_in, file_in_ST_antitop, xs_ST, N_ST_antitop, rebin);
+            TH1F* h_ST = (TH1F*) h_ST_top->Clone("ST_"+var_in);
+            h_ST->Add(h_ST_antitop);
+            h_ST->Write();
+            
+            TH1F* h_data = (TH1F*) file_in_data -> Get(var_in);//Data is, by definition, normalized
+            h_data -> SetName("data_"+var_in);
+            h_data->Rebin(rebin);
+            h_data->Write();
+	  }
 	}
       }
     }

@@ -40,7 +40,8 @@ double FakeRate(double taupt) {
   else if( taupt >= 200. && taupt < 500.)  {   SF=0.166667;}    //SF=0.214286;}
   else if( taupt >= 500. && taupt < 1500.)  {  SF=0.166667;}    //SF=0.20000;}
 
-  double reweight = SF/(1-SF);
+  //double reweight = SF/(1-SF);
+  double reweight = SF;
 
   return reweight;
 

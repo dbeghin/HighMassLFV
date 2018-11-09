@@ -121,6 +121,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
       Long64_t iEntry = LoadTree(jEntry);
       if (iEntry < 0) break;
       if (jEntry % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", jEntry, nEntries);
+      //if (jEntry % 10 == 0) cout << endl << "Processed events: " << jEntry << " of " << nEntries;
 
       nb = fChain->GetEntry(jEntry);
       nbytes += nb;

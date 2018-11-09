@@ -250,11 +250,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         int l1_pdgid = 0, l2_pdgid = 0;
         if (print_count < 20) {
           ++print_count;
-          cout << endl << "LHE info" << endl;
+          //cout << endl << "LHE info" << endl;
         }
         for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
           if (print_count < 20) {
-            cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
+            //cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
           }
           if (LHE_pdgid->at(iLHE) == 11 || LHE_pdgid->at(iLHE) == 13 || LHE_pdgid->at(iLHE) == 15) {
             l1_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
@@ -271,7 +271,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           if (ll_p4.M() > 400) reject_event = true;
         }
         else {
-          cout << "??" << endl;
+          //cout << "??" << endl;
         }
       }//close is this DY inclusive question
       else if (WJetsinc) {
@@ -282,11 +282,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         int l_pdgid = 0, nu_pdgid = 0;
         if (print_count < 20) {
           ++print_count;
-          cout << endl << "LHE info" << endl;
+          //cout << endl << "LHE info" << endl;
         }
         for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
           if (print_count < 20) {
-            cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
+	    // cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
           }
           if (abs(LHE_pdgid->at(iLHE)) == 11 || abs(LHE_pdgid->at(iLHE)) == 13 || abs(LHE_pdgid->at(iLHE)) == 15) {
             l_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
@@ -302,7 +302,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           if (lnu_p4.Pt() > 100) reject_event = true;
         }
         else {
-          cout << "??" << endl;
+          //cout << "??" << endl;
         }
       }//close the is this WJets inclusive question
       else if (TTinc || WWinc) {
@@ -313,11 +313,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         int l1_pdgid = 0, l2_pdgid = 0;
         if (print_count < 20) {
           ++print_count;
-          cout << endl << jEntry << endl << "LHE info" << endl;
+          //cout << endl << jEntry << endl << "LHE info" << endl;
         }
         for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
           if (print_count < 20) {
-            cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
+            //cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
           }
           if (abs(LHE_pdgid->at(iLHE)) == 11 || abs(LHE_pdgid->at(iLHE)) == 13 || abs(LHE_pdgid->at(iLHE)) == 15) {
             l1_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
@@ -430,21 +430,26 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	}
 	//n2 += tauhp4.size();
 
-	if (print_count < 20 /*&& foundtau*/) {
+	if (print_count < 100 /*&& foundtau*/) {
 	  ++print_count;
-	  cout << endl;
-	  for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << "  " << mc_eta->at(iMC) << "  " << mc_phi->at(iMC) << endl;
+	  cout << endl << ev_event << endl << mc_pt->size() << endl;
+	  for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
+	    cout << iMC << "  " << mc_pdgId->at(iMC) << "  ";
+	    for (unsigned int iMother = 0; iMother< mc_mother_index->at(iMC).size(); ++iMother) cout << "| " << mc_mother_index->at(iMC).at(iMother);
+	    cout << " |" << mc_pt->at(iMC) << "  " << mc_eta->at(iMC) << "  " << mc_phi->at(iMC) << endl;
+	  }
 	}
       }//end is this not-data? condition
 
 
 
       //Is one of the triggers fired?
+      //FIXME
       bool PassTrigger = false;
       if (singlemu) if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
       //We can't double-count events. Events in the SinglePhoton dataset which trigger the SingleMu trigger already show in the SingleMu dataset
-      if (singlephoton) if (trig_HLT_Photon175_accept && !(trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept)) PassTrigger = true;
-      if (!data) if (trig_HLT_Photon175_accept || trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
+      //if (singlephoton) if (trig_HLT_Photon175_accept && !(trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept)) PassTrigger = true;
+      if (!data) if (/*trig_HLT_Photon175_accept ||*/ trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
       if (!PassTrigger) continue;
 
 
@@ -710,7 +715,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    h[kMth][jTauN][13]->Fill(reweight);
 	  }
 	  //FIXME
-	  if (!data) final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton) * 1.0 * mc_w_sign * /*TT_ptreweight */ lepToTauFR;
+	  if (!data) final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton) * 1.0 * mc_w_sign * TT_ptreweight * lepToTauFR;
 
 
 	  if (CR_number == 7 || CR_number == 9) {
