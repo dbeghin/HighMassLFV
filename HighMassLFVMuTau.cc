@@ -19,16 +19,14 @@ int main(int argc, char** argv) {
   string type_in = *(argv + 4);
   string type= type_in;
   TFile *fIn = TFile::Open(inname.c_str());
-  TH1F* hCounter = (TH1F*) fIn->Get("h1");
-  TH1F* hCounter2 = (TH1F*) fIn->Get("h2");
   TTree* tree = (TTree*) fIn->Get("IIHEAnalysis");
 
   IIHEAnalysis* a = new IIHEAnalysis(tree);
-  a->Loop(controlregion, type, out_name, hCounter, hCounter2);
+  a->Loop(controlregion, type, out_name);
   return 0;
 }
 
-void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_name, TH1F* hCounter, TH1F* hCounter2) {
+void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_name) {
    if (fChain == 0) return;
 
 
@@ -430,7 +428,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	}
 	//n2 += tauhp4.size();
 
-	if (print_count < 100 /*&& foundtau*/) {
+	if (print_count < 20 /*&& foundtau*/) {
 	  ++print_count;
 	  cout << endl << ev_event << endl << mc_pt->size() << endl;
 	  for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
@@ -777,9 +775,27 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 
 
+	  // MATCH TAUS TO AK4 jets
+          bool matched_to_reco_jet=false;
+          TLorentzVector jet_p4(0.,0.,0.,0.);
+          for (unsigned int ijet = 0; ijet < jet_pt->size(); ijet++){
+            if(!(fabs(jet_eta->at(ijet)) < 2.3)) continue;
+            if(!(jet_isJetIDLoose->at(ijet))) continue;
+            TLorentzVector jet_p4_tmp;
+            jet_p4_tmp.SetPxPyPzE(jet_px->at(ijet), jet_py->at(ijet), jet_pz->at(ijet), jet_energy->at(ijet));
+            if(!(tau_p4.DeltaR(jet_p4_tmp) < 0.2)) continue;
+            matched_to_reco_jet=true;
+            jet_p4=jet_p4_tmp;
+            break;
+
+          }
+
+	  if(!(matched_to_reco_jet)) continue;
+
+
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
 	  filled_histos = true;
-	  if ((CR_number == 101) || (CR_number == 103)) final_weight *= FakeRate(tau_p4.Pt());
+	  if ((CR_number == 101) || (CR_number == 103)) final_weight *= FakeRate(tau_p4.Pt(), jet_p4.Pt());
 
 	  h[kMth][jTauN][9]->Fill(dphi_mutau, final_weight);
 	  h[kMth][jTauN][10]->Fill(dphi_METtau, final_weight);

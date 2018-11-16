@@ -51,7 +51,10 @@ int main(/*int argc, char** argv*/) {
   trigger.push_back("tautrindiff");
 
   vector<float> xpoints_all {0, 30, 40, 50, 70, 100, 200, 500, 1000};
-  vector<float> xpoints_ratio {0, 0.2, 0.4, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.5, 2.0, 3.0, 10};
+  vector<float> xpoints_30 {0, 30, 40, 50, 54, 57, 60, 70, 100, 1000};
+  vector<float> xpoints_50 {0, 50, 60, 70, 80, 100, 110, 120, 130, 150, 175, 1000};
+  vector<float> xpoints_100 {0, 100, 130, 150, 200, 300, 1000};
+  vector<float> xpoints_ratio {0, 0.2, 0.4, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.5, 2.0, 3.0, 10, 20};
 
   vector<TString> pt_range;           
   pt_range.push_back("tau_pt_30_50"); 
@@ -107,8 +110,20 @@ int main(/*int argc, char** argv*/) {
     for (unsigned int i=0; i<h_MC[k].size(); ++i) {
       int l = i/(eta.size()*pt_range.size()), m = (i / pt_range.size()) % eta.size(), p = i % pt_range.size() ;
       vector<float> xpoints;
-      if (k < k_ptratio_start) {
+      xpoints.clear();
+      if (k < k_jet_start) {
         xpoints = xpoints_all;
+      }
+      else if (k >= k_jet_start && k < k_ptratio_start) {
+	if (p==0) {
+	  xpoints = xpoints_30;
+	}
+	else if (p==1) {
+	  xpoints = xpoints_50;
+	}
+	else if (p==2) {
+	  xpoints = xpoints_100;
+	}
       }
       else {
         xpoints = xpoints_ratio;
@@ -180,8 +195,20 @@ int main(/*int argc, char** argv*/) {
     for (unsigned int i=0; i<h_data[k].size(); ++i) {
       int l = i/(eta.size()*pt_range.size()), m = (i / pt_range.size()) % eta.size(), p = i % pt_range.size() ;
       vector<float> xpoints;
-      if (k < k_ptratio_start) {
+      xpoints.clear();
+      if (k < k_jet_start) {
         xpoints = xpoints_all;
+      }
+      else if (k >= k_jet_start && k < k_ptratio_start) {
+	if (p==0) {
+	  xpoints = xpoints_30;
+	}
+	else if (p==1) {
+	  xpoints = xpoints_50;
+	}
+	else if (p==2) {
+	  xpoints = xpoints_100;
+	}
       }
       else {
         xpoints = xpoints_ratio;
@@ -209,6 +236,7 @@ int main(/*int argc, char** argv*/) {
 	  bin_error += pow(h_data[k][i]->GetBinError(iBin), 2);
         }
         else {
+	  cout << h_data[k][i]->GetName() << "  old bin: " << h_data[k][i]->GetBinCenter(iBin) << "  jBin " << jBin << " " << rebin_array[jBin] << " " << bin_content << endl;
 	  if (k%2 == 0) {
 	    hpass_data[half_k][i]->SetBinContent(jBin, bin_content);
 	    hpass_data[half_k][i]->SetBinError(jBin, sqrt(bin_error));
@@ -223,8 +251,16 @@ int main(/*int argc, char** argv*/) {
 	  ++jBin;
         }
       }
+      if (k%2 == 0) {
+	hpass_data[half_k][i]->SetBinContent(jBin, bin_content);
+	hpass_data[half_k][i]->SetBinError(jBin, sqrt(bin_error));
+      }
+      else {
+	hfail_data[half_k][i]->SetBinContent(jBin, bin_content);
+	hfail_data[half_k][i]->SetBinError(jBin, sqrt(bin_error));
+      }	    
       if (k%2 != 0) hfail_data[half_k][i]->Add(hpass_data[half_k][i]);
-      cout << k << " " << l << " " << m << " " << p << endl;
+      //cout << k << " " << l << " " << m << " " << p << endl;
       if (i==0 || i==1 || i==2) {
         if (k%2 != 0) hfail_data_total[half_k][p] = (TH1F*) hfail_data[half_k][i]->Clone("den2_total_"+vars[k]+"_"+pt_range[p]);
         if (k%2 == 0) hpass_data_total[half_k][p] = (TH1F*) hpass_data[half_k][i]->Clone("hpass_"+vars[k]+"_data_total_tauindiff_"+pt_range[p]);

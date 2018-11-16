@@ -68,19 +68,19 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 
 
 var=[]
-var.append("ev_Mvis")          
-var.append("ev_Mtot")          
-var.append("tau_pt")           
-var.append("tau_eta")          
-var.append("tau_phi")          
-var.append("mu_pt")            
-var.append("mu_eta")           
-var.append("mu_phi")           
-var.append("ev_DRmutau")       
-var.append("ev_DeltaPhimutau") 
-var.append("ev_DeltaPhiMETtau")
-var.append("ev_MET") 
-var.append("ev_Mcol")
+#var.append("ev_Mvis")          
+#var.append("ev_Mtot")          
+#var.append("tau_pt")           
+#var.append("tau_eta")          
+#var.append("tau_phi")          
+#var.append("mu_pt")            
+#var.append("mu_eta")           
+#var.append("mu_phi")           
+#var.append("ev_DRmutau")       
+#var.append("ev_DeltaPhimutau") 
+#var.append("ev_DeltaPhiMETtau")
+#var.append("ev_MET") 
+#var.append("ev_Mcol")
 var.append("ev_Mt")
 
 var_log_dic = {
@@ -97,30 +97,33 @@ var_log_dic = {
 "ev_DeltaPhiMETtau": False,
 "ev_MET"           : True,
 "ev_Mcol"          : True,
-"ev_Mt"            : False,
+"ev_Mt"            : True,
 }
 
 nvar=len(var)
 print nvar
 
 photogenic_var=[]
-photogenic_var.append("m_{vis} (GeV)")
-photogenic_var.append("m_{tot} (GeV)")
-photogenic_var.append("#tau p_{T} (GeV)")
-photogenic_var.append("#tau #eta")
-photogenic_var.append("#tau #phi")
-photogenic_var.append("#mu p_{T} (GeV)")
-photogenic_var.append("#mu #eta")
-photogenic_var.append("#mu #phi")
-photogenic_var.append("#DeltaR (#mu #tau)")
-photogenic_var.append("#Delta#Phi (#mu #tau)")
-photogenic_var.append("#Delta#Phi (E_{T}^{miss} #tau)")
-photogenic_var.append("E_{T}^{miss} (GeV)")
-photogenic_var.append("m_{col}")
+#photogenic_var.append("m_{vis} (GeV)")
+#photogenic_var.append("m_{tot} (GeV)")
+#photogenic_var.append("#tau p_{T} (GeV)")
+#photogenic_var.append("#tau #eta")
+#photogenic_var.append("#tau #phi")
+#photogenic_var.append("#mu p_{T} (GeV)")
+#photogenic_var.append("#mu #eta")
+#photogenic_var.append("#mu #phi")
+#photogenic_var.append("#DeltaR (#mu #tau)")
+#photogenic_var.append("#Delta#Phi (#mu #tau)")
+#photogenic_var.append("#Delta#Phi (E_{T}^{miss} #tau)")
+#photogenic_var.append("E_{T}^{miss} (GeV)")
+#photogenic_var.append("m_{col}")
 photogenic_var.append("m_{T}")
 
 
-Mth=["_MtHigh", "_MtLow"]
+Mth=[
+"_MtHigh", 
+#"_MtLow"
+]
 
 
 for k in range (0,nvar):
@@ -134,7 +137,7 @@ for k in range (0,nvar):
         VV=file.Get("VV_"+var_in)
         DY=file.Get("DY_"+var_in)
         ST=file.Get("ST_"+var_in)
-        Signal=file.Get("Signal_"+var_in)
+        #Signal=file.Get("Signal_"+var_in)
         Faketau=file.Get("faketau_"+var_in)
         
         Data.GetXaxis().SetTitle("")
@@ -189,13 +192,13 @@ for k in range (0,nvar):
         
         
         stack=ROOT.THStack("stack","stack")
+        stack.Add(DY)
         stack.Add(ST)
         #stack.Add(QCD)
         #stack.Add(W)
         stack.Add(VV)
         stack.Add(TT)
         stack.Add(Faketau)
-        stack.Add(DY)
         
         errorBand = TT.Clone()
         #errorBand.Add(QCD)
@@ -236,7 +239,7 @@ for k in range (0,nvar):
         else:
             Data.SetMaximum(Data.GetMaximum()*2)#2.5)#FIXME
             ST.SetMaximum(Data.GetMaximum()*2)#2.5)#FIXME
-        Data.SetMinimum(0.1)
+        Data.SetMinimum(0.01)
         Data.Draw("e")
         #ST.Draw("hist")
         stack.Draw("histsame")
@@ -244,8 +247,8 @@ for k in range (0,nvar):
         Data.Draw("esame")
         
         
-        Signal.SetLineColor(2)
-        Signal.SetLineWidth(2)
+        #Signal.SetLineColor(2)
+        #Signal.SetLineWidth(2)
         #Signal.Draw("histsame")
         
         

@@ -58,8 +58,7 @@ ROOT.gStyle.SetOptStat(0)
 c=ROOT.TCanvas("canvas","",0,0,600,600)
 c.cd()
 
-#file=ROOT.TFile("final.root","r")
-file=ROOT.TFile("histos_fakerate.root","r")
+file=ROOT.TFile("histos_fakerate_SSMtLow.root","r")
 
 adapt=ROOT.gROOT.GetColor(12)
 new_idx=ROOT.gROOT.GetListOfColors().GetSize() + 1
@@ -69,14 +68,35 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 #ncat=2
 
 var=[]
-var.append("ev_Mvis")          
-var.append("mu_pt")            
-var.append("mu_eta")           
-var.append("mu_phi")           
+var.append("mu_pt")
+var.append("mu_eta")
+var.append("mu_phi")
+var.append("tau_pt")
+var.append("tau_eta")
+var.append("tau_phi")
+var.append("ev_Nvertex")
+var.append("ev_DRmutau")
+var.append("ev_MET")
+var.append("ev_Mcol")
+var.append("ev_Mvis")
+var.append("ev_Mtot")
+var.append("ev_Mt")
 len_tau = len(var)
-var.append("taupt_pass")
-var.append("taupt_fail")
-var.append("tau_MVA")
+var.append("taupt_jetpt_pass")
+var.append("taupt_jetpt_fail")
+
+dms=[]
+dms.append("DM0")
+dms.append("DM1")
+dms.append("DM10")
+
+eta=[]
+eta.append("barrel")
+eta.append("endcap")
+
+taun=[]
+taun.append("realtau")
+taun.append("faketau")
 
 var_log_dic = {
 "ev_Mvis"          : True,           
@@ -91,48 +111,41 @@ var_log_dic = {
 nvar=len(var)
 print nvar, len_tau
 
-photogenic_var=[]
-photogenic_var.append("m_{vis} (GeV)")
-photogenic_var.append("#mu p_{T} (GeV)")
-photogenic_var.append("#mu #eta")
-photogenic_var.append("#mu #phi")
-photogenic_var.append("#tau p_{T} (GeV) - pass")
-photogenic_var.append("#tau p_{T} (GeV) - fail")
-photogenic_var.append("#tau MVA value")
-
-
-dms = []
-dms.append("DM0")
-dms.append("DM1")
-dms.append("DM10")
-
-eta = []
-eta.append("barrel")
-eta.append("endcap")
-
-ends="_tautrindiff"
+photogenic_var={
+"mu_pt"            : "p_{T} (#mu)",
+"mu_eta"           : "#eta (#mu)",
+"mu_phi"           : "#phi (#mu)",
+"tau_pt"           : "p_{T} (#tau)",
+"tau_eta"          : "#eta (#tau)",
+"tau_phi"          : "#phi (#tau)",
+"ev_Nvertex"       : "N_{vertex}",
+"ev_DRmutau"       : "#DeltaR (#mu #tau)",
+"ev_MET"           : "E_{T}^{miss} (GeV)",
+"ev_Mcol"          : "m_{col} (GeV)",
+"ev_Mvis"          : "m_{vis} (GeV)",
+"ev_Mtot"          : "m_{tot} (GeV)",
+"ev_Mt"            : "m_{T} (GeV)",
+"taupt_jetpt_pass" : ["p_{T} (#tau)", "p_{T} (jet)"],
+"taupt_jetpt_fail" : ["p_{T} (#tau)", "p_{T} (jet)"],
+}
 
 for k in range (0,nvar):
     for l in range (0,len(dms)):
         if k<len_tau and l>0: break
         for m in range (0,len(eta)):
-            var_in_MC = ""
-            var_in_data = ""
-            var_in = ""
-            if k<len_tau:
-                var_in_MC = var[k]
-                var_in_data = var[k]
-                var_in = var[k]
-                if m>0: break
-            else:
-                var_in_MC = var[k]+"_MC_"+dms[l]+"_"+eta[m]+ends
-                var_in_data = var[k]+"_data_"+dms[l]+"_"+eta[m]+ends
-                var_in = var[k]+"_"+dms[l]+"_"+eta[m]+ends
-            print var_in
+            if k<len_tau and m>0: break
+            for n in range (0,len(taun)):
+                var_in = ""
+                if k<len_tau:
+                    var_in = var[k]
+                    if n>0: break
+                else:
+                    var_in = var[k]+"_"+dms[l]+"_"+eta[m]+"_"+taun[n]
+                print var_in
 
-            Data=file.Get("data_"+var_in)
-            #QCD=file.Get("QCD_"+var_in)
-            #W=file.Get("WJets_"+var_in)
+                Data=file.Get("data_"+var_in)
+                #QCD=file.Get("QCD_"+var_in)
+                #W=file.Get("WJets_"+var_in)
             TT=file.Get("TT_"+var_in)
             VV=file.Get("VV_"+var_in)
             DY=file.Get("DY_"+var_in)

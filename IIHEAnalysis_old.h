@@ -30,18 +30,26 @@ float norm_F(float x, float y){
 }
 
 
-double FakeRate(double taupt) {
+double FakeRate(double taupt, double jetpt) {
   double SF=0.2;
-  if( taupt >= 30. && taupt < 40.)  {          SF=0.215608;}    //SF=0.214331;}
-  else if( taupt >= 40. && taupt < 50.)  {     SF=0.211886;}    //SF=0.206699;}
-  else if( taupt >= 50. && taupt < 70.)  {     SF=0.209887;}    //SF=0.2007598;}
-  else if( taupt >= 70. && taupt < 100.)  {    SF=0.197047;}    //SF=0.199132;}
-  else if( taupt >= 100. && taupt < 200.)  {   SF=0.194307;}    //SF=0.167925;}
-  else if( taupt >= 200. && taupt < 500.)  {   SF=0.166667;}    //SF=0.214286;}
-  else if( taupt >= 500. && taupt < 1500.)  {  SF=0.166667;}    //SF=0.20000;}
 
-  //double reweight = SF/(1-SF);
-  double reweight = SF;
+  TFile* fake_file = new TFile("Reweighting/fakerate.root","R");
+
+  TString taupt_string = "_tau_pt_";
+
+  if( taupt >= 30. && taupt < 50.)        taupt_string += "30_50"; 
+  else if( taupt >= 50. && taupt < 100.)  taupt_string += "50_100";
+  else if( taupt >= 100. )                taupt_string += "100"; 
+
+  double reweight = 1;
+
+  if (jetpt >= 1000) jetpt = 999;
+
+  TString hname = "hpass_jetpt_pass_data_total_tauindiff" + taupt_string;
+  TH1F* h_fake = (TH1F*) fake_file->Get(hname);
+  int iBin = h_fake->FindBin(jetpt);
+  SF = h_fake->GetBinContent(iBin);
+  if (SF != 1) reweight = SF/(1-SF);
 
   return reweight;
 
@@ -147,6 +155,12 @@ double GetReweight(int PU, float mu_pt, float mu_eta) {
   TGraphErrors* Tracker_graph = (TGraphErrors*) Tracker_file->Get("ratio_eff_eta3_dr030e030_corr");
   double tracker_sf = Tracker_graph->Eval(mu_eta); //evaluate the graph function at this value of eta
 
+  if (mediumID2016_sf == 0) mediumID2016_sf = 1.0; 
+  if (tightISO_sf == 0) tightISO_sf = 1.0; 
+  if (trigger_sf == 0) trigger_sf = 1.0; 
+  if (tracker_sf == 0) tracker_sf = 1.0; 
+  if (pu_reweight == 0) pu_reweight = 1.0; 
+  
   double reweight = mediumID2016_sf * tightISO_sf * trigger_sf * tracker_sf * pu_reweight;
 
 
@@ -5334,7 +5348,7 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop(string phase, string type_of_data, string out_name, TH1F* hCounter, TH1F* hCounter2);
+   virtual void     Loop(string phase, string type_of_data, string out_name);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 };

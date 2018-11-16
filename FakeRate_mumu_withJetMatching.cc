@@ -18,8 +18,6 @@ int main(int argc, char** argv) {
   string type_in = *(argv + 4);
   string type= type_in;
   TFile *fIn = TFile::Open(inname.c_str());
-  TH1F* hCounter = (TH1F*) fIn->Get("h1");
-  TH1F* hCounter2 = (TH1F*) fIn->Get("h2");
   TTree* tree = (TTree*) fIn->Get("IIHEAnalysis");
 
   IIHEAnalysis* a = new IIHEAnalysis(tree);
@@ -27,11 +25,8 @@ int main(int argc, char** argv) {
   return 0;
 }
 
-/////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//Currently set up to calculate fake rates in the etau region
-////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F* hCounter, TH1F* hCounter2) {
+void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
   if (fChain == 0) return;
 
   bool DY, data;
@@ -320,10 +315,10 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
           if (tau_pt->at(iTau) < 30.0) continue;
           if (fabs(tau_eta->at(iTau)) > 2.3) continue;
           if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-          //if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
-          //if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-          if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;  //FIXME
-          if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
+          if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
+          if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+          //if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;  //FIXME
+          //if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
           TLorentzVector tau_p4;
           tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));
 
@@ -451,8 +446,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
   }//loop over events
 
   file_out->cd();
-  //hCounter->Write();
-  //hCounter2->Write();
   h_reweight->Write();
   for (unsigned int i = 0; i<histo_names.size(); ++i) h[i]->Write();
   for (unsigned int i=0; i<h_names.size(); ++i) for (unsigned int j=0; j<dms.size(); ++j) for (unsigned int k=0; k<eta.size(); ++k) for (unsigned int l=0; l<trigger.size(); ++l) for (unsigned int m=0; m<pt_range.size(); ++m)   hh[i][j][k][l][m]->Write();

@@ -25,19 +25,19 @@ int main(/*int argc, char** argv*/) {
   names.push_back("TT_");
   names.push_back("ST_");
   names.push_back("VV_");
-  names.push_back("Signal_");
+  //names.push_back("Signal_");//FIXME
 
 
   //rebin vectors
-  vector<float> xpoints {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 550, 600, 650, 700, 800, 900, 1000/*, 1500, 2000, 4000*/};
+  vector<float> xpoints {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 550, 600, 650, 700, 800, 900, 1000/*, 1500, 2000, 4000*/};
   cout << xpoints.size() << endl;
 
   vector<float> xpoints_MET {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 500/*, 700, 1000*/};
 
   vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 200, 300, 400, 500};
 
-  vector<float> xpoints_Mt {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120}; //for Mt low FIXME
-  //vector<float> xpoints_Mt = xpoints; //for Mt high
+  //vector<float> xpoints_Mt {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120}; //for Mt low FIXME
+  vector<float> xpoints_Mt = xpoints; //for Mt high
 
   //float x[] = {0, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 550, 600, 650, 700, 800, 900, 1000, 1500, 2000, 4000};
 
@@ -100,6 +100,10 @@ int main(/*int argc, char** argv*/) {
 	      ++jBin;
 	    }
 	  }
+	  bin_content = bin_content/(rebin_array[jBin]-rebin_array[jBin-1]);
+	  bin_error = sqrt(bin_error)/(rebin_array[jBin]-rebin_array[jBin-1]);
+	  h_rebinned[j][k][l]->SetBinContent(jBin, bin_content);
+	  h_rebinned[j][k][l]->SetBinError(jBin, bin_error);
 	}
       }
     }
