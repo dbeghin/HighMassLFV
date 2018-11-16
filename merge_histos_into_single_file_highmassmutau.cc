@@ -402,9 +402,10 @@ int main(int argc, char** argv) {
         h_ST->Write();
 	
 	if (CR != "CR101") {
-	  TH1F* h_signal = MC_histo(var_in, file_in_signal, xs_signal, N_signal, rebin);
-	  h_signal->SetName("Signal_"+var_out);
-	  h_signal->Write();
+	  //TH1F* h_signal = MC_histo(var_in, file_in_signal, xs_signal, N_signal, rebin);
+	  //h_signal->SetName("Signal_"+var_out);
+	  //h_signal->Write();
+	  //FIXME
 	}
         
         TH1F* h_data = (TH1F*) file_in_data -> Get(var_in);//Data is, by definition, normalized
