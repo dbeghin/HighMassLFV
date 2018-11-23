@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include "TH1.h"
+#include "TH2.h"
 #include "TFile.h"
 #include "TMath.h"
 #include "TSystem.h"
@@ -40,7 +41,7 @@ TH1F* MC_histo(TString var, TFile* file_in, double xs, long Nevents, int rebin) 
 }
 
 
-TH1F* MC_histo_TH2(TString var, TFile* file_in, double xs, long Nevents, int rebin) {
+TH2F* MC_histo_TH2(TString var, TFile* file_in, double xs, long Nevents, int rebin) {
   cout << file_in->GetName() << endl;
 
   double lumi = 35.9 * pow(10,3); //luminosity in pb^-1
@@ -335,7 +336,8 @@ int main(int argc, char** argv) {
 	
 	  TH2F* h_data = (TH2F*) file_in_data -> Get(var_in);//Data is, by definition, normalized
 	  h_data -> SetName("data_"+var_out);
-	  h_data->Rebin(rebin);
+	  h_data->RebinX(rebin);
+	  h_data->RebinY(rebin);
 	  h_data->Write();
 	}
       }
