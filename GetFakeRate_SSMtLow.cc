@@ -43,7 +43,20 @@ int main(/*int argc, char** argv*/) {
   taun.push_back("realtau");  int n_real = taun.size()-1;
   taun.push_back("faketau");  int n_fake = taun.size()-1;
 
-  vector<float> xpoints_all {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300, 1000};
+  //vector<float> xpoints_all {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300, 1000};
+  vector<vector<float>> xpoints;                                                                                        vector<TString> sector_name;
+  vector<float> xpoints_lowleft {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300};  xpoints.push_back(xpoints_lowleft);   sector_name.push_back("taupt_0_300");
+  vector<float> xpoints_midleft {0, 100, 150, 300};                               xpoints.push_back(xpoints_midleft);   sector_name.push_back("taupt_0_300");
+  vector<float> xpoints_upleft {0, 300};                                          xpoints.push_back(xpoints_upleft);    sector_name.push_back("taupt_0_300");
+  vector<float> xpoints_upright {300, 1000};                                      xpoints.push_back(xpoints_upright);   sector_name.push_back("taupt_300_1000");
+  vector<float> xpoints_lowright {300, 1000};                                     xpoints.push_back(xpoints_lowright);  sector_name.push_back("taupt_300_1000");
+
+  vector<vector<float>> ypoints;										      
+  vector<float> ypoints_lowleft {0, 30, 40, 50, 60, 70, 80, 100, 120, 150};       ypoints.push_back(ypoints_lowleft);   sector_name[0] += "_jetpt_0_150";
+  vector<float> ypoints_midleft {150, 300};                                       ypoints.push_back(ypoints_midleft);   sector_name[1] += "_jetpt_150_300";
+  vector<float> ypoints_upleft {300, 1000};					  ypoints.push_back(ypoints_upleft);    sector_name[2] += "_jetpt_300_1000";
+  vector<float> ypoints_upright {300, 1000};					  ypoints.push_back(ypoints_upright);   sector_name[3] += "_jetpt_300_1000";
+  vector<float> ypoints_lowright {0, 300};					  ypoints.push_back(ypoints_lowright);  sector_name[4] += "_jetpt_0_300";
 
   vector<TH2F*> h[names.size()][vars.size()][dms.size()][eta.size()];
   for (unsigned int j=0; j<names.size(); ++j) {
@@ -82,90 +95,124 @@ int main(/*int argc, char** argv*/) {
 
 
   //data
-  vector<TH2F*> hpass_data;
-  vector<TH2F*> hfail_data;
+  int n_sectors = xpoints.size();
+  cout << "n_sectors " << n_sectors << endl;
+  vector<TH2F*> hpass_data[n_sectors];
+  vector<TH2F*> hfail_data[n_sectors];
 
-  TH2F* hpass_data_total;
-  TH2F* hfail_data_total;
+  TH2F* hpass_data_eta[eta.size()][n_sectors];
+  TH2F* hfail_data_eta[eta.size()][n_sectors];
+
+  TH2F* hpass_data_total[n_sectors];
+  TH2F* hfail_data_total[n_sectors];
   for (unsigned int k=0; k<vars.size(); ++k) {
     for (unsigned int i=0; i<h_data[k].size(); ++i) {
       int l = i/eta.size(), m = i % eta.size();
-      vector<float> xpoints;
-      xpoints.clear();
-      xpoints = xpoints_all;
 
-      int array_size = xpoints.size();
-      float rebin_array[array_size];
-      for (unsigned int iVector=0; iVector<array_size; ++iVector) rebin_array[iVector] = xpoints[iVector];
-      
-      //even->pass, odd->fail
-      if (k%2 == 0) {
-	TString name_in = "FakeRate_"+vars[k]+"_data_"+dms[l]+"_"+eta[m];
-	hpass_data.push_back( new TH2F(name_in, name_in, array_size-1, rebin_array, array_size-1, rebin_array) );
-      }
-      else {
-	TString name_in = "den2_"+vars[k]+"_"+dms[l]+"_"+eta[m];
-	hfail_data.push_back( new TH2F(name_in, name_in, array_size-1, rebin_array, array_size-1, rebin_array) );
-      }
+      for (unsigned int sector = 0; sector<n_sectors; ++sector) {
+	vector<float> xxpoints, yypoints;
+	xxpoints.clear(), yypoints.clear();
+	xxpoints = xpoints[sector], yypoints = ypoints[sector];
 
-
-      int jBinX = 1, jBinY = 1, binStartX = 1, binStartY = 1;
-      while (jBinX <= array_size) { 
-	unsigned int iBinX=binStartX;
-	unsigned int iBinY=binStartY;
-	float bin_content = 0, bin_error=0;
-	while (h_data[k][i]->GetXaxis()->GetBinCenter(iBinX) < rebin_array[jBinX]) {
-	  iBinY=binStartY;
-	  while (h_data[k][i]->GetYaxis()->GetBinCenter(iBinY) < rebin_array[jBinY]) {
-	    bin_content = bin_content + h_data[k][i]->GetBinContent(iBinX, iBinY) - h_MC[k][n_real][i]->GetBinContent(iBinX, iBinY);
-	    bin_error = bin_error + pow(h_data[k][i]->GetBinError(iBinX, iBinY), 2) + pow(h_MC[k][n_real][i]->GetBinError(iBinX, iBinY), 2);
-	    ++iBinY;
+        int array_size_x = xxpoints.size();
+        float rebin_array_x[array_size_x];
+        for (unsigned int iVector=0; iVector<array_size_x; ++iVector) rebin_array_x[iVector] = xxpoints[iVector];
+        int array_size_y = yypoints.size();
+        float rebin_array_y[array_size_y];
+        for (unsigned int iVector=0; iVector<array_size_y; ++iVector) rebin_array_y[iVector] = yypoints[iVector];
+        
+        //even->pass, odd->fail
+        if (k%2 == 0) {
+	  TString name_in = "FakeRate_"+vars[k]+"_data_"+dms[l]+"_"+eta[m]+"_"+sector_name[sector];
+	  hpass_data[sector].push_back( new TH2F(name_in, name_in, array_size_x-1, rebin_array_x, array_size_y-1, rebin_array_y) );
+        }
+        else {
+	  TString name_in = "den2_"+vars[k]+"_"+dms[l]+"_"+eta[m]+"_"+sector_name[sector];
+	  hfail_data[sector].push_back( new TH2F(name_in, name_in, array_size_x-1, rebin_array_x, array_size_y-1, rebin_array_y) );
+        }
+        
+        int jBinX = 1, jBinY = 1, binStartX = 1, binStartY = 1;
+        while (jBinX <= array_size_x) { 
+	  unsigned int iBinX=binStartX;
+	  unsigned int iBinY=binStartY;
+	  float bin_content = 0, bin_error=0;
+	  while (h_data[k][i]->GetXaxis()->GetBinCenter(iBinX) < rebin_array_x[jBinX]) {
+	    iBinY=binStartY;
+	    if (h_data[k][i]->GetXaxis()->GetBinCenter(iBinX) > rebin_array_x[jBinX-1]) {
+	      while (h_data[k][i]->GetYaxis()->GetBinCenter(iBinY) < rebin_array_y[jBinY]) {
+		if (h_data[k][i]->GetYaxis()->GetBinCenter(iBinY) > rebin_array_y[jBinY-1]) {
+		  bin_content = bin_content + h_data[k][i]->GetBinContent(iBinX, iBinY) - h_MC[k][n_real][i]->GetBinContent(iBinX, iBinY);
+		  bin_error = bin_error + pow(h_data[k][i]->GetBinError(iBinX, iBinY), 2) + pow(h_MC[k][n_real][i]->GetBinError(iBinX, iBinY), 2);
+		}
+		++iBinY;
+	      }
+	    }
+	    ++iBinX;
 	  }
-	  ++iBinX;
-	}
-	
-	if (bin_content < 0) bin_content = 0;
-	if (k%2 == 0) {
-	  hpass_data[i]->SetBinContent(jBinX, jBinY, bin_content);
-	  hpass_data[i]->SetBinError(jBinX, jBinY, sqrt(bin_error));
-	}
-	else {
-	  hfail_data[i]->SetBinContent(jBinX, jBinY, bin_content);
-	  hfail_data[i]->SetBinError(jBinX, jBinY, sqrt(bin_error));
-	}	    
+	  
+	  if (bin_content < 0) bin_content = 0;
+	  if (k%2 == 0) {
+	    hpass_data[sector][i]->SetBinContent(jBinX, jBinY, bin_content);
+	    hpass_data[sector][i]->SetBinError(jBinX, jBinY, sqrt(bin_error));
+	  }
+	  else {
+	    hfail_data[sector][i]->SetBinContent(jBinX, jBinY, bin_content);
+	    hfail_data[sector][i]->SetBinError(jBinX, jBinY, sqrt(bin_error));
+	  }	    
+	  
+	  binStartY = iBinY;
+	  ++jBinY;
+	  if (jBinY == array_size_y) {
+	    jBinY = 1;
+	    binStartY = 1;
+	    ++jBinX;
+	    binStartX = iBinX;
+	  }
+        }
+        
+        
+        if (k%2 != 0) hfail_data[sector][i]->Add(hpass_data[sector][i]);
 
-	binStartY = iBinY;
-	++jBinY;
-	if (jBinY == array_size) {
-	  jBinY = 1;
-	  binStartY = 1;
-	  ++jBinX;
-	  binStartX = iBinX;
-	}
-      }
+        if (i==0) {
+          if (k%2 != 0) hfail_data_total[sector] = (TH2F*) hfail_data[sector][i]->Clone("den2_total_"+vars[k]+"_"+sector_name[sector]);
+          if (k%2 == 0) hpass_data_total[sector] = (TH2F*) hpass_data[sector][i]->Clone("hratio_data_"+vars[k]+"_"+sector_name[sector]+"_total");
+        }
+        else {
+          if (k%2 != 0) hfail_data_total[sector]->Add(hfail_data[sector][i]);
+          if (k%2 == 0) hpass_data_total[sector]->Add(hpass_data[sector][i]);
+        }
 
-      
-      if (k%2 != 0) hfail_data[i]->Add(hpass_data[i]);
-      if (i==0) {
-        if (k%2 != 0) hfail_data_total = (TH2F*) hfail_data[i]->Clone("den2_total_"+vars[k]);
-        if (k%2 == 0) hpass_data_total = (TH2F*) hpass_data[i]->Clone("hpass_"+vars[k]+"_data_total");
+        if (l==0) {
+          if (k%2 != 0) hfail_data_eta[m][sector] = (TH2F*) hfail_data[sector][i]->Clone("den2_eta_"+eta[m]+"_"+vars[k]+"_"+sector_name[sector]);
+          if (k%2 == 0) hpass_data_eta[m][sector] = (TH2F*) hpass_data[sector][i]->Clone("hratio_data_eta_"+eta[m]+"_"+vars[k]+"_"+sector_name[sector]);
+        }
+        else {
+          if (k%2 != 0) hfail_data_eta[m][sector]->Add(hfail_data[sector][i]);
+          if (k%2 == 0) hpass_data_eta[m][sector]->Add(hpass_data[sector][i]);
+        }
+
+        if (k%2 != 0) hpass_data[sector][i]->Divide(hfail_data[sector][i]);
       }
-      else {
-        if (k%2 != 0) hfail_data_total->Add(hfail_data[i]);
-        if (k%2 == 0) hpass_data_total->Add(hpass_data[i]);
-      }
-      if (k%2 != 0) hpass_data[i]->Divide(hfail_data[i]);
     }
   }
-  hpass_data_total->Divide(hfail_data_total);
-
+  for (unsigned int sector=0; sector<n_sectors; ++sector) {
+    hpass_data_total[sector]->Divide(hfail_data_total[sector]);
+    for (unsigned int m=0; m<eta.size(); ++m) {
+      hpass_data_eta[m][sector]->Divide(hfail_data_eta[m][sector]);
+    }
+  }
 
 
 
   file_out->cd();
-  hpass_data_total->Write();
-  for (unsigned int i=0; i<hpass_data.size(); ++i) {
-    hpass_data[i]->Write();
+  for (unsigned int sector=0; sector<n_sectors; ++sector) {
+    hpass_data_total[sector]->Write();
+    for (unsigned int m=0; m<eta.size(); ++m) {
+      hpass_data_eta[m][sector]->Write();
+    }
+    for (unsigned int i=0; i<hpass_data[sector].size(); ++i) {
+      hpass_data[sector][i]->Write();
+    }
   }
   file_out->Close();
 

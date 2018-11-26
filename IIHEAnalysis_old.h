@@ -18,6 +18,7 @@
 #include "TGraphErrors.h"
 #include "MC_pileup_weight.cc"
 #include <vector>
+#include <iostream>
 #include "TString.h"
 #include "TLorentzVector.h"
 
@@ -28,6 +29,45 @@ float norm_F(float x, float y){
   return sqrt(x*x+y*y);
 
 }
+
+
+
+double FakeRate_SSMtLow(double taupt, double jetpt, TString eta) {
+  double SF=0.2;
+
+  TFile* fake_file = new TFile("Reweighting/fakerate_SSMtLow.root","R");
+
+  TString sector_string = "_taupt_";
+  
+  if (jetpt >= 1000) jetpt = 999;
+  if (taupt >= 1000) taupt = 999;
+
+  if ( (taupt > 0) && (taupt < 300) ) {
+    sector_string += "0_300_jetpt_";
+    
+    if ( (jetpt > 0) && (jetpt < 150) )          sector_string += "0_150";
+    else if ( (jetpt >= 150) && (jetpt < 300) )  sector_string += "150_300";
+    else if ( (jetpt >= 300) && (jetpt < 1000) ) sector_string += "300_1000";
+  }
+  else if ( (taupt > 300) && (taupt < 1000) ) {
+    sector_string += "300_1000_jetpt_";
+    
+    if ( (jetpt > 0) && (jetpt < 300) )          sector_string += "0_300";
+    else if ( (jetpt >= 300) && (jetpt < 1000) ) sector_string += "300_1000";
+  }
+
+  double reweight = 0;
+
+  TString hname = "hratio_data_eta_"+eta+"_taupt_jetpt_pass" + sector_string;
+  TH2F* h_fake = (TH2F*) fake_file->Get(hname);
+  int iBin = h_fake->FindBin(taupt, jetpt);
+  SF = h_fake->GetBinContent(iBin);
+  if (SF != 1) reweight = SF/(1-SF);
+
+  return reweight;
+
+}
+
 
 
 double FakeRate(double taupt, double jetpt) {
@@ -41,11 +81,11 @@ double FakeRate(double taupt, double jetpt) {
   else if( taupt >= 50. && taupt < 100.)  taupt_string += "50_100";
   else if( taupt >= 100. )                taupt_string += "100"; 
 
-  double reweight = 1;
+  double reweight = 0;
 
   if (jetpt >= 1000) jetpt = 999;
 
-  TString hname = "hpass_jetpt_pass_data_total_tauindiff" + taupt_string;
+  TString hname = "hratio_jetpt_pass_data_total_tauindiff" + taupt_string;
   TH1F* h_fake = (TH1F*) fake_file->Get(hname);
   int iBin = h_fake->FindBin(jetpt);
   SF = h_fake->GetBinContent(iBin);

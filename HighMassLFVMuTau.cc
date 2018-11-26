@@ -696,25 +696,37 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (mu_match)  lepToTauFR = GetLepToTauFR("mu", tau_p4.Eta());
 
 
-	    bool jet_match = true;
+	    bool is_not_jet = false;
 	    if (anyleptonp4.size() != 0) {
 	      for (unsigned int iGen = 0; iGen < anyleptonp4.size(); ++iGen) {
-		if (tau_p4.DeltaR(anyleptonp4[iGen]) < 0.5) jet_match = false;
+		if (tau_p4.DeltaR(anyleptonp4[iGen]) < 0.2) {
+		  is_not_jet = true;
+		  break;
+		}
 	      }
 	    }
-	    if (jet_match) jTauN=1;
 	    if (tauhp4.size() != 0) {
 	      for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
-		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.5) tau_match = true;
+		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.2) {
+		  tau_match = true;
+		  break;
+		}
 	      }
+	    }
+	    if (is_not_jet) {
+	      jTauN=0;
+	    }
+	    else {
+	      jTauN=1;
 	    }
 	    if (CR_number >= 2) tau_match = false;
 	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton);
 	    h[kMth][jTauN][13]->Fill(reweight);
 	  }
 	  //FIXME
-	  if (!data) final_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton) * 1.0 * mc_w_sign * TT_ptreweight * lepToTauFR;
-
+	  first_weight = 1;
+	  if (!data) first_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton) * 1.0 * mc_w_sign * TT_ptreweight * lepToTauFR;
+	  final_weight = first_weight;
 
 	  if (CR_number == 7 || CR_number == 9) {
 	    h[kMth][jTauN][16]->Fill(Mt, final_weight);
@@ -795,7 +807,19 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
 	  filled_histos = true;
-	  if ((CR_number == 101) || (CR_number == 103)) final_weight *= FakeRate(tau_p4.Pt(), jet_p4.Pt());
+	  TString eta_string = "";
+	  if (fabs(tau_eta->at(iTau)) < 1.46) {
+	    eta_string = "barrel";
+	  }
+	  else if (fabs(tau_eta->at(iTau)) > 1.56) {
+	    eta_string = "endcap";
+	  }
+	  else {
+	    continue;
+	  }
+
+	  //if ((CR_number == 101) || (CR_number == 103)) final_weight *= FakeRate(tau_p4.Pt(), jet_p4.Pt()); //FIXME
+	  if ((CR_number == 101) || (CR_number == 103)) final_weight = first_weight*FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);
 
 	  h[kMth][jTauN][9]->Fill(dphi_mutau, final_weight);
 	  h[kMth][jTauN][10]->Fill(dphi_METtau, final_weight);

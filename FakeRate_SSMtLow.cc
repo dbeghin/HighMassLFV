@@ -143,18 +143,21 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
     if (electron) continue;*/
 
 
-    vector<TLorentzVector> gen_tauh_p4;
+    vector<TLorentzVector> gen_tauh_p4, anylepton_p4;
     gen_tauh_p4.clear();
     if(!data) {  
       for (unsigned int iGen = 0; iGen < mc_px->size(); iGen++){
 
         TLorentzVector gen_part, gen_part2, gen_part3;
         gen_part.SetPxPyPzE(mc_px->at(iGen),mc_py->at(iGen),mc_pz->at(iGen),mc_energy->at(iGen));
+	if (gen_part.Pt() < 15) continue;
         bool isTau = abs(mc_pdgId->at(iGen))==15  ? true : false ;
         unsigned int  moth_ind = mc_mother_index->at(iGen).at(0);
         bool ishadronicdecay(false);
         int neutrino = 0;
         bool leptau= false;
+	if ( (abs(mc_pdgId->at(iGen)) == 11) || (abs(mc_pdgId->at(iGen)) == 13) ) anylepton_p4.push_back( gen_part );
+
         if( isTau) {
 
           for (unsigned int iGen2 = 0; iGen2 < mc_px->size(); iGen2++){
@@ -184,8 +187,10 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
           }
         }
         //if(neutrino =! 1) continue;
+	if (leptau) continue;
         gen_part = gen_part - gen_part3; // subtracting neutrino 4 momentum
         gen_tauh_p4.push_back(gen_part);
+	anylepton_p4.push_back(gen_part);
       }
     }
 
@@ -347,8 +352,25 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
 	  continue;
 	}
 
-	//real or fake tau
-	bool is_gen_matched= false;
+	//jet or not
+	bool is_not_jet = false;
+	if (!data) {
+	  for (unsigned int iGen = 0; iGen < anylepton_p4.size(); ++iGen) {
+	    if(tau_p4.DeltaR(anylepton_p4[iGen]) < 0.2) {
+	      is_not_jet = true;
+	      break;
+	    }
+	  }
+	}
+	int lTauNature = -1;
+	if (is_not_jet) {
+	  lTauNature = 0;
+	}
+	else {
+	  lTauNature = 1;
+	}
+
+	/*bool is_gen_matched= false;
 	if (!data) {
 	  for (unsigned int iGen = 0; iGen < gen_tauh_p4.size(); ++iGen) {
 	    if(tau_p4.DeltaR(gen_tauh_p4[iGen]) < 0.2) {
@@ -363,7 +385,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
 	}
 	else {
 	  lTauNature = 1;
-	}
+	  }*/
 
 	int iFill = -1;
 	//Tau histos
