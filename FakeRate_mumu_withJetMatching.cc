@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
   TTree* tree = (TTree*) fIn->Get("IIHEAnalysis");
 
   IIHEAnalysis* a = new IIHEAnalysis(tree);
-  a->Loop(phase, type, out_name, hCounter, hCounter2);
+  a->Loop(phase, type, out_name);
   return 0;
 }
 
@@ -75,49 +75,29 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
     h[i]->Sumw2();
   }
 
-  vector<TString> h_names;              vector<int> nBins2;     vector<float> x_min2,   x_max2; 
-  h_names.push_back("taupt_pass");      nBins2.push_back(1000); x_min2.push_back(0);    x_max2.push_back(1000);
-  h_names.push_back("taupt_fail");      nBins2.push_back(1000); x_min2.push_back(0);    x_max2.push_back(1000);
-  h_names.push_back("jetpt_pass");      nBins2.push_back(1000); x_min2.push_back(0);    x_max2.push_back(1000);
-  h_names.push_back("jetpt_fail");      nBins2.push_back(1000); x_min2.push_back(0);    x_max2.push_back(1000);
-  h_names.push_back("ptratio_pass");    nBins2.push_back(2000); x_min2.push_back(0);    x_max2.push_back(20);
-  h_names.push_back("ptratio_fail");    nBins2.push_back(2000); x_min2.push_back(0);    x_max2.push_back(20);
-  h_names.push_back("tau_MVA");         nBins2.push_back(200);  x_min2.push_back(-1);   x_max2.push_back(1);
+  vector<TString> h_names;
+  h_names.push_back("taupt_jetpt_pass"); int iJetPtPass = h_names.size()-1;
+  h_names.push_back("taupt_jetpt_fail"); int iJetPtFail = h_names.size()-1;
 
   vector<TString> dms;
-  dms.push_back("DM0");
-  dms.push_back("DM1");
-  dms.push_back("DM10");
+  dms.push_back("DM0");  int k_DM0  = dms.size()-1;
+  dms.push_back("DM1");  int k_DM1  = dms.size()-1;
+  dms.push_back("DM10"); int k_DM10 = dms.size()-1;
 
   vector<TString> eta;
-  eta.push_back("barrel");
-  eta.push_back("endcap");
+  eta.push_back("barrel"); int l_barrel = eta.size()-1;
+  eta.push_back("endcap"); int l_endcap = eta.size()-1;
 
-  vector<TString> trigger;                int indiff_number, fired_number;
-  trigger.push_back("tautrfired");        fired_number = 0;
-  trigger.push_back("tautrindiff");       indiff_number = 1;
-
-  vector<TString> pt_range;
-  pt_range.push_back("tau_pt_30_50");
-  pt_range.push_back("tau_pt_50_100");
-  pt_range.push_back("tau_pt_100");
-
-  vector<TH1F*> hh[h_names.size()][dms.size()][eta.size()][trigger.size()];
+  vector<TH2F*> hh[h_names.size()][dms.size()];
 
   for (unsigned int i = 0; i<h_names.size(); ++i) {
-    for (unsigned int j = 0; j<dms.size(); ++j) {
-      for (unsigned int k = 0; k<eta.size(); ++k) {
-        for (unsigned int l = 0; l<trigger.size(); ++l) {
-          for (unsigned int m = 0; m<pt_range.size(); ++m) {
-            TString nname = h_names[i]+"_"+dms[j]+"_"+eta[k]+"_"+trigger[l]+"_"+pt_range[m];
-            hh[i][j][k][l].push_back( new TH1F(nname, nname, nBins2[i], x_min2[i], x_max2[i]) ); 
-            hh[i][j][k][l][m]->Sumw2();
-
-          }
-        }
+    for (unsigned int k = 0; k<dms.size(); ++k) {
+      for (unsigned int l = 0; l<eta.size(); ++l) {
+	TString nname = h_names[i]+"_"+dms[k]+"_"+eta[l];
+	hh[i][k].push_back( new TH2F(nname, nname, 1000, 0, 1000, 1000, 0, 1000) );
+	hh[i][k][l]->Sumw2();
       }
     }
-
   }
 
   TH1F* h_reweight = new TH1F("h_r", "h_r", 100, -2, 2);
@@ -130,7 +110,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
     Long64_t iEntry = LoadTree(jEntry);
     if (iEntry < 0) break;
     if (jEntry % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", jEntry, nEntries);
-    if (jEntry % 10 == 0) cout << endl << "Processed events: " << jEntry << " of " << nEntries;
+    //if (jEntry % 10 == 0) cout << endl << "Processed events: " << jEntry << " of " << nEntries;
 
     nb = fChain->GetEntry(jEntry);
     nbytes += nb;
@@ -205,7 +185,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
             }
           }
         }
-        if(neutrino =! 1) continue;
+        //if(neutrino =! 1) continue;
         gen_part = gen_part - gen_part3; // subtracting neutrino 4 momentum
         gen_tauh_p4.push_back(gen_part);
       }
@@ -323,12 +303,14 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
           tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));
 
           // taus NOT matched to gen taus
-          bool is_not_gen_matched= false;
+          bool is_gen_matched= false;
           for (unsigned int iGen = 0; iGen < gen_tauh_p4.size(); ++iGen) {
-                  if(tau_p4.DeltaR(gen_tauh_p4[iGen]) < 0.2) continue;
-            is_not_gen_matched=true;
+	    if(tau_p4.DeltaR(gen_tauh_p4[iGen]) < 0.2) {
+	      is_gen_matched=true;
+	      break;
+	    }
           }
-          if(!data && !is_not_gen_matched) continue; // reject reco tau which matches to gen tau
+          if(!data && is_gen_matched) continue; // reject reco tau which matches to gen tau
 
 
           if (tau_p4.DeltaR(mu1_p4) < 0.5) continue;
@@ -350,8 +332,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
           }
 
           if(!(matched_to_reco_jet)) continue;
-
-          // NEED PT< ETA and DM sperateuons, lets talk!!!
 
           //mu histos
           h[0]->Fill(mu_gt_pt->at(iMu1), final_weight);
@@ -383,7 +363,6 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
           h[16]->Fill(pv_n, final_weight);
 
           int j_dm = -1, k_eta = -1, k_pt = -1;
-          bool bTautrigger = false;
           if (tau_decayMode->at(iTau) == 0) {
             j_dm = 0;
           }
@@ -404,42 +383,14 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
             continue;
           }
 
-          //PT Range
-
-          if(tau_pt->at(iTau) >= 30. && tau_pt->at(iTau) < 50.) {
-            k_pt=0;
-
-          } else if (tau_pt->at(iTau) >= 50. && tau_pt->at(iTau) < 100.) {
-
-            k_pt=1;
-          } else {
-            k_pt=2;
-          }
-          if (trig_HLT_VLooseIsoPFTau140_Trk50_eta2p1_accept) {
-            bTautrigger = true;
-          }
-          // =----- TO DO +++++++>>>>>>>>>>>   ADD JET PT histo and its ratio
-          double ptratio = 1.;
-          if (jet_p4.Pt() != 0) ptratio = tau_pt->at(iTau)/jet_p4.Pt();
           
           //Tau histos
           if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) {
-            hh[0][j_dm][k_eta][indiff_number][k_pt]->Fill(tau_pt->at(iTau), final_weight);
-	    hh[2][j_dm][k_eta][indiff_number][k_pt]->Fill(jet_p4.Pt(), final_weight);
-	    hh[4][j_dm][k_eta][indiff_number][k_pt]->Fill(ptratio, final_weight);
-
-            if (bTautrigger) hh[0][j_dm][k_eta][fired_number][k_pt]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
+            hh[0][j_dm][k_eta]->Fill(tau_pt->at(iTau), jet_p4.Pt(), final_weight);
           }
           if ((tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) && (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5)) {
-            hh[1][j_dm][k_eta][indiff_number][k_pt]->Fill(tau_pt->at(iTau), final_weight);
-	    hh[3][j_dm][k_eta][indiff_number][k_pt]->Fill(jet_p4.Pt(), final_weight);
-	    hh[5][j_dm][k_eta][indiff_number][k_pt]->Fill(ptratio, final_weight);
-
-            if (bTautrigger) hh[1][j_dm][k_eta][fired_number][k_pt]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
+            hh[1][j_dm][k_eta]->Fill(tau_pt->at(iTau), jet_p4.Pt(), final_weight);
           }
-          hh[6][j_dm][k_eta][indiff_number][k_pt]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
-
-          if (bTautrigger) hh[6][j_dm][k_eta][fired_number][k_pt]->Fill(tau_byIsolationMVArun2v1DBoldDMwLTraw->at(iTau), final_weight);
         }//loop over taus
       }//loop over mus
     }//loop over muons
@@ -448,7 +399,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
   file_out->cd();
   h_reweight->Write();
   for (unsigned int i = 0; i<histo_names.size(); ++i) h[i]->Write();
-  for (unsigned int i=0; i<h_names.size(); ++i) for (unsigned int j=0; j<dms.size(); ++j) for (unsigned int k=0; k<eta.size(); ++k) for (unsigned int l=0; l<trigger.size(); ++l) for (unsigned int m=0; m<pt_range.size(); ++m)   hh[i][j][k][l][m]->Write();
+  for (unsigned int i=0; i<h_names.size(); ++i) for (unsigned int j=0; j<dms.size(); ++j) for (unsigned int k=0; k<eta.size(); ++k)  hh[i][j][k]->Write();
 
   file_out->Close();
 

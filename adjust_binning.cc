@@ -21,6 +21,8 @@ int main(/*int argc, char** argv*/) {
   vector<TString> names;
   names.push_back("data_");//0
   names.push_back("faketau_");
+  names.push_back("faketau_fakerate_up_");
+  names.push_back("faketau_fakerate_down_");
   names.push_back("DY_");
   names.push_back("TT_");
   names.push_back("ST_");
@@ -34,7 +36,7 @@ int main(/*int argc, char** argv*/) {
 
   vector<float> xpoints_MET {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 500/*, 700, 1000*/};
 
-  vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 200, 300, 400, 500};
+  vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 200, 250, 300, 350, 400, 500};
 
   //vector<float> xpoints_Mt {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120}; //for Mt low FIXME
   vector<float> xpoints_Mt = xpoints; //for Mt high
@@ -51,6 +53,7 @@ int main(/*int argc, char** argv*/) {
   vars.push_back("mu_pt");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_pt);
   vars.push_back("mu_eta");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("mu_phi");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
+  vars.push_back("mu_isolation");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DRmutau");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DeltaPhimutau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DeltaPhiMETtau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
@@ -60,7 +63,8 @@ int main(/*int argc, char** argv*/) {
 
   vector<TString> Mth;
   Mth.push_back("_MtHigh");
-  Mth.push_back("_MtLow");
+  Mth.push_back("_MtLow_OS");
+  Mth.push_back("_MtLow_SS");
 
 
   //retrieve all histos and rebin them
