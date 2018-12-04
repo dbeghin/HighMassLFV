@@ -70,30 +70,38 @@ double FakeRate_SSMtLow(double taupt, double jetpt, TString eta) {
 
 
 
-double FakeRate(double taupt, double jetpt) {
+double FakeRate_mumu(double taupt, double jetpt) {
   double SF=0.2;
 
   TFile* fake_file = new TFile("Reweighting/fakerate.root","R");
 
-  TString taupt_string = "_tau_pt_";
+  TString sector_string = "_taupt_";
+  
+  if (jetpt >= 1000) jetpt = 999;
+  if (taupt >= 1000) taupt = 999;
 
-  if( taupt >= 30. && taupt < 50.)        taupt_string += "30_50"; 
-  else if( taupt >= 50. && taupt < 100.)  taupt_string += "50_100";
-  else if( taupt >= 100. )                taupt_string += "100"; 
+  if ( (taupt > 0) && (taupt < 300) ) {
+    if ( (jetpt > 0) && (jetpt < 120) )          sector_string += "0_300_jetpt_0_120";
+    else if ( (jetpt >= 120) && (jetpt < 300) )  sector_string += "0_300_jetpt_120_300";
+    else if ( (jetpt >= 300) && (jetpt < 1000) ) sector_string += "0_1000_jetpt_300_1000";
+  }
+  else if ( (taupt > 300) && (taupt < 1000) ) {
+    if ( (jetpt > 0) && (jetpt < 300) )          sector_string += "300_1000_jetpt_0_300";
+    else if ( (jetpt >= 300) && (jetpt < 1000) ) sector_string += "0_1000_jetpt_300_1000";
+  }
 
   double reweight = 0;
 
-  if (jetpt >= 1000) jetpt = 999;
-
-  TString hname = "hratio_jetpt_pass_data_total_tauindiff" + taupt_string;
-  TH1F* h_fake = (TH1F*) fake_file->Get(hname);
-  int iBin = h_fake->FindBin(jetpt);
+  TString hname = "hratio_data_total_taupt_jetpt_pass" + sector_string;
+  TH2F* h_fake = (TH2F*) fake_file->Get(hname);
+  int iBin = h_fake->FindBin(taupt, jetpt);
   SF = h_fake->GetBinContent(iBin);
   if (SF != 1) reweight = SF/(1-SF);
 
   return reweight;
 
 }
+
 
 
 double topPtReweight(double pt) {
