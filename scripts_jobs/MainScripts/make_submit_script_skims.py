@@ -14,7 +14,7 @@ if __name__ == "__main__":
     folder = "/pnfs/iihe/cms/store/user/dbeghin/Skims/HighMassLFV/2016DataAndMC"
     cms_rel = "/user/dbeghin/CMSSW_8_0_26_patch1/src"
     proxy = "/user/dbeghin/x509up_u$(id -u dbeghin)"
-    walltime = "15:00:00"
+    walltime = "05:00:00"
 
     for jj in range(0, len(pnfn)):    
         #Main file, which you'll use to submit the jobs
