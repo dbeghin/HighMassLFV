@@ -21,20 +21,25 @@ int main(/*int argc, char** argv*/) {
   vector<TString> names;
   names.push_back("data_");//0
   names.push_back("faketau_");
+  names.push_back("faketau_fakerate_up_");
+  names.push_back("faketau_fakerate_down_");
   names.push_back("DY_");
   names.push_back("TT_");
   names.push_back("ST_");
   names.push_back("VV_");
-  names.push_back("Signal_");
+  //names.push_back("Signal_");//FIXME
 
 
   //rebin vectors
-  vector<float> xpoints {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 550, 600, 650, 700, 800, 900, 1000, 1500, 2000, 4000};
+  vector<float> xpoints {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 550, 600, 650, 700, 800, 900, 1000/*, 1500, 2000, 4000*/};
   cout << xpoints.size() << endl;
 
-  vector<float> xpoints_MET {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 500, 700, 1000};
+  vector<float> xpoints_MET {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 500/*, 700, 1000*/};
 
-  vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 200, 300, 400, 500};
+  vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 200, 250, 300, 350, 400, 500};
+
+  //vector<float> xpoints_Mt {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120}; //for Mt low FIXME
+  vector<float> xpoints_Mt = xpoints; //for Mt high
 
   //float x[] = {0, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 550, 600, 650, 700, 800, 900, 1000, 1500, 2000, 4000};
 
@@ -48,16 +53,18 @@ int main(/*int argc, char** argv*/) {
   vars.push_back("mu_pt");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_pt);
   vars.push_back("mu_eta");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("mu_phi");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
+  vars.push_back("mu_isolation");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DRmutau");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DeltaPhimutau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DeltaPhiMETtau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_MET");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_MET);
   vars.push_back("ev_Mcol");                simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints);                
-  vars.push_back("ev_Mt");                  simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints);                
+  vars.push_back("ev_Mt");                  simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_Mt);                
 
   vector<TString> Mth;
   Mth.push_back("_MtHigh");
-  Mth.push_back("_MtLow");
+  Mth.push_back("_MtLow_OS");
+  Mth.push_back("_MtLow_SS");
 
 
   //retrieve all histos and rebin them
@@ -97,6 +104,10 @@ int main(/*int argc, char** argv*/) {
 	      ++jBin;
 	    }
 	  }
+	  bin_content = bin_content/(rebin_array[jBin]-rebin_array[jBin-1]);
+	  bin_error = sqrt(bin_error)/(rebin_array[jBin]-rebin_array[jBin-1]);
+	  h_rebinned[j][k][l]->SetBinContent(jBin, bin_content);
+	  h_rebinned[j][k][l]->SetBinError(jBin, bin_error);
 	}
       }
     }

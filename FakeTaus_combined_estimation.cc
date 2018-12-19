@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 
   vector<TString> names;
   names.push_back("data_");//0
-  names.push_back("WJets_");//1
+  //names.push_back("WJets_");//1
   //names.push_back("QCD_");//2
   names.push_back("DY_");
   names.push_back("TT_");
@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
   vars.push_back("mu_pt");
   vars.push_back("mu_eta");
   vars.push_back("mu_phi");
+  vars.push_back("mu_isolation");
   vars.push_back("ev_DRmutau");
   vars.push_back("ev_DeltaPhimutau");
   vars.push_back("ev_DeltaPhiMETtau");
@@ -57,33 +58,43 @@ int main(int argc, char** argv) {
 
   
   vector<TString> Mth;
+  Mth.push_back("MtLow_OS");
+  Mth.push_back("MtLow_SS");
   Mth.push_back("MtHigh");
-  Mth.push_back("MtLow");
 
+  vector<TString> systs;            
+  systs.push_back("");              
+  systs.push_back("fakerate_up_");
+  systs.push_back("fakerate_down_");
+  
 
   //retrieve histograms from all control regions
   //only for CR4 (1) do we care to have all histos
-  vector<TH1F*> h[names.size()][vars.size()];
-  for (unsigned int j=0; j<names.size(); ++j) {
-    for (unsigned int k=0; k<vars.size(); ++k) {
-      for (unsigned int l=0; l<Mth.size(); ++l) {
-	h[j][k].push_back( (TH1F*) file_in->Get(names[j]+vars[k]+"_realtau_"+Mth[l]) );
-	h[j][k][l]->SetName(names[j]+vars[k]+"_"+Mth[l]);
+  vector<TH1F*> h[names.size()][vars.size()][systs.size()];
+  for (unsigned int i=0; i<names.size(); ++i) {
+    for (unsigned int j=0; j<vars.size(); ++j) {
+      for (unsigned int k=0; k<systs.size(); ++k) {
+	for (unsigned int l=0; l<Mth.size(); ++l) {
+	  h[i][j][k].push_back( (TH1F*) file_in->Get(names[i]+vars[j]+"_"+"realtau_"+systs[k]+Mth[l]) );
+	  h[i][j][k][l]->SetName(names[i]+vars[j]+"_"+systs[k]+Mth[l]);
+	}
       }
     }
   }
 
 
   file_out->cd();
-  for (unsigned int k=0; k<vars.size(); ++k) {
-    for (unsigned int l=0; l<Mth.size(); ++l) {
-      TH1F* h_faketau = (TH1F*) h[0][k][l]->Clone("faketau_"+vars[k]+"_"+Mth[l]);
-      for (unsigned int j=1; j<names.size(); ++j) h_faketau->Add(h[j][k][l], -1);//subtract all real tau bg
-
-      for (unsigned int iBin = 0; iBin<h_faketau->GetNbinsX(); ++iBin) {
-	if (h_faketau->GetBinContent(iBin) < 0) h_faketau->SetBinContent(iBin,0);
+  for (unsigned int j=0; j<vars.size(); ++j) {
+    for (unsigned int k=0; k<systs.size(); ++k) {
+      for (unsigned int l=0; l<Mth.size(); ++l) {
+	TH1F* h_faketau = (TH1F*) h[0][j][k][l]->Clone("faketau_"+systs[k]+vars[j]+"_"+Mth[l]);
+	for (unsigned int i=1; i<names.size(); ++i) h_faketau->Add(h[i][j][k][l], -1);//subtract all real tau bg
+	
+	for (unsigned int iBin = 0; iBin<h_faketau->GetNbinsX(); ++iBin) {
+	  if (h_faketau->GetBinContent(iBin) < 0) h_faketau->SetBinContent(iBin,0);
+	}
+	h_faketau->Write();
       }
-      h_faketau->Write();
     }
   }
   file_out->Close();

@@ -62,6 +62,7 @@ c.cd()
 
 #file=ROOT.TFile("final.root","r")
 file=ROOT.TFile("histos_highmassmutau.root","r")
+file2=ROOT.TFile("histos_highmassmutau_test_rebinned.root","r")
 
 adapt=ROOT.gROOT.GetColor(12)
 new_idx=ROOT.gROOT.GetListOfColors().GetSize() + 1
@@ -137,7 +138,6 @@ for k in range (0,nvar):
         print var_in
         Data=file.Get("data_"+var_in)
         #QCD=file.Get("QCD_"+var_in)
-        W=file.Get("WJets_"+var_in)
         TT=file.Get("TT_"+var_in)
         VV=file.Get("VV_"+var_in)
         DY=file.Get("DY_"+var_in)
@@ -146,7 +146,22 @@ for k in range (0,nvar):
         Faketau=file.Get("faketau_"+var_in)
         Faketau_high=file.Get("faketau_fakerate_up_"+var_in)
         Faketau_low=file.Get("faketau_fakerate_down_"+var_in)
-        
+
+
+        TT2=file2.Get("TT_"+var_in)
+        VV2=file2.Get("VV_"+var_in)
+        DY2=file2.Get("DY_"+var_in)
+        ST2=file2.Get("ST_"+var_in)
+        W2=file2.Get("WJets_"+var_in)
+        Faketau2=file2.Get("faketau_"+var_in)
+
+        Total2=Faketau2.Clone()
+        Total2.Add(TT2)
+        Total2.Add(VV2)
+        Total2.Add(DY2)
+        Total2.Add(ST2)
+        Total2.Add(W2)
+
         Data.GetXaxis().SetTitle("")
         Data.GetXaxis().SetTitleSize(0)
         #if var_in == "ev_Mcol": Data.GetXaxis().SetRangeUser(0,500) 
@@ -220,8 +235,10 @@ for k in range (0,nvar):
         
         h4=Faketau_high.Clone()
         h4.Add(Faketau, -1)
+        h_error2=Total2.Clone()
+        h_error2.Add(errorBand, -1)
         for iii in range(1, h4.GetNbinsX()+1):
-            bin_error = pow(pow(h4.GetBinContent(iii),2) + pow(errorBand.GetBinError(iii),2),0.5)
+            bin_error = pow(pow(errorBand.GetBinError(iii),2) + pow(h4.GetBinContent(iii),2) + pow(h_error2.GetBinContent(iii),2),0.5)
             errorBand.SetBinError(iii, bin_error)
 
         
