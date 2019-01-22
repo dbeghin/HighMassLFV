@@ -201,6 +201,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    histo_names.push_back("ev_Mcol");          nBins.push_back(4000); x_min.push_back(0);    x_max.push_back(4000);
    histo_names.push_back("ev_Mt");            nBins.push_back(4000); x_min.push_back(0);    x_max.push_back(4000);
    histo_names.push_back("mu_isolation");     nBins.push_back(200);  x_min.push_back(0);    x_max.push_back(0.2);
+   histo_names.push_back("weight");           nBins.push_back(1000);  x_min.push_back(-5);    x_max.push_back(5);
 
    vector<TString> taun;
    taun.push_back("realtau"); int j_real = taun.size()-1;
@@ -236,8 +237,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    vector<TString> h_names;
    h_names.push_back("taupt_jetpt_pass"); int iJetPtPass = h_names.size()-1;
    h_names.push_back("taupt_jetpt_fail"); int iJetPtFail = h_names.size()-1;
-   h_names.push_back("taupt_mupt_pass");  int iMuPtPass  = h_names.size()-1;
-   h_names.push_back("taupt_mupt_fail");  int iMuPtFail  = h_names.size()-1;
+   h_names.push_back("taupt_ratio_pass");  int iRatioPass  = h_names.size()-1;
+   h_names.push_back("taupt_ratio_fail");  int iRatioFail  = h_names.size()-1;
 
    vector<TString> dms;
    dms.push_back("DM0");  int k_DM0  = dms.size()-1;
@@ -248,7 +249,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    eta.push_back("barrel"); int l_barrel = eta.size()-1;
    eta.push_back("endcap"); int l_endcap = eta.size()-1;
 
-   vector<TH2F*> hh[h_names.size()][Mth.size()][dms.size()][eta.size()];
+   vector<TH2D*> hh[h_names.size()][Mth.size()][dms.size()][eta.size()];
 
    for (unsigned int i = 0; i<h_names.size(); ++i) {
      for (unsigned int j = 0; j<Mth.size(); ++j) {
@@ -256,7 +257,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	 for (unsigned int l = 0; l<eta.size(); ++l) {
 	   for (unsigned int m = 0; m<taun.size(); ++m) {
 	     TString nname = h_names[i]+"_"+Mth[j]+"_"+dms[k]+"_"+eta[l]+"_"+taun[m];
-	     hh[i][j][k][l].push_back( new TH2F(nname, nname, 1000, 0, 1000, 1000, 0, 1000) );
+	     if (i<2) {
+	       hh[i][j][k][l].push_back( new TH2D(nname, nname, 1000, 0, 1000, 1000, 0, 1000) );
+	     }
+	     else {
+	       hh[i][j][k][l].push_back( new TH2D(nname, nname, 1000, 0, 1000, 1000, 0, 10) );
+	     }
 	     hh[i][j][k][l][m]->Sumw2();
 	   }
 	 }
@@ -880,13 +886,18 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 	  double fake_weight = 1, fake_weight_high = 1, fake_weight_low = 1;
 	  if ((CR_number == 101) || (CR_number == 103)) {
-	    fake_weight = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);
-	    fake_weight_high = FakeRate_mumu(tau_p4.Pt(), jet_p4.Pt()); //FIXME
+	    double ratio = 0;
+	    if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
+	    fake_weight = FakeRate_factorised(tau_p4.Pt(), ratio, eta_string);
+	    //fake_weight = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);
+	    fake_weight_high = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);//FakeRate_mumu(tau_p4.Pt(), jet_p4.Pt()); //FIXME
 	    fake_weight_low = 2*fake_weight - fake_weight_high;
 
 	    if (fake_weight != 0) {
 	      syst_weights[systs_map["fakerate_up_"]] = fake_weight_high/fake_weight;
 	      syst_weights[systs_map["fakerate_down_"]] = fake_weight_low/fake_weight;
+	      cout << "fr up: " << systs_map["fakerate_up_"] << endl;
+	      cout << "fr down: " << systs_map["fakerate_down_"] << endl;
 	    }
 	    else {
 	      syst_weights[systs_map["fakerate_up_"]] = 1;
@@ -897,15 +908,15 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 
 	  //TH2's for the fake rate
-	  int iJetPt = -1, iMuPt = -1;
+	  int iJetPt = -1, iRatio = -1;
 	  //Tau histos
 	  if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) {
 	    iJetPt = iJetPtPass;
-	    iMuPt  = iMuPtPass;
+	    iRatio  = iRatioPass;
 	  }
 	  else {
 	    iJetPt = iJetPtFail;
-	    iMuPt  = iMuPtFail;
+	    iRatio  = iRatioFail;
 	  }
 
 	  //decay mode
@@ -920,34 +931,37 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    k_dm = k_DM10;
 	  }
 
+	  if (dR < 0.5) continue;
+	  float ratio = 0;
+	  if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
 	  if (CR_number == 100) {
 	    hh[iJetPt][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), jet_p4.Pt(), final_weight);
-	    hh[iMuPt][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), mu_p4.Pt(), final_weight);
+	    hh[iRatio][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), ratio, final_weight);
 	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
 	  }
 
 
-	  for (unsigned int k=0; k<systs.size(); ++k) {
-	    final_weight = first_weight*fake_weight*syst_weights[k];
-	    h[lMth][k][jTauN][9]->Fill(dphi_mutau, final_weight);
-	    h[lMth][k][jTauN][10]->Fill(dphi_METtau, final_weight);
+	  for (unsigned int k_syst=0; k_syst<systs.size(); ++k_syst) {
+	    final_weight = first_weight*fake_weight*syst_weights[k_syst];
+	    h[lMth][k_syst][jTauN][9]->Fill(dphi_mutau, final_weight);
+	    h[lMth][k_syst][jTauN][10]->Fill(dphi_METtau, final_weight);
 	    
-	    if (dR < 0.5) continue;
-	    h[lMth][k][jTauN][0]->Fill(vis_p4.M(), final_weight);
-	    h[lMth][k][jTauN][1]->Fill(total_p4.M(), final_weight);
-	    h[lMth][k][jTauN][2]->Fill(tau_p4.Pt(), final_weight);
-	    h[lMth][k][jTauN][3]->Fill(tau_p4.Eta(), final_weight);
-	    h[lMth][k][jTauN][4]->Fill(tau_p4.Phi(), final_weight);
-	    h[lMth][k][jTauN][5]->Fill(mu_p4.Pt(), final_weight);
-	    h[lMth][k][jTauN][6]->Fill(mu_p4.Eta(), final_weight);
-	    h[lMth][k][jTauN][7]->Fill(mu_p4.Phi(), final_weight);
-	    h[lMth][k][jTauN][8]->Fill(dR, final_weight);
-	    h[lMth][k][jTauN][11]->Fill(met_p4.Pt(), final_weight);
-	    //h[lMth][k][jTauN][12]->Fill(mc_w_sign);
-	    h[lMth][k][jTauN][13]->Fill(met_p4.Px()-met_px, final_weight);
-	    h[lMth][k][jTauN][14]->Fill(Mcol, final_weight);
-	    h[lMth][k][jTauN][15]->Fill(Mt, final_weight);
-	    h[lMth][k][jTauN][16]->Fill(reliso, final_weight);
+	    h[lMth][k_syst][jTauN][0]->Fill(vis_p4.M(), final_weight);
+	    h[lMth][k_syst][jTauN][1]->Fill(total_p4.M(), final_weight);
+	    h[lMth][k_syst][jTauN][2]->Fill(tau_p4.Pt(), final_weight);
+	    h[lMth][k_syst][jTauN][3]->Fill(tau_p4.Eta(), final_weight);
+	    h[lMth][k_syst][jTauN][4]->Fill(tau_p4.Phi(), final_weight);
+	    h[lMth][k_syst][jTauN][5]->Fill(mu_p4.Pt(), final_weight);
+	    h[lMth][k_syst][jTauN][6]->Fill(mu_p4.Eta(), final_weight);
+	    h[lMth][k_syst][jTauN][7]->Fill(mu_p4.Phi(), final_weight);
+	    h[lMth][k_syst][jTauN][8]->Fill(dR, final_weight);
+	    h[lMth][k_syst][jTauN][11]->Fill(met_p4.Pt(), final_weight);
+	    //h[lMth][k_syst][jTauN][12]->Fill(mc_w_sign);
+	    h[lMth][k_syst][jTauN][13]->Fill(met_p4.Px()-met_px, final_weight);
+	    h[lMth][k_syst][jTauN][14]->Fill(Mcol, final_weight);
+	    h[lMth][k_syst][jTauN][15]->Fill(Mt, final_weight);
+	    h[lMth][k_syst][jTauN][16]->Fill(reliso, final_weight);
+	    h[lMth][k_syst][jTauN][17]->Fill(final_weight, 1);
 	    //h[lMth][k][jTauN][11]->Fill(Mt, final_weight);
 	    //if (cut_zeta < -25) continue;
 	  }

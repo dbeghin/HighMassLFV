@@ -80,6 +80,7 @@ int main(int argc, char** argv) {
   }
   else if (CR == "CR101") {
     folder_in = "HighMassLFVMuTau/Faketaus_CR101";
+    //folder_in = "HighMassLFVMuTau/Faketaus_CR101_old";
   }
   else if (CR == "CR102") {
     folder_in = "HighMassLFVMuTau/WjetsTest_CR102";
