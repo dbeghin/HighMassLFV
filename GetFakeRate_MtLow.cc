@@ -112,11 +112,15 @@ int main(/*int argc, char** argv*/) {
   TH1D* hfail_taupt_data_eta[half_var][eta.size()];
   TH1D* hpass_ratio_data_eta[half_var][eta.size()];
   TH1D* hfail_ratio_data_eta[half_var][eta.size()];
+  double integral_pass_eta[half_var][eta.size()];
+  double integral_fail_eta[half_var][eta.size()];
 
   TH1D* hpass_taupt_data_total[half_var];
   TH1D* hfail_taupt_data_total[half_var];
   TH1D* hpass_ratio_data_total[half_var];
   TH1D* hfail_ratio_data_total[half_var];
+  double integral_pass_total[half_var];
+  double integral_fail_total[half_var];
   for (unsigned int k=0; k<vars.size(); ++k) {
     for (unsigned int i=0; i<h_data[k].size(); ++i) {
       int l = i/eta.size(), m = i % eta.size();
@@ -217,19 +221,24 @@ int main(/*int argc, char** argv*/) {
       }
         
         
-      if (k%2 != 0) hfail_taupt_data[half_k][i]->Add(hpass_taupt_data[half_k][i]);
+      //if (k%2 != 0) hfail_taupt_data[half_k][i]->Add(hpass_taupt_data[half_k][i]);
+      //remove this, was causing issue with the 
 
       if (i==0) {
 	if (k%2 != 0) hfail_taupt_data_total[half_k] = (TH1D*) hfail_taupt_data[half_k][i]->Clone("den2_total");
 	if (k%2 == 0) hpass_taupt_data_total[half_k] = (TH1D*) hpass_taupt_data[half_k][i]->Clone("FakeRateByTauPt_total");
 	if (k%2 != 0) hfail_ratio_data_total[half_k] = (TH1D*) hfail_ratio_data[half_k][i]->Clone("den3_total");
 	if (k%2 == 0) hpass_ratio_data_total[half_k] = (TH1D*) hpass_ratio_data[half_k][i]->Clone("RatioCorrectionFactor_total");
+	if (k%2 != 0) integral_fail_total[half_k] = hfail_taupt_data[half_k][i]->Integral();
+	if (k%2 == 0) integral_pass_total[half_k] = hpass_taupt_data[half_k][i]->Integral();
       }
       else {
 	if (k%2 != 0) hfail_taupt_data_total[half_k]->Add(hfail_taupt_data[half_k][i]);
 	if (k%2 == 0) hpass_taupt_data_total[half_k]->Add(hpass_taupt_data[half_k][i]);
 	if (k%2 != 0) hfail_ratio_data_total[half_k]->Add(hfail_ratio_data[half_k][i]);
 	if (k%2 == 0) hpass_ratio_data_total[half_k]->Add(hpass_ratio_data[half_k][i]);
+	if (k%2 != 0) integral_fail_total[half_k] += hfail_taupt_data[half_k][i]->Integral();
+	if (k%2 == 0) integral_pass_total[half_k] += hpass_taupt_data[half_k][i]->Integral();
       }
 
       if (l==0) {
@@ -237,38 +246,40 @@ int main(/*int argc, char** argv*/) {
 	if (k%2 == 0) hpass_taupt_data_eta[half_k][m] = (TH1D*) hpass_taupt_data[half_k][i]->Clone("FakeRateByTauPt_eta_"+eta[m]);
 	if (k%2 != 0) hfail_ratio_data_eta[half_k][m] = (TH1D*) hfail_ratio_data[half_k][i]->Clone("den2_eta_"+eta[m]);
 	if (k%2 == 0) hpass_ratio_data_eta[half_k][m] = (TH1D*) hpass_ratio_data[half_k][i]->Clone("RatioCorrectionFactor_eta_"+eta[m]);
+	if (k%2 != 0) integral_fail_eta[half_k][m] = hfail_taupt_data[half_k][i]->Integral();
+	if (k%2 == 0) integral_pass_eta[half_k][m] = hpass_taupt_data[half_k][i]->Integral();
       }
       else {
 	if (k%2 != 0) hfail_taupt_data_eta[half_k][m]->Add(hfail_taupt_data[half_k][i]);
 	if (k%2 == 0) hpass_taupt_data_eta[half_k][m]->Add(hpass_taupt_data[half_k][i]);
 	if (k%2 != 0) hfail_ratio_data_eta[half_k][m]->Add(hfail_ratio_data[half_k][i]);
 	if (k%2 == 0) hpass_ratio_data_eta[half_k][m]->Add(hpass_ratio_data[half_k][i]);
+	if (k%2 != 0) integral_fail_eta[half_k][m] += hfail_taupt_data[half_k][i]->Integral();
+	if (k%2 == 0) integral_pass_eta[half_k][m] += hpass_taupt_data[half_k][i]->Integral();
       }
       
       if (k%2 != 0) hpass_taupt_data[half_k][i]->Divide(hfail_taupt_data[half_k][i]);
-      if (k%2 != 0) hpass_ratio_data[half_k][i]->Divide(hfail_ratio_data[half_k][i]);
+      if (k%2 != 0) {
+	double av_fr = hpass_ratio_data[half_k][i]->Integral()/hfail_ratio_data[half_k][i]->Integral();
+	hpass_ratio_data[half_k][i]->Divide(hfail_ratio_data[half_k][i]);
+	hpass_ratio_data[half_k][i]->Scale(1./av_fr);
+      }
     }
   }
   for (unsigned int half_k=0; half_k<half_var; ++half_k) {
     hpass_taupt_data_total[half_k]->Divide(hfail_taupt_data_total[half_k]);
     hpass_ratio_data_total[half_k]->Divide(hfail_ratio_data_total[half_k]);
+    double av_fr = integral_pass_total[half_k]/integral_fail_total[half_k];
+    hpass_ratio_data_total[half_k]->Scale(1./av_fr);
     for (unsigned int m=0; m<eta.size(); ++m) {
       hpass_taupt_data_eta[half_k][m]->Divide(hfail_taupt_data_eta[half_k][m]);
       hpass_ratio_data_eta[half_k][m]->Divide(hfail_ratio_data_eta[half_k][m]);
+      av_fr = integral_pass_eta[half_k][m]/integral_fail_eta[half_k][m];
+      hpass_ratio_data_eta[half_k][m]->Scale(1./av_fr);
     }
   }
 
 
-  //normalise the ratio correction factors
-  for (unsigned int half_k=0; half_k<half_var; ++half_k) {
-    Normalise( hpass_ratio_data_total[half_k] );
-    for (unsigned int m=0; m<eta.size(); ++m) {
-      Normalise( hpass_ratio_data_eta[half_k][m] );
-    }
-    for (unsigned int i=0; i<hpass_ratio_data[half_k].size(); ++i) {
-      Normalise( hpass_ratio_data[half_k][i] );
-    }
-  }
 
   file_out->cd();
   for (unsigned int half_k=0; half_k<half_var; ++half_k) {

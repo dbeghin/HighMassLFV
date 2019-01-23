@@ -31,6 +31,34 @@ float norm_F(float x, float y){
 }
 
 
+double FakeRate_factorised(double taupt, double ratio, TString eta) {
+  double SF=0.2;
+  if (taupt >= 1000) taupt = 999;
+  if (ratio >= 2) ratio = 1.9;
+
+  TFile* fake_file = new TFile("Reweighting/fakerate_MtLow.root","R");
+
+  double reweight = 0;
+
+  TString hname = "eta_"+eta;
+  TH1F* h_taupt = (TH1F*) fake_file->Get("FakeRateByTauPt_"+hname);
+  int iBin = h_taupt->FindBin(taupt);
+  double base_SF = h_taupt->GetBinContent(iBin);
+  
+  TH1F* h_corr = (TH1F*) fake_file->Get("RatioCorrectionFactor_"+hname);
+  iBin = h_corr->FindBin(ratio);
+  double corr_factor = h_corr->GetBinContent(iBin);
+
+  SF = corr_factor*base_SF;
+  //cout << endl << "taupt " << taupt << endl;
+  //cout << "ratio " << ratio << endl;
+  //cout << eta << endl;
+  //cout << base_SF << "*" << corr_factor << endl;
+  reweight = SF;
+
+  return reweight;
+}
+
 
 double FakeRate_SSMtLow(double taupt, double jetpt, TString eta) {
   double SF=0.2;

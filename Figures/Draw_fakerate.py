@@ -110,7 +110,6 @@ eta = []
 eta.append("barrel")
 eta.append("endcap")
 
-ends="_tautrindiff"
 
 for k in range (0,nvar):
     for l in range (0,len(dms)):
@@ -125,9 +124,9 @@ for k in range (0,nvar):
                 var_in = var[k]
                 if m>0: break
             else:
-                var_in_MC = var[k]+"_MC_"+dms[l]+"_"+eta[m]+ends
-                var_in_data = var[k]+"_data_"+dms[l]+"_"+eta[m]+ends
-                var_in = var[k]+"_"+dms[l]+"_"+eta[m]+ends
+                var_in_MC = var[k]+"_MC_"+dms[l]+"_"+eta[m]
+                var_in_data = var[k]+"_data_"+dms[l]+"_"+eta[m]
+                var_in = var[k]+"_"+dms[l]+"_"+eta[m]
             print var_in
 
             Data=file.Get("data_"+var_in)
