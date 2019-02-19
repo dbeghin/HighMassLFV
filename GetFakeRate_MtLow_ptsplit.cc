@@ -31,9 +31,20 @@ void Normalise(TH1D* h) {
 
 
 
-int main(/*int argc, char** argv*/) {
-  TFile* file_out = new TFile("HighMassLFVMuTau/fakerate_MtLow.root", "RECREATE");
+int main(int argc, char** argv) {
+
+  string sstart = *(argv+1);
+  string eend = *(argv+2);
+
+  TString start = sstart;
+  TString end = eend;
+
+  TFile* file_out = new TFile("HighMassLFVMuTau/fakerate_MtLow_"+start+"_"+end+".root", "RECREATE");
   TFile* file_in  = new TFile("Figures/histos_fakerate_MtLow.root", "R");
+
+  int startbinX = stoi(sstart);
+  int endbinX = stoi(eend);
+  cout << startbinX + endbinX << endl;
 
   vector<TString> names;
   names.push_back("data_");//0
@@ -60,8 +71,9 @@ int main(/*int argc, char** argv*/) {
   //taun.push_back("faketau");  int n_fake = taun.size()-1;
 
   vector<float> xpoints_taupt {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300, 1000};
-  vector<float> ypoints_ratio {0, 0.3, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 2.};
   //vector<float> ypoints_ratio {0, 0.7, 2.};
+  //vector<float> ypoints_ratio {0, 2.};
+  vector<float> ypoints_ratio {0, 0.3, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 2.};
 
   vector<TH2D*> h[names.size()][vars.size()][dms.size()][eta.size()];
   for (unsigned int j=0; j<names.size(); ++j) {
@@ -167,8 +179,8 @@ int main(/*int argc, char** argv*/) {
 	while (h_data[k][i]->GetXaxis()->GetBinCenter(iBinX) < rebin_array_x[jBinX]) {
 	  if (h_data[k][i]->GetXaxis()->GetBinCenter(iBinX) > rebin_array_x[jBinX-1]) {
 	    double error_temp_data, error_temp_MC;
-	    float integral_data = h_data[k][i]->IntegralAndError(iBinX, iBinX, 1, nBinsY, error_temp_data, "");
-	    float integral_MC = h_MC[k][n_real][i]->IntegralAndError(iBinX, iBinX, 1, nBinsY, error_temp_MC, "");
+	    float integral_data = h_data[k][i]->IntegralAndError(iBinX, iBinX, 1, nBinsY, error_temp_data);
+	    float integral_MC = h_MC[k][n_real][i]->IntegralAndError(iBinX, iBinX, 1, nBinsY, error_temp_MC);
 	    bin_content += integral_data - integral_MC;
 	    bin_error += pow(error_temp_data, 2) + pow(error_temp_MC, 2);
 	  }
@@ -193,14 +205,14 @@ int main(/*int argc, char** argv*/) {
       //same for the X axis
       int jBinY = 1, binStartY = 1;
       int nBinsX = h_data[k][i]->GetNbinsX();
-      while (jBinY <= array_size_x) { 
+      while (jBinY <= array_size_y) { 
 	unsigned int iBinY=binStartY;
 	float bin_content = 0, bin_error=0;
 	while (h_data[k][i]->GetYaxis()->GetBinCenter(iBinY) < rebin_array_y[jBinY]) {
 	  if (h_data[k][i]->GetYaxis()->GetBinCenter(iBinY) > rebin_array_y[jBinY-1]) {
 	    double error_temp_data, error_temp_MC;
-	    float integral_data = h_data[k][i]->IntegralAndError(1, nBinsX, iBinY, iBinY, error_temp_data);
-	    float integral_MC = h_MC[k][n_real][i]->IntegralAndError(1, nBinsX, iBinY, iBinY, error_temp_MC);
+	    float integral_data = h_data[k][i]->IntegralAndError(startbinX+1, endbinX, iBinY, iBinY, error_temp_data);
+	    float integral_MC = h_MC[k][n_real][i]->IntegralAndError(startbinX+1, endbinX, iBinY, iBinY, error_temp_MC);
 	    bin_content += integral_data - integral_MC;
 	    bin_error += pow(error_temp_data, 2) + pow(error_temp_MC, 2);
 	  }
@@ -230,16 +242,16 @@ int main(/*int argc, char** argv*/) {
 	if (k%2 == 0) hpass_taupt_data_total[half_k] = (TH1D*) hpass_taupt_data[half_k][i]->Clone("FakeRateByTauPt_total");
 	if (k%2 != 0) hfail_ratio_data_total[half_k] = (TH1D*) hfail_ratio_data[half_k][i]->Clone("den3_total");
 	if (k%2 == 0) hpass_ratio_data_total[half_k] = (TH1D*) hpass_ratio_data[half_k][i]->Clone("RatioCorrectionFactor_total");
-	if (k%2 != 0) integral_fail_total[half_k] = hfail_taupt_data[half_k][i]->Integral();
-	if (k%2 == 0) integral_pass_total[half_k] = hpass_taupt_data[half_k][i]->Integral();
+	if (k%2 != 0) integral_fail_total[half_k] = h_data[k][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[k][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY);
+	if (k%2 == 0) integral_pass_total[half_k] = h_data[k][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[k][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY);
       }
       else {
 	if (k%2 != 0) hfail_taupt_data_total[half_k]->Add(hfail_taupt_data[half_k][i]);
 	if (k%2 == 0) hpass_taupt_data_total[half_k]->Add(hpass_taupt_data[half_k][i]);
 	if (k%2 != 0) hfail_ratio_data_total[half_k]->Add(hfail_ratio_data[half_k][i]);
 	if (k%2 == 0) hpass_ratio_data_total[half_k]->Add(hpass_ratio_data[half_k][i]);
-	if (k%2 != 0) integral_fail_total[half_k] += hfail_taupt_data[half_k][i]->Integral();
-	if (k%2 == 0) integral_pass_total[half_k] += hpass_taupt_data[half_k][i]->Integral();
+	if (k%2 != 0) integral_fail_total[half_k] += h_data[k][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[k][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY);
+	if (k%2 == 0) integral_pass_total[half_k] += h_data[k][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[k][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY);
       }
 
       if (l==0) {
@@ -247,36 +259,40 @@ int main(/*int argc, char** argv*/) {
 	if (k%2 == 0) hpass_taupt_data_eta[half_k][m] = (TH1D*) hpass_taupt_data[half_k][i]->Clone("FakeRateByTauPt_eta_"+eta[m]);
 	if (k%2 != 0) hfail_ratio_data_eta[half_k][m] = (TH1D*) hfail_ratio_data[half_k][i]->Clone("den2_eta_"+eta[m]);
 	if (k%2 == 0) hpass_ratio_data_eta[half_k][m] = (TH1D*) hpass_ratio_data[half_k][i]->Clone("RatioCorrectionFactor_eta_"+eta[m]);
-	if (k%2 != 0) integral_fail_eta[half_k][m] = hfail_taupt_data[half_k][i]->Integral();
-	if (k%2 == 0) integral_pass_eta[half_k][m] = hpass_taupt_data[half_k][i]->Integral();
+	if (k%2 != 0) integral_fail_eta[half_k][m] = h_data[k][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[k][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY);
+	if (k%2 == 0) integral_pass_eta[half_k][m] = h_data[k][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[k][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY);
       }
       else {
 	if (k%2 != 0) hfail_taupt_data_eta[half_k][m]->Add(hfail_taupt_data[half_k][i]);
 	if (k%2 == 0) hpass_taupt_data_eta[half_k][m]->Add(hpass_taupt_data[half_k][i]);
 	if (k%2 != 0) hfail_ratio_data_eta[half_k][m]->Add(hfail_ratio_data[half_k][i]);
 	if (k%2 == 0) hpass_ratio_data_eta[half_k][m]->Add(hpass_ratio_data[half_k][i]);
-	if (k%2 != 0) integral_fail_eta[half_k][m] += hfail_taupt_data[half_k][i]->Integral();
-	if (k%2 == 0) integral_pass_eta[half_k][m] += hpass_taupt_data[half_k][i]->Integral();
+	if (k%2 != 0) integral_fail_eta[half_k][m] += h_data[k][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[k][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY);
+	if (k%2 == 0) integral_pass_eta[half_k][m] += h_data[k][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[k][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY);
       }
       
       if (k%2 != 0) hpass_taupt_data[half_k][i]->Divide(hfail_taupt_data[half_k][i]);
       if (k%2 != 0) {
-	double av_fr = hpass_ratio_data[half_k][i]->Integral()/hfail_ratio_data[half_k][i]->Integral();
+	double av_fr = (h_data[0][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[0][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY))/(h_data[1][i]->Integral(startbinX+1, endbinX, 1, nBinsY) - h_MC[1][n_real][i]->Integral(startbinX+1, endbinX, 1, nBinsY));
+	cout << hpass_ratio_data[half_k][i]->GetName() << " " << av_fr << endl;
 	hpass_ratio_data[half_k][i]->Divide(hfail_ratio_data[half_k][i]);
 	hpass_ratio_data[half_k][i]->Scale(1./av_fr);
       }
     }
   }
   for (unsigned int half_k=0; half_k<half_var; ++half_k) {
+    float iintegral = hpass_ratio_data_total[half_k]->Integral(1,2)/hfail_ratio_data_total[half_k]->Integral(1,2);
+
     hpass_taupt_data_total[half_k]->Divide(hfail_taupt_data_total[half_k]);
     hpass_ratio_data_total[half_k]->Divide(hfail_ratio_data_total[half_k]);
     double av_fr = integral_pass_total[half_k]/integral_fail_total[half_k];
-    cout << av_fr << endl;
+    cout << hpass_ratio_data_total[half_k]->GetName() << " " << av_fr << endl;
     hpass_ratio_data_total[half_k]->Scale(1./av_fr);
     for (unsigned int m=0; m<eta.size(); ++m) {
       hpass_taupt_data_eta[half_k][m]->Divide(hfail_taupt_data_eta[half_k][m]);
       hpass_ratio_data_eta[half_k][m]->Divide(hfail_ratio_data_eta[half_k][m]);
       av_fr = integral_pass_eta[half_k][m]/integral_fail_eta[half_k][m];
+      cout << hpass_ratio_data_eta[half_k][m]->GetName() << " " << av_fr << endl;
       hpass_ratio_data_eta[half_k][m]->Scale(1./av_fr);
     }
   }

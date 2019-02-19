@@ -32,7 +32,7 @@ void Normalise(TH1D* h) {
 
 
 int main(/*int argc, char** argv*/) {
-  TFile* file_out = new TFile("HighMassLFVMuTau/fakerate_MtLow.root", "RECREATE");
+  TFile* file_out = new TFile("HighMassLFVMuTau/fakerate_MtLowOS.root", "RECREATE");
   TFile* file_in  = new TFile("Figures/histos_fakerate_MtLow.root", "R");
 
   vector<TString> names;
@@ -59,9 +59,8 @@ int main(/*int argc, char** argv*/) {
   taun.push_back("realtau");  int n_real = taun.size()-1;
   //taun.push_back("faketau");  int n_fake = taun.size()-1;
 
-  vector<float> xpoints_taupt {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300, 1000};
-  vector<float> ypoints_ratio {0, 0.3, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 2.};
-  //vector<float> ypoints_ratio {0, 0.7, 2.};
+  vector<float> xpoints_taupt {0, 30, 40, 50, 60, 70, 80, 100, 150, 500};
+  vector<float> ypoints_ratio {0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 2.};
 
   vector<TH2D*> h[names.size()][vars.size()][dms.size()][eta.size()];
   for (unsigned int j=0; j<names.size(); ++j) {
@@ -69,12 +68,9 @@ int main(/*int argc, char** argv*/) {
       for (unsigned int l=0; l<dms.size(); ++l) {
 	for (unsigned int m=0; m<eta.size(); ++m) {
 	  for (unsigned int n=0; n<taun.size(); ++n) {
-	    TString name_in = names[j]+vars[k]+"_MtLow_SS_"+dms[l]+"_"+eta[m]+"_"+taun[n];
+	    TString name_in = names[j]+vars[k]+"_MtLow_OS_"+dms[l]+"_"+eta[m]+"_"+taun[n];
 	    h[j][k][l][m].push_back( (TH2D*) file_in->Get(name_in) );
 	    h[j][k][l][m][n]->SetName(names[j]+vars[k]+dms[l]+"_"+eta[m]+"_"+taun[n]);
-
-	    TH2D* hh2 = (TH2D*) file_in->Get(names[j]+vars[k]+"_MtLow_OS_"+dms[l]+"_"+eta[m]+"_"+taun[n]);
-	    h[j][k][l][m][n]->Add(hh2);
 	  }
 	}
       }
@@ -271,7 +267,6 @@ int main(/*int argc, char** argv*/) {
     hpass_taupt_data_total[half_k]->Divide(hfail_taupt_data_total[half_k]);
     hpass_ratio_data_total[half_k]->Divide(hfail_ratio_data_total[half_k]);
     double av_fr = integral_pass_total[half_k]/integral_fail_total[half_k];
-    cout << av_fr << endl;
     hpass_ratio_data_total[half_k]->Scale(1./av_fr);
     for (unsigned int m=0; m<eta.size(); ++m) {
       hpass_taupt_data_eta[half_k][m]->Divide(hfail_taupt_data_eta[half_k][m]);

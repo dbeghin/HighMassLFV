@@ -32,8 +32,8 @@ void Normalise(TH1D* h) {
 
 
 int main(/*int argc, char** argv*/) {
-  TFile* file_out = new TFile("HighMassLFVMuTau/fakerate_MtLow.root", "RECREATE");
-  TFile* file_in  = new TFile("Figures/histos_fakerate_MtLow.root", "R");
+  TFile* file_out = new TFile("HighMassLFVMuTau/fakerate_DY.root", "RECREATE");
+  TFile* file_in  = new TFile("Figures/histos_fakerate.root", "R");
 
   vector<TString> names;
   names.push_back("data_");//0
@@ -55,46 +55,34 @@ int main(/*int argc, char** argv*/) {
   eta.push_back("barrel");
   eta.push_back("endcap");
 
-  vector<TString> taun;
-  taun.push_back("realtau");  int n_real = taun.size()-1;
-  //taun.push_back("faketau");  int n_fake = taun.size()-1;
+  vector<float> xpoints_taupt {0, 30, 40, 50, 60, 70, 80, 100, 150, 500};
+  vector<float> ypoints_ratio {0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 2.};
 
-  vector<float> xpoints_taupt {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300, 1000};
-  vector<float> ypoints_ratio {0, 0.3, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 2.};
-  //vector<float> ypoints_ratio {0, 0.7, 2.};
-
-  vector<TH2D*> h[names.size()][vars.size()][dms.size()][eta.size()];
+  vector<TH2D*> h[names.size()][vars.size()][dms.size()];
   for (unsigned int j=0; j<names.size(); ++j) {
     for (unsigned int k=0; k<vars.size(); ++k) { 
       for (unsigned int l=0; l<dms.size(); ++l) {
 	for (unsigned int m=0; m<eta.size(); ++m) {
-	  for (unsigned int n=0; n<taun.size(); ++n) {
-	    TString name_in = names[j]+vars[k]+"_MtLow_SS_"+dms[l]+"_"+eta[m]+"_"+taun[n];
-	    h[j][k][l][m].push_back( (TH2D*) file_in->Get(name_in) );
-	    h[j][k][l][m][n]->SetName(names[j]+vars[k]+dms[l]+"_"+eta[m]+"_"+taun[n]);
-
-	    TH2D* hh2 = (TH2D*) file_in->Get(names[j]+vars[k]+"_MtLow_OS_"+dms[l]+"_"+eta[m]+"_"+taun[n]);
-	    h[j][k][l][m][n]->Add(hh2);
-	  }
+	  TString name_in = names[j]+vars[k]+"_"+dms[l]+"_"+eta[m];
+	  h[j][k][l].push_back( (TH2D*) file_in->Get(name_in) );
+	  h[j][k][l][m]->SetName(names[j]+vars[k]+dms[l]+"_"+eta[m]);
 	}
       }
     }
   }
 
 
-  vector<TH2D*> h_MC[vars.size()][taun.size()];
+  vector<TH2D*> h_MC[vars.size()];
   vector<TH2D*> h_data[vars.size()];
   for (unsigned int k=0; k<vars.size(); ++k) {
-    for (unsigned int n=0; n<taun.size(); ++n) {
-      for (unsigned int l=0; l<dms.size(); ++l) {
-	for (unsigned int m=0; m<eta.size(); ++m) {
-	  TString name_in = vars[k]+"_"+dms[l]+"_"+eta[m];
-	  if (n==n_real) h_data[k].push_back( (TH2D*) h[0][k][l][m][n_real]->Clone("data_"+name_in) );
-	  h_MC[k][n].push_back( (TH2D*) h[1][k][l][m][n]->Clone("MC_"+name_in+"_"+taun[n]) );
-	  int i = h_MC[k][n].size()-1;
-	  for (unsigned int j=2; j<names.size(); ++j) {
-	    h_MC[k][n][i]->Add(h[j][k][l][m][n]);
-	  }
+    for (unsigned int l=0; l<dms.size(); ++l) {
+      for (unsigned int m=0; m<eta.size(); ++m) {
+	TString name_in = vars[k]+"_"+dms[l]+"_"+eta[m];
+	h_data[k].push_back( (TH2D*) h[0][k][l][m]->Clone("data_"+name_in) );
+	h_MC[k].push_back( (TH2D*) h[1][k][l][m]->Clone("MC_"+name_in) );
+	int i = h_MC[k].size()-1;
+	for (unsigned int j=2; j<names.size(); ++j) {
+	  h_MC[k][i]->Add(h[j][k][l][m]);
 	}
       }
     }
@@ -168,9 +156,8 @@ int main(/*int argc, char** argv*/) {
 	  if (h_data[k][i]->GetXaxis()->GetBinCenter(iBinX) > rebin_array_x[jBinX-1]) {
 	    double error_temp_data, error_temp_MC;
 	    float integral_data = h_data[k][i]->IntegralAndError(iBinX, iBinX, 1, nBinsY, error_temp_data, "");
-	    float integral_MC = h_MC[k][n_real][i]->IntegralAndError(iBinX, iBinX, 1, nBinsY, error_temp_MC, "");
-	    bin_content += integral_data - integral_MC;
-	    bin_error += pow(error_temp_data, 2) + pow(error_temp_MC, 2);
+	    bin_content += integral_data;
+	    bin_error += pow(error_temp_data, 2);
 	  }
 	  ++iBinX;
 	}
@@ -200,9 +187,8 @@ int main(/*int argc, char** argv*/) {
 	  if (h_data[k][i]->GetYaxis()->GetBinCenter(iBinY) > rebin_array_y[jBinY-1]) {
 	    double error_temp_data, error_temp_MC;
 	    float integral_data = h_data[k][i]->IntegralAndError(1, nBinsX, iBinY, iBinY, error_temp_data);
-	    float integral_MC = h_MC[k][n_real][i]->IntegralAndError(1, nBinsX, iBinY, iBinY, error_temp_MC);
-	    bin_content += integral_data - integral_MC;
-	    bin_error += pow(error_temp_data, 2) + pow(error_temp_MC, 2);
+	    bin_content += integral_data;
+	    bin_error += pow(error_temp_data, 2);
 	  }
 	  ++iBinY;
 	}
@@ -271,7 +257,6 @@ int main(/*int argc, char** argv*/) {
     hpass_taupt_data_total[half_k]->Divide(hfail_taupt_data_total[half_k]);
     hpass_ratio_data_total[half_k]->Divide(hfail_ratio_data_total[half_k]);
     double av_fr = integral_pass_total[half_k]/integral_fail_total[half_k];
-    cout << av_fr << endl;
     hpass_ratio_data_total[half_k]->Scale(1./av_fr);
     for (unsigned int m=0; m<eta.size(); ++m) {
       hpass_taupt_data_eta[half_k][m]->Divide(hfail_taupt_data_eta[half_k][m]);

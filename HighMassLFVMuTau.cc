@@ -888,7 +888,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  if ((CR_number == 101) || (CR_number == 103)) {
 	    double ratio = 0;
 	    if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
-	    fake_weight = FakeRate_factorised(tau_p4.Pt(), ratio, eta_string);
+	    fake_weight = FakeRate_unfactorised(tau_p4.Pt(), ratio, eta_string); //FIXME
+	    //fake_weight = FakeRate_factorised(tau_p4.Pt(), ratio, eta_string);
 	    //fake_weight = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);
 	    fake_weight_high = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);//FakeRate_mumu(tau_p4.Pt(), jet_p4.Pt()); //FIXME
 	    fake_weight_low = 2*fake_weight - fake_weight_high;

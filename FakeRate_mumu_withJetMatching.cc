@@ -94,7 +94,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
     for (unsigned int k = 0; k<dms.size(); ++k) {
       for (unsigned int l = 0; l<eta.size(); ++l) {
 	TString nname = h_names[i]+"_"+dms[k]+"_"+eta[l];
-	hh[i][k].push_back( new TH2F(nname, nname, 1000, 0, 1000, 200, 0, 2) );
+	hh[i][k].push_back( new TH2F(nname, nname, 1000, 0, 1000, 1000, 0, 10) );
 	hh[i][k][l]->Sumw2();
       }
     }

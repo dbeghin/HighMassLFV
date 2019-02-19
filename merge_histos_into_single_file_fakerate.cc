@@ -159,8 +159,8 @@ int main(int argc, char** argv) {
   vars.push_back("mu_phi");           
 
   vector<TString> vars_TH2;
-  vars_TH2.push_back("taupt_jetpt_pass");
-  vars_TH2.push_back("taupt_jetpt_fail");
+  vars_TH2.push_back("taupt_ratio_pass");
+  vars_TH2.push_back("taupt_ratio_fail");
   
 
   vector<TString> dms;
