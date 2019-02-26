@@ -79,8 +79,9 @@ int main(int argc, char** argv) {
     folder_in = "HighMassLFVMuTau/SignalRegion_CR100";
   }
   else if (CR == "CR101") {
-    folder_in = "HighMassLFVMuTau/Faketaus_CR101";
-    //folder_in = "HighMassLFVMuTau/Faketaus_CR101_old";
+    //folder_in = "HighMassLFVMuTau/Faketaus_CR101";
+    //folder_in = "HighMassLFVMuTau/Faketaus_CR101_unfactorised";
+    folder_in = "HighMassLFVMuTau/Faketaus_CR101_factorised";
   }
   else if (CR == "CR102") {
     folder_in = "HighMassLFVMuTau/WjetsTest_CR102";
@@ -363,15 +364,15 @@ int main(int argc, char** argv) {
               h_WJets->Write();
             }
             else {
-              vector<TH1F*> h_WJets_vector;
-              for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
-	        h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
-              }
-              TH1F* h_WJets = (TH1F*) h_WJets_vector[0]->Clone("WJets_"+var_out);
-              for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
-	        h_WJets->Add(h_WJets_vector[iBin]);
-              }
-              h_WJets->Write();
+              //vector<TH1F*> h_WJets_vector;
+              //for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
+	      //  h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
+              //}
+              //TH1F* h_WJets = (TH1F*) h_WJets_vector[0]->Clone("WJets_"+var_out);
+              //for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
+	      //  h_WJets->Add(h_WJets_vector[iBin]);
+              //}
+              //h_WJets->Write();
             }
           }
       	  

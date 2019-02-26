@@ -73,7 +73,7 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low)
     
     #ST.GetXaxis().SetTitle("")
     ST.GetXaxis().SetTitleSize(0.06)
-    ST.GetXaxis().SetTitle(photogenic_var[var[k]])
+    ST.GetXaxis().SetTitle(photogenic_var[k])
     ST.GetXaxis().SetNdivisions(505)
     ST.GetYaxis().SetLabelFont(42)
     ST.GetYaxis().SetLabelOffset(0.01)
@@ -249,7 +249,7 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low)
     h1.Divide(hwoE)
     h3.Divide(hwoE)
 
-    h1.GetXaxis().SetTitle(photogenic_var[var[k]])
+    h1.GetXaxis().SetTitle(photogenic_var[k])
     h1.GetXaxis().SetLabelSize(0.08)
     h1.GetYaxis().SetLabelSize(0.08)
     h1.GetYaxis().SetTitle("Obs./Exp.")
@@ -294,21 +294,21 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 
 
 var=[]
-var.append("ev_Mvis")          
-var.append("ev_Mtot")          
+#var.append("ev_Mvis")          
+#var.append("ev_Mtot")          
 #var.append("tau_pt")           
 #var.append("tau_eta")          
 #var.append("tau_phi")          
 #var.append("mu_pt")            
 var.append("mu_eta")           
 #var.append("mu_phi")           
-var.append("mu_isolation")           
+#var.append("mu_isolation")           
 #var.append("ev_DRmutau")       
 #var.append("ev_DeltaPhimutau") 
 #var.append("ev_DeltaPhiMETtau")
-var.append("ev_MET")           
-#var.append("ev_Mcol")          
-var.append("ev_Mt")            
+#var.append("ev_MET") 
+#var.append("ev_Mcol")
+#var.append("ev_Mt")
 
 var_log_dic = {
 "ev_Mvis"          : True,           
@@ -331,23 +331,23 @@ var_log_dic = {
 nvar=len(var)
 print nvar
 
-photogenic_var={
-"ev_Mvis":              "m_{vis} (GeV)",
-"ev_Mtot":              "m_{tot} (GeV)",
-"tau_pt":               "#tau p_{T} (GeV)",
-"tau_eta":              "#tau #eta",
-"tau_phi":              "#tau #phi",
-"mu_pt":                "#mu p_{T} (GeV)",
-"mu_eta":               "#mu #eta",
-"mu_phi":               "#mu #phi",
-"mu_isolation":         "#mu iso",
-"ev_DRmutau":           "#DeltaR (#mu #tau)",
-"ev_DeltaPhimutau":     "#Delta#Phi (#mu #tau)",
-"ev_DeltaPhiMETtau":    "#Delta#Phi (E_{T}^{miss} #tau)",
-"ev_MET":               "E_{T}^{miss} (GeV)",
-"ev_Mcol":              "m_{col}",
-"ev_Mt":                "m_{T}",
-}
+photogenic_var=[]
+#photogenic_var.append("m_{vis} (GeV)")
+#photogenic_var.append("m_{tot} (GeV)")
+#photogenic_var.append("#tau p_{T} (GeV)")
+#photogenic_var.append("#tau #eta")
+#photogenic_var.append("#tau #phi")
+#photogenic_var.append("#mu p_{T} (GeV)")
+photogenic_var.append("#mu #eta")
+#photogenic_var.append("#mu #phi")
+#photogenic_var.append("#mu iso")
+#photogenic_var.append("#DeltaR (#mu #tau)")
+#photogenic_var.append("#Delta#Phi (#mu #tau)")
+#photogenic_var.append("#Delta#Phi (E_{T}^{miss} #tau)")
+#photogenic_var.append("E_{T}^{miss} (GeV)")
+#photogenic_var.append("m_{col}")
+#photogenic_var.append("m_{T}")
+
 
 Mth=[
 "_MtHigh", 

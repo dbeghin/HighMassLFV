@@ -59,8 +59,8 @@ int main(int argc, char** argv) {
   mass.push_back("4000");
   mass.push_back("4500");
   mass.push_back("5000");
-  mass.push_back("5500");
-  mass.push_back("6000");
+  //mass.push_back("5500");
+  //mass.push_back("6000");
 
 
   TFile* file_out = new TFile("mutauHistos_forLimitSetting.root", "RECREATE");

@@ -31,6 +31,27 @@ float norm_F(float x, float y){
 }
 
 
+double FakeRate_noratio(double taupt, TString eta) {
+  double SF=0.2;
+  if (taupt >= 1000) taupt = 999;
+
+  TFile* fake_file = new TFile("Reweighting/fakerate_MtLow.root","R");
+
+  double reweight = 0;
+
+  TString hname = "eta_"+eta;
+  TH1F* h_taupt = (TH1F*) fake_file->Get("FakeRateByTauPt_"+hname);
+  int iBin = h_taupt->FindBin(taupt);
+  double base_SF = h_taupt->GetBinContent(iBin);
+  
+  SF = base_SF;
+  reweight = SF;
+
+  return reweight;
+}
+
+
+
 double FakeRate_unfactorised(double taupt, double ratio, TString eta) {
   double SF=0.2;
   if (taupt >= 1000) taupt = 999;
@@ -5453,7 +5474,7 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop(string phase, string type_of_data, string out_name);
+   virtual void     Loop(string phase, string type_of_data, string out_name, Float_t nEvents);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 };
