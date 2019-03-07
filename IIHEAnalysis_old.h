@@ -31,6 +31,41 @@ float norm_F(float x, float y){
 }
 
 
+
+float top_reweighting_uncertainty(float top_pt_in){
+  float weight = 0.0;
+  if (top_pt_in < 0.0) {
+    weight = 0.0;
+  } else if (top_pt_in < 150.0) {
+    weight = 0.045;
+  } else if (top_pt_in < 1000.0) {
+    weight = 0.04 * top_pt_in/1000.0 + 0.045;
+  } else if (top_pt_in < 1100.0) {
+    weight = 0.09;
+  } else if (top_pt_in < 1200.0) {
+    weight = 0.1;
+  } else if (top_pt_in < 1400.0) {
+    weight = 0.12;
+  } else if (top_pt_in < 1600.0) {
+    weight = 0.14;
+  } else if (top_pt_in < 1800.0) {
+    weight = 0.155;
+  } else if (top_pt_in < 2000.0) {
+    weight = 0.18;
+  } else if (top_pt_in < 2200.0) {
+    weight = 0.2;
+  } else if (top_pt_in < 2600.0) {
+    weight = 0.243;
+  } else if (top_pt_in < 3000.0) {
+    weight = 0.34;
+  } else if (top_pt_in > 2999.9) {
+    weight = 0.34;
+  }
+  return weight;
+}
+
+
+
 double FakeRate_noratio(double taupt, TString eta) {
   double SF=0.2;
   if (taupt >= 1000) taupt = 999;
@@ -9667,8 +9702,8 @@ void IIHEAnalysis::Init(TTree *tree)
    //fChain->SetBranchAddress("trig_HLT_Mu27_accept", &trig_HLT_Mu27_accept, &b_trig_HLT_Mu27_accept);
    //fChain->SetBranchAddress("trig_HLT_TkMu27_accept", &trig_HLT_TkMu27_accept, &b_trig_HLT_TkMu27_accept);
    //fChain->SetBranchAddress("trig_HLT_Mu45_eta2p1_accept", &trig_HLT_Mu45_eta2p1_accept, &b_trig_HLT_Mu45_eta2p1_accept);
-   //fChain->SetBranchAddress("trig_HLT_Mu50_accept", &trig_HLT_Mu50_accept, &b_trig_HLT_Mu50_accept);
-   //fChain->SetBranchAddress("trig_HLT_TkMu50_accept", &trig_HLT_TkMu50_accept, &b_trig_HLT_TkMu50_accept);
+   fChain->SetBranchAddress("trig_HLT_Mu50_accept", &trig_HLT_Mu50_accept, &b_trig_HLT_Mu50_accept);
+   fChain->SetBranchAddress("trig_HLT_TkMu50_accept", &trig_HLT_TkMu50_accept, &b_trig_HLT_TkMu50_accept);
    //fChain->SetBranchAddress("trig_HLT_Mu38NoFiltersNoVtx_Photon38_CaloIdL_accept", &trig_HLT_Mu38NoFiltersNoVtx_Photon38_CaloIdL_accept, &b_trig_HLT_Mu38NoFiltersNoVtx_Photon38_CaloIdL_accept);
    //fChain->SetBranchAddress("trig_HLT_Mu42NoFiltersNoVtx_Photon42_CaloIdL_accept", &trig_HLT_Mu42NoFiltersNoVtx_Photon42_CaloIdL_accept, &b_trig_HLT_Mu42NoFiltersNoVtx_Photon42_CaloIdL_accept);
    //fChain->SetBranchAddress("trig_HLT_Mu28NoFiltersNoVtxDisplaced_Photon28_CaloIdL_accept", &trig_HLT_Mu28NoFiltersNoVtxDisplaced_Photon28_CaloIdL_accept, &b_trig_HLT_Mu28NoFiltersNoVtxDisplaced_Photon28_CaloIdL_accept);

@@ -294,21 +294,22 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 
 
 var=[]
-var.append("ev_Mvis")          
-var.append("ev_Mtot")          
-#var.append("tau_pt")           
-#var.append("tau_eta")          
+#var.append("ev_Mvis")          
+#var.append("ev_Mtot")          
+var.append("tau_pt")           
+var.append("tau_eta")          
 #var.append("tau_phi")          
-#var.append("mu_pt")            
+var.append("mu_pt")            
 var.append("mu_eta")           
 #var.append("mu_phi")           
-var.append("mu_isolation")           
+#var.append("mu_isolation")           
 #var.append("ev_DRmutau")       
 #var.append("ev_DeltaPhimutau") 
 #var.append("ev_DeltaPhiMETtau")
 var.append("ev_MET")           
-#var.append("ev_Mcol")          
-var.append("ev_Mt")            
+var.append("ev_Mcol")          
+#var.append("ev_Mt")            
+var.append("sign")
 
 var_log_dic = {
 "ev_Mvis"          : True,           
@@ -326,6 +327,7 @@ var_log_dic = {
 "ev_MET"           : True,
 "ev_Mcol"          : True,
 "ev_Mt"            : True,
+"sign"             : False,
 }
 
 nvar=len(var)
@@ -347,10 +349,13 @@ photogenic_var={
 "ev_MET":               "E_{T}^{miss} (GeV)",
 "ev_Mcol":              "m_{col}",
 "ev_Mt":                "m_{T}",
+"sign":                 "OS (left) versus SS (right)",
 }
 
 Mth=[
 "_MtHigh", 
+"_MtHigh_TT", 
+"_MtLow_TT", 
 "_MtLow_OS",
 "_MtLow_SS"
 ]

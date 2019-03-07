@@ -79,7 +79,7 @@ nvar=len(var)
 print nvar
 
 photogenic_var=[]
-photogenic_var.append("jet p_{T} (GeV)")
+photogenic_var.append("tau p_{T} (GeV)")
 photogenic_var.append("tau p_{T} / jet p_{T} ratio")
 
 photogenic_var2=[]

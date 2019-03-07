@@ -6,6 +6,7 @@
 #include "TString.h"
 #include <iostream>
 #include <vector>
+#include "meta.h"
 
 using namespace std;
 
@@ -25,7 +26,6 @@ int main(int argc, char** argv) {
   TTree* mmeta = (TTree*) fIn->Get("meta");
   meta* m = new meta(mmeta);
   Float_t nEvents = m->Loop(type);
-
 
   IIHEAnalysis* a = new IIHEAnalysis(tree);
   a->Loop(controlregion, type, out_name, nEvents);
@@ -256,11 +256,14 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    Mth.push_back("MtLow_OS");  int k_low_OS = Mth.size()-1;
    Mth.push_back("MtLow_SS");  int k_low_SS = Mth.size()-1;
    Mth.push_back("MtHigh");    int k_high   = Mth.size()-1;
+   Mth.push_back("MtLow_TT");  int k_low_TT= Mth.size()-1;
    Mth.push_back("MtHigh_TT"); int k_high_TT= Mth.size()-1;
 
    //put all systematics here                                           
    vector<TString> systs;                 map<TString, int> systs_map;                          vector<double> syst_weights;
    systs.push_back("");                   systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
+   systs.push_back("topreweight_up_");    systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
+   systs.push_back("topreweight_down_");  systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
    if (CR_number == 101 || CR_number == 103) {
      //up or down are arbitrary labels, the important thing is they go on different directions
      systs.push_back("fakerate_up_");     systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
@@ -440,18 +443,33 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       //close the is this TT inclusive question
       if (reject_event) continue;
 
-      double TT_ptreweight = 1;
-      if (TT) {
-	double w_top = 1, w_antitop = 1;
-        for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
-	  if (LHE_pdgid->at(iLHE) == 6) {
-	    w_top = topPtReweight(LHE_Pt->at(iLHE));
+      double TT_ptreweight = 1, w_top_up = 1, w_top_down = 1;
+      if(TT) {
+	bool find_t1 = false;
+	bool find_t2 = false;
+	TLorentzVector MC_p4_1(1,0,0,0);
+	TLorentzVector MC_p4_2(1,0,0,0);
+	for(unsigned iMC=0 ; iMC<LHE_Pt->size() ; ++iMC) {
+	  if( (LHE_pdgid->at(iMC) == 6) ) {
+	    MC_p4_1.SetPtEtaPhiE(LHE_Pt->at(iMC),LHE_Eta->at(iMC),LHE_Phi->at(iMC),LHE_E->at(iMC)) ;
+	    find_t1 = true;
 	  }
-	  else if (LHE_pdgid->at(iLHE) == -6) {
-	    w_antitop = topPtReweight(LHE_Pt->at(iLHE));
+	  else if( (LHE_pdgid->at(iMC) == -6) ) {
+	    MC_p4_2.SetPtEtaPhiE(LHE_Pt->at(iMC),LHE_Eta->at(iMC),LHE_Phi->at(iMC),LHE_E->at(iMC)) ;
+	    find_t2 = true;
+	  }
+	  if(find_t1 && find_t2) {
+	    float tmp_t1 = exp(0.0615-0.0005*MC_p4_1.Pt());
+	    float tmp_t2 = exp(0.0615-0.0005*MC_p4_2.Pt());
+	    float tmp_t1_uncer = top_reweighting_uncertainty(MC_p4_1.Pt());
+	    float tmp_t2_uncer = top_reweighting_uncertainty(MC_p4_2.Pt());
+
+	    w_top_up = sqrt(tmp_t1*(1.0 + tmp_t1_uncer)*tmp_t2*(1.0 + tmp_t2_uncer) );
+	    w_top_down = sqrt(tmp_t1*(1.0 - tmp_t1_uncer)*tmp_t2*(1.0 - tmp_t2_uncer) );
+	    TT_ptreweight = sqrt(tmp_t1 * tmp_t2);
+	    break;
 	  }
 	}
-	TT_ptreweight = sqrt(w_top*w_antitop);
       }
 
       vector<TLorentzVector> tauhp4;
@@ -538,32 +556,13 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       }//end is this not-data? condition
 
 
-
       //Is one of the triggers fired?
       //FIXME
       bool PassTrigger = false;
-      if (singlemu) if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
-      //We can't double-count events. Events in the SinglePhoton dataset which trigger the SingleMu trigger already show in the SingleMu dataset
-      //if (singlephoton) if (trig_HLT_Photon175_accept && !(trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept)) PassTrigger = true;
-      if (!data) if (/*trig_HLT_Photon175_accept ||*/ trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
+      if (data)  if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
+      if (!data) if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
       if (!PassTrigger) continue;
 
-
-      //start muon counting loop
-      /*int Nmu = 0;
-      for (unsigned int iMu = 0; iMu < mu_gt_pt->size(); ++iMu) {
-        if(mu_isPFMuon->at(iMu) && mu_gt_pt->at(iMu) > 20 && fabs(mu_gt_eta->at(iMu)) < 2.4 && fabs(mu_gt_dxy_firstPVtx->at(iMu)) < 0.045 && fabs(mu_gt_dz_firstPVtx->at(iMu)) < 0.2 && mu_pfIsoDbCorrected04->at(iMu) < 0.3 && mu_isMediumMuon->at(iMu)) ++Nmu;
-        if (Nmu > 1) break;
-      }
-      if (Nmu > 1) continue; //2nd muon veto                                                                                                                                                                
-
-      //electron veto
-      bool electron = false;
-      for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
-	if (gsf_VIDLoose->at(iEle) && gsf_pt->at(iEle) > 20 && fabs(gsf_eta->at(iEle)) < 2.5 && fabs(gsf_dxy_firstPVtx->at(iEle)) < 0.045 && fabs(gsf_dz_firstPVtx->at(iEle)) < 0.2 && gsf_passConversionVeto->at(iEle) && gsf_nLostInnerHits->at(iEle) <= 1 && gsf_relIso->at(iEle) < 0.3) electron = true;
-        if (electron) break;
-      }
-      if (electron) continue;*/
 
       //bjet pair finding (medium WP for the bjet)                                                                                                                           
       int nbjet = 0;
@@ -757,10 +756,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 
 	  int lMth = -1;
-	  bool isTTCR = false;
+	  bool isLowTTCR = false, isHighTTCR = false;
 	  if (Mt < 120) {
 	    if ( tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
 	      lMth = k_low_OS;
+	      if (nbjet >= 2) isLowTTCR = true;
 	    }
 	    else {
 	      lMth = k_low_SS;
@@ -768,7 +768,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 	  else {
 	    lMth = k_high;
-	    if (nbjet >= 2) isTTCR = true;
+	    if (nbjet >= 2 && tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) isHighTTCR = true;
 	  }
 
 	  int sign_number = -1;
@@ -924,7 +924,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
-	  filled_histos = true;
 	  TString eta_string = "";
 	  int l_eta = -1;
 	  if (fabs(tau_eta->at(iTau)) < 1.46) {
@@ -945,8 +944,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    double ratio = 0;
 	    if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
 	    //fake_weight = FakeRate_noratio(tau_p4.Pt(), eta_string); //FIXME
-	    //fake_weight = FakeRate_unfactorised(tau_p4.Pt(), ratio, eta_string);
-	    fake_weight = FakeRate_factorised(tau_p4.Pt(), ratio, eta_string);
+	    fake_weight = FakeRate_unfactorised(tau_p4.Pt(), ratio, eta_string);
+	    //fake_weight = FakeRate_factorised(tau_p4.Pt(), ratio, eta_string);
 	    //fake_weight = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);
 	    fake_weight_high = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);//FakeRate_mumu(tau_p4.Pt(), jet_p4.Pt()); //FIXME
 	    fake_weight_low = 2*fake_weight - fake_weight_high;
@@ -954,16 +953,14 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (fake_weight != 0) {
 	      syst_weights[systs_map["fakerate_up_"]] = fake_weight_high/fake_weight;
 	      syst_weights[systs_map["fakerate_down_"]] = fake_weight_low/fake_weight;
-	      cout << "fr up: " << systs_map["fakerate_up_"] << endl;
-	      cout << "fr down: " << systs_map["fakerate_down_"] << endl;
 	    }
 	    else {
 	      syst_weights[systs_map["fakerate_up_"]] = 1;
 	      syst_weights[systs_map["fakerate_down_"]] = 1;
 	    }
 	  }
-	  final_weight = first_weight*fake_weight;
-
+	  syst_weights[systs_map["topreweight_up_"]] = w_top_up;
+	  syst_weights[systs_map["topreweight_down_"]] = w_top_down;
 
 	  //TH2's for the fake rate
 	  int iJetPt = -1, iRatio = -1;
@@ -990,6 +987,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 
 	  if (dR < 0.5) continue;
+	  filled_histos = true;
 	  float ratio = 0;
 	  if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
 	  if (CR_number == 100) {
@@ -998,13 +996,24 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
 	  }
 
+	  //electron veto
+	  bool electron = false;
+	  for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
+	    if (gsf_isHeepV7->at(iEle) && gsf_pt->at(iEle) > 40) electron = true;
+	    if (electron) break;
+	  }
+	  if (electron) continue;
 
 	  for (unsigned int k_syst=0; k_syst<systs.size(); ++k_syst) {
 	    final_weight = first_weight*fake_weight*syst_weights[k_syst];
 
 	    bool stopFilling = false;
 	    int l_value = lMth;
-	    while (!stopFilling) {
+	    int n_fuel = 0;
+	    cout << "histo filling" << endl;
+	    while (!stopFilling && n_fuel<3) {
+	      ++n_fuel;
+	      cout << lMth << " " << k_high_TT << " " << l_value << endl;
 	      h[l_value][k_syst][jTauN][9]->Fill(dphi_mutau, final_weight);
 	      h[l_value][k_syst][jTauN][10]->Fill(dphi_METtau, final_weight);
 	      
@@ -1024,11 +1033,14 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      h[l_value][k_syst][jTauN][16]->Fill(reliso, final_weight);
 	      h[l_value][k_syst][jTauN][17]->Fill(final_weight, 1);
 	      h[l_value][k_syst][jTauN][18]->Fill(sign_number, final_weight);
-	      if (l_value == k_high_TT) stopFilling = true;
+	      if (l_value == k_high_TT || l_value == k_low_TT) stopFilling = true;
 	      if (l_value == lMth) {
-		if (isTTCR) {
+		if (isHighTTCR) {
 		  l_value = k_high_TT;
 		}
+		else if (isLowTTCR) {
+		  l_value = k_low_TT;
+		} 
 		else {
 		  stopFilling = true;
 		}

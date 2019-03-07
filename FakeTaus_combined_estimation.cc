@@ -55,12 +55,15 @@ int main(int argc, char** argv) {
   vars.push_back("ev_Mt");
   vars.push_back("ev_MET");
   vars.push_back("ev_Mcol");
+  vars.push_back("sign");
 
   
   vector<TString> Mth;
   Mth.push_back("MtLow_OS");
   Mth.push_back("MtLow_SS");
   Mth.push_back("MtHigh");
+  Mth.push_back("MtLow_TT");
+  Mth.push_back("MtHigh_TT");
 
   vector<TString> systs;            
   systs.push_back("");              
