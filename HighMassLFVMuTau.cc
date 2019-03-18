@@ -61,6 +61,7 @@ Float_t meta::Loop(string type_of_data) {
     else {
       nEvents = mc_nEventsWeighted;
     }
+    break;
   }
   return nEvents;
 }
@@ -564,21 +565,57 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       if (!PassTrigger) continue;
 
 
-      //bjet pair finding (medium WP for the bjet)                                                                                                                           
-      int nbjet = 0;
-      float bjetMedium2016 = 0.800;
-      for (unsigned int iJet = 0; iJet < jet_pt->size(); ++iJet) {
-        if (jet_CSVv2->at(iJet) > bjetMedium2016 && jet_pt->at(iJet) > 20 && fabs(jet_eta->at(iJet)) < 2.4) ++nbjet;
-        if (nbjet >= 2) break;
-      }
-
-
-
       //Sort muons, taus by decreasing pt
       float pt = 0.0;
       int highest = -1;
       vector<int> orderedMu, orderedTau;
       vector<int> rest, rest2;
+
+
+
+      //bjet pair finding (medium WP for the bjet)                                                                                                                           
+      int nbjet = 0;
+      float bjetMedium2016 = 0.800;
+      for (unsigned int iJet = 0; iJet < jet_pt->size(); ++iJet) {
+	TLorentzVector bjet_p4;
+	if (jet_CSVv2->at(iJet) > bjetMedium2016 && jet_pt->at(iJet) > 30 && fabs(jet_eta->at(iJet)) < 2.4 && jet_isJetIDLoose->at(iJet)) {
+	  bjet_p4.SetPxPyPzE(jet_px->at(iJet), jet_py->at(iJet), jet_pz->at(iJet), jet_energy->at(iJet));
+	}
+
+	//bjet should match neither a tau nor a muon
+	bool btau = false;
+	for (unsigned int iTau = 0; iTau < tau_pt->size(); ++iTau) {
+	  TLorentzVector tau_temp_p4;
+	  tau_temp_p4.SetPtEtaPhiE(tau_pt->at(iTau), tau_eta->at(iTau), tau_phi->at(iTau), tau_energy->at(iTau));
+	  if (tau_temp_p4.Pt() < 30.0) continue;
+	  if (fabs(tau_eta->at(iTau)) > 2.3) continue;
+	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
+	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
+	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	  if (fabs(tau_charge->at(iTau)) != 1) continue;
+	  if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+
+	  if (bjet_p4.DeltaR(tau_temp_p4) < 0.4) btau = true;
+	  if (btau) break;
+	}
+	if (btau) continue;
+
+	bool bmu = false;
+	for (unsigned int iMu = 0; iMu < mu_ibt_pt->size(); ++iMu) {
+	  TLorentzVector mu_temp_p4;
+	  mu_temp_p4.SetPtEtaPhiM(mu_ibt_pt->at(iMu), mu_ibt_eta->at(iMu), mu_ibt_phi->at(iMu), mu_mass);
+	  if (mu_ibt_pt->at(iMu) < 53.0) continue;
+	  if (!mu_isHighPtMuon->at(iMu)) continue;
+	  if (fabs(mu_ibt_eta->at(iMu)) > 2.4) continue;
+
+	  if (bjet_p4.DeltaR(mu_temp_p4) < 0.4) bmu = true;
+	  if (bmu) break;
+	}
+	if (bmu) continue;
+	++nbjet;
+	if (nbjet >= 2) break;
+      }
+
 
 
       //sorting muons
@@ -666,8 +703,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
 	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
 	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-	  //if (tau_ptLeadChargedCand->at(iTau) < 5) continue;
-	  //if (fabs(tau_dz->at(iTau)) > 0.2) continue;
 	  if (fabs(tau_charge->at(iTau)) != 1) continue;
 
 	  //control regions : sign selection, muon isolation and tau ID
@@ -757,18 +792,27 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 	  int lMth = -1;
 	  bool isLowTTCR = false, isHighTTCR = false;
+	  TString sign_string = ""; 
 	  if (Mt < 120) {
 	    if ( tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
 	      lMth = k_low_OS;
+	      sign_string = "OS";
 	      if (nbjet >= 2) isLowTTCR = true;
 	    }
 	    else {
 	      lMth = k_low_SS;
+	      sign_string = "SS";
 	    }
 	  }
 	  else {
 	    lMth = k_high;
-	    if (nbjet >= 2 && tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) isHighTTCR = true;
+	    if (tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
+	      sign_string = "OS";
+	      if (nbjet >= 2) isHighTTCR = true;
+	    }
+	    else {
+	      sign_string = "SS";
+	    }
 	  }
 
 	  int sign_number = -1;
@@ -844,6 +888,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  //FIXME
 	  first_weight = 1;
 	  if (!data) first_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton) * 1.0 * mc_w_sign * TT_ptreweight * lepToTauFR;
+	  final_weight = first_weight;
 
 	  if (CR_number == 7 || CR_number == 9) {
 	    h[lMth][0][jTauN][16]->Fill(Mt, final_weight);
@@ -959,8 +1004,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      syst_weights[systs_map["fakerate_down_"]] = 1;
 	    }
 	  }
-	  syst_weights[systs_map["topreweight_up_"]] = w_top_up;
-	  syst_weights[systs_map["topreweight_down_"]] = w_top_down;
+	  syst_weights[systs_map["topreweight_up_"]] = w_top_up/TT_ptreweight;
+	  syst_weights[systs_map["topreweight_down_"]] = w_top_down/TT_ptreweight;
 
 	  //TH2's for the fake rate
 	  int iJetPt = -1, iRatio = -1;
@@ -986,16 +1031,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    k_dm = k_DM10;
 	  }
 
-	  if (dR < 0.5) continue;
-	  filled_histos = true;
-	  float ratio = 0;
-	  if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
-	  if (CR_number == 100) {
-	    hh[iJetPt][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), jet_p4.Pt(), final_weight);
-	    hh[iRatio][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), ratio, final_weight);
-	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	  }
-
 	  //electron veto
 	  bool electron = false;
 	  for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
@@ -1004,16 +1039,27 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 	  if (electron) continue;
 
+	  if (dR < 0.5) continue;
+	  filled_histos = true;
+	  float ratio = 0;
+
+	  if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
+	  if (CR_number == 100) {
+	    hh[iJetPt][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), jet_p4.Pt(), final_weight);
+	    hh[iRatio][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), ratio, final_weight);
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	  }
+
+
+	  cout << endl << TT_ptreweight << " " << first_weight << endl;
 	  for (unsigned int k_syst=0; k_syst<systs.size(); ++k_syst) {
 	    final_weight = first_weight*fake_weight*syst_weights[k_syst];
 
 	    bool stopFilling = false;
 	    int l_value = lMth;
 	    int n_fuel = 0;
-	    cout << "histo filling" << endl;
-	    while (!stopFilling && n_fuel<3) {
+	    while (!stopFilling && n_fuel<2) {
 	      ++n_fuel;
-	      cout << lMth << " " << k_high_TT << " " << l_value << endl;
 	      h[l_value][k_syst][jTauN][9]->Fill(dphi_mutau, final_weight);
 	      h[l_value][k_syst][jTauN][10]->Fill(dphi_METtau, final_weight);
 	      
