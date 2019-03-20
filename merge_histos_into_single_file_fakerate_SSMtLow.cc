@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
 
   //cross-sections
   vector<double> xs_DY;
-  double xs_DY_lowmass = 5765.4;           xs_DY.push_back(xs_DY_lowmass);   
+  double xs_DY_lowmass = 6225.42;          xs_DY.push_back(xs_DY_lowmass);   
   double xs_DY_400to500 = 0.4064;	   xs_DY.push_back(xs_DY_400to500);  
   double xs_DY_500to700 = 0.241;	   xs_DY.push_back(xs_DY_500to700);  
   double xs_DY_700to800 = 0.03606;	   xs_DY.push_back(xs_DY_700to800);  

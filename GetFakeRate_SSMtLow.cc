@@ -67,9 +67,8 @@ int main(/*int argc, char** argv*/) {
 	for (unsigned int m=0; m<eta.size(); ++m) {
 	  for (unsigned int n=0; n<taun.size(); ++n) {
 	    TString name_in = names[j]+vars[k]+"_MtLow_SS_"+dms[l]+"_"+eta[m]+"_"+taun[n];
-	    //cout << name_in << endl;
 	    h[j][k][l][m].push_back( (TH2F*) file_in->Get(name_in) );
-	    //h[j][k][l][m][n]->SetName(names[j]+vars[k]);
+	    h[j][k][l][m][n]->SetName(names[j]+vars[k]+dms[l]+"_"+eta[m]+"_"+taun[n]);
 	  }
 	}
       }
