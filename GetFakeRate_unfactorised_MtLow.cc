@@ -42,26 +42,28 @@ int main(/*int argc, char** argv*/) {
   vector<TString> taun;
   taun.push_back("realtau");  int n_real = taun.size()-1;
 
+
   //vector<float> xpoints_all {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300, 1000};
-  vector<vector<float>> xpoints;                                                                                  vector<TString> sector_name;
+  vector<vector<float>> xpoints;                                                                        vector<TString> sector_name;
   vector<float> xpoints_left {0, 30, 40, 50, 60, 70, 80, 100, 150};  xpoints.push_back(xpoints_left);   sector_name.push_back("taupt_0_150");
-  vector<float> xpoints_right {150, 1000};                      xpoints.push_back(xpoints_right);  sector_name.push_back("taupt_150_1000");
+  vector<float> xpoints_right {150, 1000};                           xpoints.push_back(xpoints_right);  sector_name.push_back("taupt_150_1000");
 
   vector<vector<float>> ypoints;										      
-  vector<float> ypoints_left {0, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 2.}; ypoints.push_back(ypoints_left); 
-  vector<float> ypoints_right {0, 0.6, 0.7, 0.8, 0.85, 1., 2};		       ypoints.push_back(ypoints_right);
+  vector<float> ypoints_left {0, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 3.};      ypoints.push_back(ypoints_left); 
+  vector<float> ypoints_right {0, 0.6, 0.8, 1., 3};		               ypoints.push_back(ypoints_right);
 
   vector<TH2F*> h[names.size()][vars.size()][dms.size()];
   for (unsigned int j=0; j<names.size(); ++j) {
     for (unsigned int k=0; k<vars.size(); ++k) { 
       for (unsigned int l=0; l<dms.size(); ++l) {
 	for (unsigned int m=0; m<eta.size(); ++m) {
-	  TString name_in = names[j]+vars[k]+"_MtLow_SS_"+dms[l]+"_"+eta[m]+"_"+taun[n_real];
+	  TString name_in = names[j]+vars[k]+"_MtLow_OS_"+dms[l]+"_"+eta[m]+"_"+taun[n_real];
 	  h[j][k][l].push_back( (TH2F*) file_in->Get(name_in) );
 	  h[j][k][l][m]->SetName(names[j]+vars[k]+dms[l]+"_"+eta[m]+"_"+taun[n_real]);
-	  name_in = names[j]+vars[k]+"_MtLow_OS_"+dms[l]+"_"+eta[m]+"_"+taun[n_real];
-	  TH2F* htemp = (TH2F*) file_in->Get(name_in);
-	  h[j][k][l][m]->Add(htemp);
+
+	  name_in = names[j]+vars[k]+"_MtLow_SS_"+dms[l]+"_"+eta[m]+"_"+taun[n_real];
+	  TH2F* h_temp = (TH2F*) file_in->Get(name_in);
+	  h[j][k][l][m]->Add(h_temp);
 	}
       }
     }
@@ -107,27 +109,27 @@ int main(/*int argc, char** argv*/) {
 	xxpoints.clear(), yypoints.clear();
 	xxpoints = xpoints[sector], yypoints = ypoints[sector];
 
-        int array_size_x = xxpoints.size();
-        float rebin_array_x[array_size_x];
-        for (unsigned int iVector=0; iVector<array_size_x; ++iVector) rebin_array_x[iVector] = xxpoints[iVector];
-        int array_size_y = yypoints.size();
-        float rebin_array_y[array_size_y];
-        for (unsigned int iVector=0; iVector<array_size_y; ++iVector) rebin_array_y[iVector] = yypoints[iVector];
+	int array_size_x = xxpoints.size();
+	float rebin_array_x[array_size_x];
+	for (unsigned int iVector=0; iVector<array_size_x; ++iVector) rebin_array_x[iVector] = xxpoints[iVector];
+	int array_size_y = yypoints.size();
+	float rebin_array_y[array_size_y];
+	for (unsigned int iVector=0; iVector<array_size_y; ++iVector) rebin_array_y[iVector] = yypoints[iVector];
 
 	int half_k = k/2;
         
-        //even->pass, odd->fail
-        if (k%2 == 0) {
+	//even->pass, odd->fail
+	if (k%2 == 0) {
 	  TString name_in = "FakeRate_"+vars[k]+"_data_"+dms[l]+"_"+eta[m]+"_"+sector_name[sector];
 	  hpass_data[half_k][sector].push_back( new TH2F(name_in, name_in, array_size_x-1, rebin_array_x, array_size_y-1, rebin_array_y) );
-        }
-        else {
+	}
+	else {
 	  TString name_in = "den2_"+vars[k]+"_"+dms[l]+"_"+eta[m]+"_"+sector_name[sector];
 	  hfail_data[half_k][sector].push_back( new TH2F(name_in, name_in, array_size_x-1, rebin_array_x, array_size_y-1, rebin_array_y) );
-        }
+	}
         
-        int jBinX = 1, jBinY = 1, binStartX = 1, binStartY = 1;
-        while (jBinX <= array_size_x) { 
+	int jBinX = 1, jBinY = 1, binStartX = 1, binStartY = 1;
+	while (jBinX <= array_size_x) { 
 	  unsigned int iBinX=binStartX;
 	  unsigned int iBinY=binStartY;
 	  float bin_content = 0, bin_error=0;
@@ -163,30 +165,30 @@ int main(/*int argc, char** argv*/) {
 	    ++jBinX;
 	    binStartX = iBinX;
 	  }
-        }
+	}
+	  
         
-        
-        //if (k%2 != 0) hfail_data[half_k][sector][i]->Add(hpass_data[half_k][sector][i]);
+	//if (k%2 != 0) hfail_data[half_k][sector][i]->Add(hpass_data[half_k][sector][i]);
 
-        if (i==0) {
-          if (k%2 != 0) hfail_data_total[half_k][sector] = (TH2F*) hfail_data[half_k][sector][i]->Clone("den2_total_"+vars[k]+"_"+sector_name[sector]);
-          if (k%2 == 0) hpass_data_total[half_k][sector] = (TH2F*) hpass_data[half_k][sector][i]->Clone("FakeRateByTauPtAndRatio_total_"+sector_name[sector]);
-        }
-        else {
-          if (k%2 != 0) hfail_data_total[half_k][sector]->Add(hfail_data[half_k][sector][i]);
-          if (k%2 == 0) hpass_data_total[half_k][sector]->Add(hpass_data[half_k][sector][i]);
-        }
+	if (i==0) {
+	  if (k%2 != 0) hfail_data_total[half_k][sector] = (TH2F*) hfail_data[half_k][sector][i]->Clone("den2_total_"+vars[k]+"_"+sector_name[sector]);
+	  if (k%2 == 0) hpass_data_total[half_k][sector] = (TH2F*) hpass_data[half_k][sector][i]->Clone("FakeRateByTauPtAndRatio_total_"+sector_name[sector]);
+	}
+	else {
+	  if (k%2 != 0) hfail_data_total[half_k][sector]->Add(hfail_data[half_k][sector][i]);
+	  if (k%2 == 0) hpass_data_total[half_k][sector]->Add(hpass_data[half_k][sector][i]);
+	}
 
-        if (l==0) {
-          if (k%2 != 0) hfail_data_eta[half_k][m][sector] = (TH2F*) hfail_data[half_k][sector][i]->Clone("den2_eta_"+eta[m]+"_"+vars[k]+"_"+sector_name[sector]);
-          if (k%2 == 0) hpass_data_eta[half_k][m][sector] = (TH2F*) hpass_data[half_k][sector][i]->Clone("FakeRateByTauPtAndRatio_eta_"+eta[m]+"_"+sector_name[sector]);
-        }
-        else {
-          if (k%2 != 0) hfail_data_eta[half_k][m][sector]->Add(hfail_data[half_k][sector][i]);
-          if (k%2 == 0) hpass_data_eta[half_k][m][sector]->Add(hpass_data[half_k][sector][i]);
-        }
+	if (l==0) {
+	  if (k%2 != 0) hfail_data_eta[half_k][m][sector] = (TH2F*) hfail_data[half_k][sector][i]->Clone("den2_eta_"+eta[m]+"_"+vars[k]+"_"+sector_name[sector]);
+	  if (k%2 == 0) hpass_data_eta[half_k][m][sector] = (TH2F*) hpass_data[half_k][sector][i]->Clone("FakeRateByTauPtAndRatio_eta_"+eta[m]+"_"+sector_name[sector]);
+	}
+	else {
+	  if (k%2 != 0) hfail_data_eta[half_k][m][sector]->Add(hfail_data[half_k][sector][i]);
+	  if (k%2 == 0) hpass_data_eta[half_k][m][sector]->Add(hpass_data[half_k][sector][i]);
+	}
 
-        if (k%2 != 0) hpass_data[half_k][sector][i]->Divide(hfail_data[half_k][sector][i]);
+	if (k%2 != 0) hpass_data[half_k][sector][i]->Divide(hfail_data[half_k][sector][i]);
       }
     }
   }

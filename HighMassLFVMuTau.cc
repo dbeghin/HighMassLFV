@@ -580,39 +580,40 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	TLorentzVector bjet_p4;
 	if (jet_CSVv2->at(iJet) > bjetMedium2016 && jet_pt->at(iJet) > 30 && fabs(jet_eta->at(iJet)) < 2.4 && jet_isJetIDLoose->at(iJet)) {
 	  bjet_p4.SetPxPyPzE(jet_px->at(iJet), jet_py->at(iJet), jet_pz->at(iJet), jet_energy->at(iJet));
+
+	  //bjet should match neither a tau nor a muon
+	  bool btau = false;
+	  for (unsigned int iTau = 0; iTau < tau_pt->size(); ++iTau) {
+	    TLorentzVector tau_temp_p4;
+	    tau_temp_p4.SetPtEtaPhiE(tau_pt->at(iTau), tau_eta->at(iTau), tau_phi->at(iTau), tau_energy->at(iTau));
+	    if (tau_temp_p4.Pt() < 30.0) continue;
+	    if (fabs(tau_eta->at(iTau)) > 2.3) continue;
+	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
+	    if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
+	    if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	    if (fabs(tau_charge->at(iTau)) != 1) continue;
+	    if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	  
+	    if (bjet_p4.DeltaR(tau_temp_p4) < 0.5) btau = true;
+	    if (btau) break;
+	  }
+	  if (btau) continue;
+	  
+	  bool bmu = false;
+	  for (unsigned int iMu = 0; iMu < mu_ibt_pt->size(); ++iMu) {
+	    TLorentzVector mu_temp_p4;
+	    mu_temp_p4.SetPtEtaPhiM(mu_ibt_pt->at(iMu), mu_ibt_eta->at(iMu), mu_ibt_phi->at(iMu), mu_mass);
+	    if (mu_ibt_pt->at(iMu) < 53.0) continue;
+	    if (!mu_isHighPtMuon->at(iMu)) continue;
+	    if (fabs(mu_ibt_eta->at(iMu)) > 2.4) continue;
+	    if (mu_isoTrackerBased03->at(iMu) > 0.1) continue;
+	  
+	    if (bjet_p4.DeltaR(mu_temp_p4) < 0.5) bmu = true;
+	    if (bmu) break;
+	  }
+	  if (bmu) continue;
+	  ++nbjet;
 	}
-
-	//bjet should match neither a tau nor a muon
-	bool btau = false;
-	for (unsigned int iTau = 0; iTau < tau_pt->size(); ++iTau) {
-	  TLorentzVector tau_temp_p4;
-	  tau_temp_p4.SetPtEtaPhiE(tau_pt->at(iTau), tau_eta->at(iTau), tau_phi->at(iTau), tau_energy->at(iTau));
-	  if (tau_temp_p4.Pt() < 30.0) continue;
-	  if (fabs(tau_eta->at(iTau)) > 2.3) continue;
-	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
-	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-	  if (fabs(tau_charge->at(iTau)) != 1) continue;
-	  if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-
-	  if (bjet_p4.DeltaR(tau_temp_p4) < 0.4) btau = true;
-	  if (btau) break;
-	}
-	if (btau) continue;
-
-	bool bmu = false;
-	for (unsigned int iMu = 0; iMu < mu_ibt_pt->size(); ++iMu) {
-	  TLorentzVector mu_temp_p4;
-	  mu_temp_p4.SetPtEtaPhiM(mu_ibt_pt->at(iMu), mu_ibt_eta->at(iMu), mu_ibt_phi->at(iMu), mu_mass);
-	  if (mu_ibt_pt->at(iMu) < 53.0) continue;
-	  if (!mu_isHighPtMuon->at(iMu)) continue;
-	  if (fabs(mu_ibt_eta->at(iMu)) > 2.4) continue;
-
-	  if (bjet_p4.DeltaR(mu_temp_p4) < 0.4) bmu = true;
-	  if (bmu) break;
-	}
-	if (bmu) continue;
-	++nbjet;
 	if (nbjet >= 2) break;
       }
 

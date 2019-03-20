@@ -124,24 +124,6 @@ int main(int argc, char** argv) {
     file_in_faketau = new TFile("HighMassLFVMuTau/Faketaus_CR102.root", "R");
   }
 
-  TFile* file_in_QCD = new TFile(folder_in+"/Arranged_QCD/QCD.root", "R");
-  vector<TFile*> QCD_files;
-  TFile* file_in_QCD_15to30 = new TFile(folder_in+"/Arranged_QCD/QCD_15to30.root", "R");              QCD_files.push_back(file_in_QCD_15to30);
-  TFile* file_in_QCD_30to50 = new TFile(folder_in+"/Arranged_QCD/QCD_30to50.root", "R");              QCD_files.push_back(file_in_QCD_30to50);
-  TFile* file_in_QCD_50to80 = new TFile(folder_in+"/Arranged_QCD/QCD_50to80.root", "R");              QCD_files.push_back(file_in_QCD_50to80);
-  TFile* file_in_QCD_80to120 = new TFile(folder_in+"/Arranged_QCD/QCD_80to120.root", "R");            QCD_files.push_back(file_in_QCD_80to120);
-  TFile* file_in_QCD_120to170 = new TFile(folder_in+"/Arranged_QCD/QCD_120to170.root", "R");          QCD_files.push_back(file_in_QCD_120to170);
-  TFile* file_in_QCD_170to300 = new TFile(folder_in+"/Arranged_QCD/QCD_170to300.root", "R");          QCD_files.push_back(file_in_QCD_170to300);
-  TFile* file_in_QCD_300to470 = new TFile(folder_in+"/Arranged_QCD/QCD_300to470.root", "R");          QCD_files.push_back(file_in_QCD_300to470);
-  TFile* file_in_QCD_470to600 = new TFile(folder_in+"/Arranged_QCD/QCD_470to600.root", "R");          QCD_files.push_back(file_in_QCD_470to600);
-  TFile* file_in_QCD_600to800 = new TFile(folder_in+"/Arranged_QCD/QCD_600to800.root", "R");          QCD_files.push_back(file_in_QCD_600to800);
-  TFile* file_in_QCD_800to1000 = new TFile(folder_in+"/Arranged_QCD/QCD_800to1000.root", "R");        QCD_files.push_back(file_in_QCD_800to1000);
-  TFile* file_in_QCD_1000to1400 = new TFile(folder_in+"/Arranged_QCD/QCD_1000to1400.root", "R");      QCD_files.push_back(file_in_QCD_1000to1400);
-  TFile* file_in_QCD_1400to1800 = new TFile(folder_in+"/Arranged_QCD/QCD_1400to1800.root", "R");      QCD_files.push_back(file_in_QCD_1400to1800);
-  TFile* file_in_QCD_1800to2400 = new TFile(folder_in+"/Arranged_QCD/QCD_1800to2400.root", "R");      QCD_files.push_back(file_in_QCD_1800to2400);
-  TFile* file_in_QCD_2400to3200 = new TFile(folder_in+"/Arranged_QCD/QCD_2400to3200.root", "R");      QCD_files.push_back(file_in_QCD_2400to3200);
-  
-
   TFile* file_in_WJets = new TFile(folder_in+"/Arranged_WJets/WJets.root", "R");
   vector<TFile*> WJets_files;
   TFile* file_in_WJets_lowpt = new TFile(folder_in+"/Arranged_WJets/WJets_inclusive.root", "R");     WJets_files.push_back(file_in_WJets_lowpt);
@@ -207,7 +189,9 @@ int main(int argc, char** argv) {
   Mth.push_back("MtHigh_TT"); //FIXME
 
   vector<TString> systs;              
-  systs.push_back("");                
+  systs.push_back("");
+  systs.push_back("topreweight_up_");
+  systs.push_back("topreweight_down_");
   if (CR == "CR101" || CR == "CR103") {
     systs.push_back("fakerate_up_");  
     systs.push_back("fakerate_down_");
@@ -231,24 +215,6 @@ int main(int argc, char** argv) {
   double xs_WJets_250to400 = 21.8;	   xs_WJets.push_back(xs_WJets_250to400);
   double xs_WJets_400to600 = 2.635;	   xs_WJets.push_back(xs_WJets_400to600);
   double xs_WJets_600toInf = 0.4102;       xs_WJets.push_back(xs_WJets_600toInf);
-
-  double xs_QCD_muenriched = 720648000*0.00042;
-  //double xs_QCD_inc = 1953000;
-  vector<double> xs_QCD;
-  double xs_QCD_15to30 = /*0;*/1.822*pow(10,9);    xs_QCD.push_back(xs_QCD_15to30);
-  double xs_QCD_30to50 = /*0;*/1.387*pow(10,8);    xs_QCD.push_back(xs_QCD_30to50);
-  double xs_QCD_50to80 = /*0;*/1.913*pow(10,7);    xs_QCD.push_back(xs_QCD_50to80);
-  double xs_QCD_80to120 = 2.736*pow(10,6);   xs_QCD.push_back(xs_QCD_80to120);
-  double xs_QCD_120to170 = 4.663*pow(10,5);  xs_QCD.push_back(xs_QCD_120to170);
-  double xs_QCD_170to300 = 1.172*pow(10,5);  xs_QCD.push_back(xs_QCD_170to300);
-  double xs_QCD_300to470 = 7.76*pow(10,3);   xs_QCD.push_back(xs_QCD_300to470);
-  double xs_QCD_470to600 = 640.5;	     xs_QCD.push_back(xs_QCD_470to600);
-  double xs_QCD_600to800 = 185.9;	     xs_QCD.push_back(xs_QCD_600to800);
-  double xs_QCD_800to1000 = 32;		     xs_QCD.push_back(xs_QCD_800to1000);
-  double xs_QCD_1000to1400 = 9.37;	     xs_QCD.push_back(xs_QCD_1000to1400);
-  double xs_QCD_1400to1800 = 0.838;	     xs_QCD.push_back(xs_QCD_1400to1800);
-  double xs_QCD_1800to2400 = 0.112;	     xs_QCD.push_back(xs_QCD_1800to2400);
-  double xs_QCD_2400to3200 = 6.74*pow(10,-3); xs_QCD.push_back(xs_QCD_2400to3200);
 
   vector<double> xs_TT;
   double xs_TT_lowmll = 85.5/*831.76*/;      xs_TT.push_back(xs_TT_lowmll);   
@@ -338,7 +304,7 @@ int main(int argc, char** argv) {
 
           var_in = vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
 	  if (CR == "CR100") {
-	    var_out = vars[i]+"_"+Mth[l];
+	    var_out = systs[k]+vars[i]+"_"+Mth[l];
 	  }
 	  else {
 	    var_out = var_in;
@@ -362,10 +328,6 @@ int main(int argc, char** argv) {
             h_faketau->Write();
           }
           else {
-            if (CR == "CR0" || CR == "CR2") {
-              TH1F* h_QCD = (TH1F*) file_in_QCD->Get("QCD_"+var_in);
-              h_QCD->Write();
-            }
             
             if (CR == "CR0") {
               TH1F* h_WJets = (TH1F*) file_in_WJets->Get("WJets_"+var_in);
@@ -444,6 +406,12 @@ int main(int argc, char** argv) {
 
 	TH1F* h_faketaus_low = (TH1F*) file_in_faketau -> Get("faketau_fakerate_down_"+vars[i]+"_"+Mth[k]);
 	h_faketaus_low->Write();
+
+	TH1F* h_faketaus_TT_high = (TH1F*) file_in_faketau -> Get("faketau_topreweight_up_"+vars[i]+"_"+Mth[k]);
+	h_faketaus_TT_high->Write();
+
+	TH1F* h_faketaus_TT_low = (TH1F*) file_in_faketau -> Get("faketau_topreweight_down_"+vars[i]+"_"+Mth[k]);
+	h_faketaus_TT_low->Write();
       }
     }
   }

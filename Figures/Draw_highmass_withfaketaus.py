@@ -54,7 +54,7 @@ def make_legend():
     return output
 
 
-def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low):
+def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low, Faketau_topreweight_high, Faketau_topreweight_low, TT_topreweight_high, TT_topreweight_low):
     Data.GetXaxis().SetTitle("")
     Data.GetXaxis().SetTitleSize(0)
     #if var_in == "ev_Mcol": Data.GetXaxis().SetRangeUser(0,500) 
@@ -129,8 +129,12 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low)
     
     h4=Faketau_high.Clone()
     h4.Add(Faketau, -1)
+    h5=Faketau_topreweight_high.Clone() #FIXME
+    h5.Add(TT_topreweight_high)
+    h5.Add(Faketau, -1)
+    h5.Add(TT, -1)
     for iii in range(1, h4.GetNbinsX()+1):
-        bin_error = pow(pow(h4.GetBinContent(iii),2) + pow(errorBand.GetBinError(iii),2),0.5)
+        bin_error = pow(pow(h4.GetBinContent(iii),2) + pow(errorBand.GetBinError(iii),2) + pow(h5.GetBinContent(iii),2), 0.5)
         errorBand.SetBinError(iii, bin_error)
 
     
@@ -298,12 +302,12 @@ var=[]
 #var.append("ev_Mtot")          
 var.append("tau_pt")           
 var.append("tau_eta")          
-#var.append("tau_phi")          
+var.append("tau_phi")          
 var.append("mu_pt")            
 var.append("mu_eta")           
-#var.append("mu_phi")           
-#var.append("mu_isolation")           
-#var.append("ev_DRmutau")       
+var.append("mu_phi")           
+var.append("mu_isolation")           
+var.append("ev_DRmutau")       
 #var.append("ev_DeltaPhimutau") 
 #var.append("ev_DeltaPhiMETtau")
 var.append("ev_MET")           
@@ -375,6 +379,11 @@ for k in range (0,nvar):
     Faketau_OS=file.Get("faketau_"+var_in)
     Faketau_high_OS=file.Get("faketau_fakerate_up_"+var_in)
     Faketau_low_OS=file.Get("faketau_fakerate_down_"+var_in)
+    Faketau_topreweight_high_OS=file.Get("faketau_topreweight_up_"+var_in)
+    Faketau_topreweight_low_OS=file.Get("faketau_topreweight_down_"+var_in)
+    TT_topreweight_high_OS=file.Get("TT_topreweight_up_"+var_in)
+    TT_topreweight_low_OS=file.Get("TT_topreweight_down_"+var_in)
+
 
     for l in range (0,len(Mth)):
         var_in = var[k]+Mth[l]
@@ -390,6 +399,10 @@ for k in range (0,nvar):
         Faketau=file.Get("faketau_"+var_in)
         Faketau_high=file.Get("faketau_fakerate_up_"+var_in)
         Faketau_low=file.Get("faketau_fakerate_down_"+var_in)
+        Faketau_topreweight_high=file.Get("faketau_topreweight_up_"+var_in)
+        Faketau_topreweight_low=file.Get("faketau_topreweight_down_"+var_in)
+        TT_topreweight_high=file.Get("TT_topreweight_up_"+var_in)
+        TT_topreweight_low=file.Get("TT_topreweight_down_"+var_in)
 
         Data_MtLow=Data.Clone()
         DY_MtLow=DY.Clone()
@@ -399,8 +412,13 @@ for k in range (0,nvar):
         Faketau_MtLow=Faketau.Clone()
         Faketau_high_MtLow=Faketau_high.Clone()
         Faketau_low_MtLow=Faketau_low.Clone()
+        Faketau_topreweight_high_MtLow =Faketau_topreweight_high.Clone()
+        Faketau_topreweight_low_MtLow  =Faketau_topreweight_low.Clone()
+        TT_topreweight_high_MtLow      =TT_topreweight_high.Clone()
+        TT_topreweight_low_MtLow       =TT_topreweight_low.Clone()
 
-        make_plot(var_in, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low)
+
+        make_plot(var_in, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low, Faketau_topreweight_high, Faketau_topreweight_low, TT_topreweight_high, TT_topreweight_low)
         
 
         if "MtLow_SS" in var_in:
@@ -412,9 +430,13 @@ for k in range (0,nvar):
             Faketau_MtLow.Add(Faketau_OS)
             Faketau_high_MtLow.Add(Faketau_high_OS)
             Faketau_low_MtLow.Add(Faketau_low_OS)
+            Faketau_topreweight_high_MtLow.Add(Faketau_topreweight_high_OS)
+            Faketau_topreweight_low_MtLow.Add(Faketau_topreweight_low_OS)
+            TT_topreweight_high_MtLow.Add(TT_topreweight_high_OS)
+            TT_topreweight_low_MtLow.Add(TT_topreweight_low_OS)
 
 
-            make_plot(var[k]+"_MtLow", Data_MtLow, DY_MtLow, TT_MtLow, VV_MtLow, ST_MtLow, Faketau_MtLow, Faketau_high_MtLow, Faketau_low_MtLow)
+            make_plot(var[k]+"_MtLow", Data_MtLow, DY_MtLow, TT_MtLow, VV_MtLow, ST_MtLow, Faketau_MtLow, Faketau_high_MtLow, Faketau_low_MtLow, Faketau_topreweight_high_MtLow, Faketau_topreweight_low_MtLow, TT_topreweight_high_MtLow, TT_topreweight_low_MtLow)
         
 
 

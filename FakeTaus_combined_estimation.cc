@@ -67,6 +67,8 @@ int main(int argc, char** argv) {
 
   vector<TString> systs;            
   systs.push_back("");              
+  systs.push_back("topreweight_up_");
+  systs.push_back("topreweight_down_");
   systs.push_back("fakerate_up_");
   systs.push_back("fakerate_down_");
   
@@ -78,6 +80,7 @@ int main(int argc, char** argv) {
     for (unsigned int j=0; j<vars.size(); ++j) {
       for (unsigned int k=0; k<systs.size(); ++k) {
 	for (unsigned int l=0; l<Mth.size(); ++l) {
+	  cout << names[i]+vars[j]+"_"+"realtau_"+systs[k]+Mth[l] << endl;
 	  h[i][j][k].push_back( (TH1F*) file_in->Get(names[i]+vars[j]+"_"+"realtau_"+systs[k]+Mth[l]) );
 	  h[i][j][k][l]->SetName(names[i]+vars[j]+"_"+systs[k]+Mth[l]);
 	}

@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
   TFile* file_in_signal = new TFile("Figures/histos_signal.root", "R");
 
 
-  vector<TString> in_names,                       out_names;
+  vector<TString> in_names,               out_names;
   in_names.push_back("faketau_");	  out_names.push_back("faketau");
   in_names.push_back("DY_");  		  out_names.push_back("DY");  
   in_names.push_back("VV_");   		  out_names.push_back("VV");   
@@ -27,10 +27,12 @@ int main(int argc, char** argv) {
   in_names.push_back("data_"); 		  out_names.push_back("data_obs");
 
 
-  vector<TString> in_sys,             out_sys;
-  in_sys.push_back("");               out_sys.push_back("");
-  in_sys.push_back("fakerate_up_");   out_sys.push_back("fakerate_up_");
-  in_sys.push_back("fakerate_down_"); out_sys.push_back("fakerate_down_");
+  vector<TString> in_sys,                out_sys;
+  in_sys.push_back("");                  out_sys.push_back("");
+  in_sys.push_back("fakerate_up_");      out_sys.push_back("fakerate_up_");
+  in_sys.push_back("fakerate_down_");    out_sys.push_back("fakerate_down_");
+  in_sys.push_back("topreweight_up_");   out_sys.push_back("topreweight_up_");
+  in_sys.push_back("topreweight_down_"); out_sys.push_back("topreweight_down_");
 
 
   vector<TString> mass;  

@@ -23,8 +23,12 @@ int main(/*int argc, char** argv*/) {
   names.push_back("faketau_");
   names.push_back("faketau_fakerate_up_");
   names.push_back("faketau_fakerate_down_");
+  names.push_back("faketau_topreweight_up_");  
+  names.push_back("faketau_topreweight_down_");
   names.push_back("DY_");
   names.push_back("TT_");
+  names.push_back("TT_topreweight_up_");  
+  names.push_back("TT_topreweight_down_");
   names.push_back("ST_");
   names.push_back("VV_");
   //names.push_back("Signal_");//FIXME
@@ -77,6 +81,7 @@ int main(/*int argc, char** argv*/) {
   for (unsigned int j=0; j<names.size(); ++j) {
     for (unsigned int k=0; k<vars.size(); ++k) { 
       for (unsigned int l=0; l<Mth.size(); ++l) {
+	cout << names[j]+vars[k]+Mth[l] << endl;
 	h[j][k].push_back( (TH1F*) file_in->Get(names[j]+vars[k]+Mth[l]) );
 	h[j][k][l]->SetName(names[j]+vars[k]+Mth[l]+"_old");
 
