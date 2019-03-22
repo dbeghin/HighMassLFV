@@ -1,5 +1,6 @@
 #define IIHEAnalysis_cxx
 #include "IIHEAnalysis_old.h"
+#include "meta.h"
 //#include <TH1.h>
 #include <TLorentzVector.h>
 //#include <TCanvas.h>
@@ -18,20 +19,59 @@ int main(int argc, char** argv) {
   string type_in = *(argv + 4);
   string type= type_in;
   TFile *fIn = TFile::Open(inname.c_str());
-  TH1F* hCounter = (TH1F*) fIn->Get("h1");
-  TH1F* hCounter2 = (TH1F*) fIn->Get("h2");
   TTree* tree = (TTree*) fIn->Get("IIHEAnalysis");
 
+
+  TTree* mmeta = (TTree*) fIn->Get("meta");
+  meta* m = new meta(mmeta);
+  Float_t nEvents = m->Loop(type);
+
   IIHEAnalysis* a = new IIHEAnalysis(tree);
-  a->Loop(phase, type, out_name, hCounter, hCounter2);
+  a->Loop(phase, type, out_name, nEvents);
   return 0;
 }
+
+
+
+//Get weighted events
+Float_t meta::Loop(string type_of_data) {
+  if (fChain == 0) return -1;
+
+  bool data;
+  if (type_of_data == "Data" || type_of_data == "data" || type_of_data == "singlephoton" || type_of_data == "SinglePhoton" || type_of_data == "singlemu" || type_of_data == "SingleMu") {
+    data = true;
+  }
+  else {
+    data = false;
+  }
+
+  Long64_t nentries = fChain->GetEntriesFast();
+
+  Long64_t nbytes = 0, nb = 0;
+  Float_t nEvents = -1;
+  for (Long64_t jentry=0; jentry<nentries;jentry++) {
+    Long64_t ientry = LoadTree(jentry);
+    if (ientry < 0) break;
+    nb = fChain->GetEntry(jentry);   nbytes += nb;
+    
+    if (data) {
+      nEvents = nEventsRaw;
+    }
+    else {
+      nEvents = mc_nEventsWeighted;
+    }
+    break;
+  }
+  return nEvents;
+}
+
 
 /////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //Currently set up to calculate fake rates in the etau region
 ////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F* hCounter, TH1F* hCounter2) {
+//main analysis loop
+void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_name, Float_t nEvents) {
    if (fChain == 0) return;
 
    bool DY, data;
@@ -333,9 +373,10 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name, TH1F
       }//loop over muons
    }//loop over events
 
+   TH1F* h_total_events =  new TH1F("weighted_events", "weighted_events", 1, 0, 1);
+   h_total_events->Fill(0.5, nEvents);
    file_out->cd();
-   //hCounter->Write();
-   //hCounter2->Write();
+   h_total_events->Write();
    h_reweight->Write();
    for (unsigned int i = 0; i<histo_names.size(); ++i) h[i]->Write();
    for (unsigned int i=0; i<htau_names.size(); ++i) for (unsigned int j=0; j<dms.size(); ++j) for (unsigned int k=0; k<eta.size(); ++k) for (unsigned int l=0; l<trigger.size(); ++l) htau[i][j][k][l]->Write();
