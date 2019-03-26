@@ -18,9 +18,11 @@
 using namespace std;
 
 
-TH1F* MC_histo(TString var, TFile* file_in, double xs, long Nevents, int rebin) {
+TH1F* MC_histo(TString var, TFile* file_in, TFile* file_in_d, double xs, int rebin) {
 
   cout << file_in->GetName() << endl;
+
+  
 
   double lumi = 35.9 * pow(10,3); //luminosity in pb^-1
 

@@ -217,11 +217,11 @@ int main(int argc, char** argv) {
   double xs_WJets_600toInf = 0.4102;       xs_WJets.push_back(xs_WJets_600toInf);
 
   vector<double> xs_TT;
-  double xs_TT_lowmll = 85.5/*831.76*/;      xs_TT.push_back(xs_TT_lowmll);   
-  double xs_TT_500to800 = 0.319;             xs_TT.push_back(xs_TT_500to800); 
-  double xs_TT_800to1200 = 3.196e-2;	     xs_TT.push_back(xs_TT_800to1200); 
-  double xs_TT_1200to1800 = 2.987e-3;	     xs_TT.push_back(xs_TT_1200to1800); 
-  double xs_TT_1800toInf = 1.711e-4;         xs_TT.push_back(xs_TT_1800toInf); 
+  double xs_TT_lowmll = 87.31;               xs_TT.push_back(xs_TT_lowmll);   
+  double xs_TT_500to800 = 0.326;             xs_TT.push_back(xs_TT_500to800); 
+  double xs_TT_800to1200 = 3.26e-2;	     xs_TT.push_back(xs_TT_800to1200); 
+  double xs_TT_1200to1800 = 3.05e-3;	     xs_TT.push_back(xs_TT_1200to1800); 
+  double xs_TT_1800toInf = 1.74e-4;          xs_TT.push_back(xs_TT_1800toInf); 
 
   vector<double> xs_WW;
   double xs_WW_lowm = /*63.21*/12.178;       xs_WW.push_back(xs_WW_lowm);
