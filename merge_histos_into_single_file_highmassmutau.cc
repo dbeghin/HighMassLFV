@@ -235,64 +235,6 @@ int main(int argc, char** argv) {
   double xs_ZZ = 10.32;
   double xs_signal = 20;
 
-  //Nevents
-  vector<double> N_DY;
-  double N_DY_lowmass = 56653095 + 24936833;  N_DY.push_back(N_DY_lowmass);   
-  double N_DY_400to500 = 151168;	      N_DY.push_back(N_DY_400to500);  
-  double N_DY_500to700 = 144087;	      N_DY.push_back(N_DY_500to700);  
-  double N_DY_700to800 = 136874;	      N_DY.push_back(N_DY_700to800);  
-  double N_DY_800to1000 = 131568;	      N_DY.push_back(N_DY_800to1000); 
-  double N_DY_1000to1500 = 119990;	      N_DY.push_back(N_DY_1000to1500);
-  double N_DY_1500to2000 = 111668;	      N_DY.push_back(N_DY_1500to2000);
-  double N_DY_2000to3000 = 101266;	      N_DY.push_back(N_DY_2000to3000);
-
-  vector<double> N_WJets;
-  double N_WJets_lowpt = 57025279 + 29584813;                         N_WJets.push_back(N_WJets_lowpt);	 
-  double N_WJets_100to250 = 3605796 + 3645002 + 28601158 + 7436491;   N_WJets.push_back(N_WJets_100to250);
-  double N_WJets_250to400 = 369311 + 369256 + 3696492;		      N_WJets.push_back(N_WJets_250to400);
-  double N_WJets_400to600 = 364427 + 376433;			      N_WJets.push_back(N_WJets_400to600);
-  double N_WJets_600toInf = 396336 + 396394;                          N_WJets.push_back(N_WJets_600toInf);
-
-
-  double N_QCD_muenriched = 22093506;//9951232;//check metadata
-  vector<double> N_QCD;
-  long N_QCD_15to30 = 37585689;              N_QCD.push_back(N_QCD_15to30);
-  long N_QCD_30to50 = 9979945;               N_QCD.push_back(N_QCD_30to50);
-  long N_QCD_50to80 = 9954259;               N_QCD.push_back(N_QCD_50to80);
-  long N_QCD_80to120 = 7608728+6986638;      N_QCD.push_back(N_QCD_80to120);
-  long N_QCD_120to170 = 5504047+6324260;     N_QCD.push_back(N_QCD_120to170);
-  long N_QCD_170to300 = 6855630+6799704;     N_QCD.push_back(N_QCD_170to300);
-  long N_QCD_300to470 = 4150323+14771394;    N_QCD.push_back(N_QCD_300to470);
-  long N_QCD_470to600 = 3866704;             N_QCD.push_back(N_QCD_470to600);
-  long N_QCD_600to800 = 3810427+9496102;     N_QCD.push_back(N_QCD_600to800);
-  long N_QCD_800to1000 = 13715052;           N_QCD.push_back(N_QCD_800to1000);
-  long N_QCD_1000to1400 = 2829635+6539554;   N_QCD.push_back(N_QCD_1000to1400);
-  long N_QCD_1400to1800 = 312291+2310326;    N_QCD.push_back(N_QCD_1400to1800);
-  long N_QCD_1800to2400 = 397083+1549881;    N_QCD.push_back(N_QCD_1800to2400);
-  long N_QCD_2400to3200 = 398491+550068;     N_QCD.push_back(N_QCD_2400to3200); 
-
-
-  vector<double> N_TT;
-  double N_TT_lowmll = 75897555;              N_TT.push_back(N_TT_lowmll);   
-  double N_TT_500to800 = 199979;	      N_TT.push_back(N_TT_500to800); 
-  double N_TT_800to1200 = 199773;	      N_TT.push_back(N_TT_800to1200);
-  double N_TT_1200to1800 = 199956;	      N_TT.push_back(N_TT_1200to1800);
-  double N_TT_1800toInf = 40816;	      N_TT.push_back(N_TT_1800toInf);
-
-  vector<double> N_WW;
-  double N_WW_lowm = 1021000;                N_WW.push_back(N_WW_lowm);
-  double N_WW_200to600 = 199991;             N_WW.push_back(N_WW_200to600); 
-  double N_WW_600to1200 = 74997;             N_WW.push_back(N_WW_600to1200); 
-  double N_WW_1200to2500 = 99992;            N_WW.push_back(N_WW_1200to2500); 
-  double N_WW_2500toInf = 13968;             N_WW.push_back(N_WW_2500toInf); 
-
-  double N_ST = 3256548 + 3256309;
-
-  double N_WZ = 921116;
-  double N_ZZ = 990051;
-
-
-  double N_signal = 14994;
   TString var_in, var_out;
 
   file_out->cd();

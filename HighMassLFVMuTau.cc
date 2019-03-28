@@ -502,6 +502,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	for (unsigned int iMC = 0; iMC < mc_tau_had_pt->size(); ++iMC) {
 	  p4.SetPtEtaPhiE(mc_tau_had_pt->at(iMC), mc_tau_had_eta->at(iMC), mc_tau_had_phi->at(iMC), mc_tau_had_energy->at(iMC));
 	  tauhp4.push_back( p4 );
+	  anyleptonp4.push_back( p4 );
 	}
       }//end is this not-data? condition
 
@@ -513,6 +514,13 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       if (!data) if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
       if (!PassTrigger) continue;
 
+      if(!trig_Flag_goodVertices_accept) continue;
+      if(!trig_Flag_globalSuperTightHalo2016Filter_accept) continue;
+      if(!trig_Flag_HBHENoiseFilter_accept) continue;
+      if(!trig_Flag_HBHENoiseIsoFilter_accept) continue;
+      if(!trig_Flag_EcalDeadCellTriggerPrimitiveFilter_accept) continue;
+      if(!trig_Flag_BadPFMuonFilter_accept) continue;
+      
 
       //Sort muons, taus by decreasing pt
       float pt = 0.0;
