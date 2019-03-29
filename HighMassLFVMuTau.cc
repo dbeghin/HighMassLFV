@@ -357,6 +357,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           ++print_count;
           //cout << endl << "LHE info" << endl;
         }
+	bool found_1 = false, found_2 = false;
         for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
           if (print_count < 20) {
             //cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
@@ -364,14 +365,16 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           if (LHE_pdgid->at(iLHE) == 11 || LHE_pdgid->at(iLHE) == 13 || LHE_pdgid->at(iLHE) == 15) {
             l1_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
             l1_pdgid = LHE_pdgid->at(iLHE);
+	    found_1 = true;
           }
           else if (LHE_pdgid->at(iLHE) == -11 || LHE_pdgid->at(iLHE) == -13 || LHE_pdgid->at(iLHE) == -15) {
             l2_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
             l2_pdgid = LHE_pdgid->at(iLHE);
+	    found_2 = true;
           }
 	  if (abs(LHE_pdgid->at(iLHE)) == 13) Zmumu = true;
         }
-        if (l1_pdgid == -l2_pdgid) {
+        if ((l1_pdgid == -l2_pdgid) && found_1 && found_2) {
           ll_p4 = l1_p4 + l2_p4;
           if (ll_p4.M() > 400) reject_event = true;
         }
@@ -389,6 +392,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           ++print_count;
           //cout << endl << "LHE info" << endl;
         }
+
+	bool found_1 = false, found_2 = false;
         for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
           if (print_count < 20) {
 	    // cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
@@ -396,13 +401,15 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           if (abs(LHE_pdgid->at(iLHE)) == 11 || abs(LHE_pdgid->at(iLHE)) == 13 || abs(LHE_pdgid->at(iLHE)) == 15) {
             l_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
             l_pdgid = LHE_pdgid->at(iLHE);
+	    found_1 = true;
           }
           else if (abs(LHE_pdgid->at(iLHE)) == 12 || abs(LHE_pdgid->at(iLHE)) == 14 || abs(LHE_pdgid->at(iLHE)) == 16) {
             nu_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
             nu_pdgid = LHE_pdgid->at(iLHE);
+	    found_2 = true;
           }
         }
-        if (abs(l_pdgid) == abs(nu_pdgid)-1) {
+        if ((abs(l_pdgid) == abs(nu_pdgid)-1) && found_1 && found_2) {
           lnu_p4 = l_p4 + nu_p4;
           if (lnu_p4.Pt() > 100) reject_event = true;
         }
@@ -420,6 +427,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           ++print_count;
           cout << endl << jEntry << endl << "LHE info size " << LHE_Pt->size() << endl;
         }
+
+	bool found_1 = false, found_2 = false;
         for (unsigned int iLHE = 0; iLHE < LHE_Pt->size(); ++iLHE) {
           if (print_count < 20) {
             cout << LHE_pdgid->at(iLHE) << "  " << LHE_Pt->at(iLHE) << "  " << LHE_Eta->at(iLHE) << "  " << LHE_Phi->at(iLHE) << "  " << LHE_E->at(iLHE) << endl;
@@ -427,13 +436,16 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
           if (abs(LHE_pdgid->at(iLHE)) == 11 || abs(LHE_pdgid->at(iLHE)) == 13 || abs(LHE_pdgid->at(iLHE)) == 15) {
             l1_p4.SetPtEtaPhiE(LHE_Pt->at(iLHE),LHE_Eta->at(iLHE),LHE_Phi->at(iLHE),LHE_E->at(iLHE));
             l1_pdgid = LHE_pdgid->at(iLHE);
+	    found_1 = true;
           }
 
           for (unsigned int jLHE = 0; jLHE < iLHE; ++jLHE) {
             if (abs(LHE_pdgid->at(iLHE)) == 11 || abs(LHE_pdgid->at(iLHE)) == 13 || abs(LHE_pdgid->at(iLHE)) == 15) {
               l2_p4.SetPtEtaPhiE(LHE_Pt->at(jLHE),LHE_Eta->at(jLHE),LHE_Phi->at(iLHE),LHE_E->at(jLHE));
               l2_pdgid = LHE_pdgid->at(jLHE);
+	      found_2 = true;
             }
+	    if (!(found_1 && found_2)) continue;
             ll_p4 = l1_p4 + l2_p4;
 	    if (TTinc) {
 	      if (ll_p4.M() > 500) reject_event = true;
