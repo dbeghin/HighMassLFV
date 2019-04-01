@@ -50,7 +50,7 @@ int main(/*int argc, char** argv*/) {
 
   vector<vector<float>> ypoints;										      
   vector<float> ypoints_left {0, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 1., 3.};      ypoints.push_back(ypoints_left); 
-  vector<float> ypoints_right {0, 0.6, 0.8, 1., 3};		               ypoints.push_back(ypoints_right);
+  vector<float> ypoints_right {0, 0.6, 0.7, 0.8, 1., 3};		               ypoints.push_back(ypoints_right);
 
   vector<TH2F*> h[names.size()][vars.size()][dms.size()];
   for (unsigned int j=0; j<names.size(); ++j) {
