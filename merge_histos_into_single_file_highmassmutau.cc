@@ -193,8 +193,8 @@ int main(int argc, char** argv) {
   systs.push_back("topreweight_up_");
   systs.push_back("topreweight_down_");
   if (CR == "CR101" || CR == "CR103") {
-    systs.push_back("fakerate_up_");  
-    systs.push_back("fakerate_down_");
+    systs.push_back("fakerate_DY_up_");
+    systs.push_back("fakerate_norm_up_");
   }
 
   //cross-sections
