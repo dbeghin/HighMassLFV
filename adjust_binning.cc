@@ -23,8 +23,12 @@ int main(/*int argc, char** argv*/) {
   names.push_back("faketau_");
   names.push_back("faketau_fakerate_up_");
   names.push_back("faketau_fakerate_down_");
+  names.push_back("faketau_topreweight_up_");  
+  names.push_back("faketau_topreweight_down_");
   names.push_back("DY_");
   names.push_back("TT_");
+  names.push_back("TT_topreweight_up_");  
+  names.push_back("TT_topreweight_down_");
   names.push_back("ST_");
   names.push_back("VV_");
   //names.push_back("Signal_");//FIXME
@@ -36,7 +40,8 @@ int main(/*int argc, char** argv*/) {
 
   vector<float> xpoints_MET {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 500/*, 700, 1000*/};
 
-  vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 200, 250, 300, 350, 400, 500};
+  vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 200, 300, 500, 1000};
+  //vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 300, 1000};
 
   //vector<float> xpoints_Mt {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120}; //for Mt low FIXME
   vector<float> xpoints_Mt = xpoints; //for Mt high
@@ -60,11 +65,14 @@ int main(/*int argc, char** argv*/) {
   vars.push_back("ev_MET");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_MET);
   vars.push_back("ev_Mcol");                simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints);                
   vars.push_back("ev_Mt");                  simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_Mt);                
+  vars.push_back("sign");                   simpleRebin.push_back(true);      rebin.push_back(1);     rebin_vector.push_back(xpoints);                
 
   vector<TString> Mth;
   Mth.push_back("_MtHigh");
   Mth.push_back("_MtLow_OS");
   Mth.push_back("_MtLow_SS");
+  Mth.push_back("_MtHigh_TT");
+  Mth.push_back("_MtLow_TT");
 
 
   //retrieve all histos and rebin them
@@ -73,6 +81,7 @@ int main(/*int argc, char** argv*/) {
   for (unsigned int j=0; j<names.size(); ++j) {
     for (unsigned int k=0; k<vars.size(); ++k) { 
       for (unsigned int l=0; l<Mth.size(); ++l) {
+	cout << names[j]+vars[k]+Mth[l] << endl;
 	h[j][k].push_back( (TH1F*) file_in->Get(names[j]+vars[k]+Mth[l]) );
 	h[j][k][l]->SetName(names[j]+vars[k]+Mth[l]+"_old");
 

@@ -18,9 +18,11 @@
 using namespace std;
 
 
-TH1F* MC_histo(TString var, TFile* file_in, double xs, long Nevents, int rebin) {
+TH1F* MC_histo(TString var, TFile* file_in, TFile* file_in_d, double xs, int rebin) {
 
   cout << file_in->GetName() << endl;
+
+  
 
   double lumi = 35.9 * pow(10,3); //luminosity in pb^-1
 
@@ -159,8 +161,8 @@ int main(int argc, char** argv) {
   vars.push_back("mu_phi");           
 
   vector<TString> vars_TH2;
-  vars_TH2.push_back("taupt_jetpt_pass");
-  vars_TH2.push_back("taupt_jetpt_fail");
+  vars_TH2.push_back("taupt_ratio_pass");
+  vars_TH2.push_back("taupt_ratio_fail");
   
 
   vector<TString> dms;

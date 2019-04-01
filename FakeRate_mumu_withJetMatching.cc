@@ -76,8 +76,8 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
   }
 
   vector<TString> h_names;
-  h_names.push_back("taupt_jetpt_pass"); int iJetPtPass = h_names.size()-1;
-  h_names.push_back("taupt_jetpt_fail"); int iJetPtFail = h_names.size()-1;
+  h_names.push_back("taupt_ratio_pass"); int iJetPtPass = h_names.size()-1;
+  h_names.push_back("taupt_ratio_fail"); int iJetPtFail = h_names.size()-1;
 
   vector<TString> dms;
   dms.push_back("DM0");  int k_DM0  = dms.size()-1;
@@ -94,7 +94,7 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
     for (unsigned int k = 0; k<dms.size(); ++k) {
       for (unsigned int l = 0; l<eta.size(); ++l) {
 	TString nname = h_names[i]+"_"+dms[k]+"_"+eta[l];
-	hh[i][k].push_back( new TH2F(nname, nname, 1000, 0, 1000, 1000, 0, 1000) );
+	hh[i][k].push_back( new TH2F(nname, nname, 1000, 0, 1000, 1000, 0, 10) );
 	hh[i][k][l]->Sumw2();
       }
     }
@@ -143,20 +143,22 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
     if (electron) continue;*/
 
 
-    vector<TLorentzVector> gen_tauh_p4;
-    gen_tauh_p4.clear();
+    vector<TLorentzVector> anylepton_p4;
+    anylepton_p4.clear();
     if(!data) {  
       for (unsigned int iGen = 0; iGen < mc_px->size(); iGen++){
 
         TLorentzVector gen_part, gen_part2, gen_part3;
         gen_part.SetPxPyPzE(mc_px->at(iGen),mc_py->at(iGen),mc_pz->at(iGen),mc_energy->at(iGen));
+
+	if (abs(mc_pdgId->at(iGen))==11 || abs(mc_pdgId->at(iGen))==13) anylepton_p4.push_back(gen_part);
+
         bool isTau = abs(mc_pdgId->at(iGen))==15  ? true : false ;
         unsigned int  moth_ind = mc_mother_index->at(iGen).at(0);
         bool ishadronicdecay(false);
         int neutrino = 0;
-        bool leptau= false;
         if( isTau) {
-
+	  bool leptau= false;
           for (unsigned int iGen2 = 0; iGen2 < mc_px->size(); iGen2++){
 
             gen_part2.SetPxPyPzE(mc_px->at(iGen2),mc_py->at(iGen2),mc_pz->at(iGen2),mc_energy->at(iGen2));
@@ -169,25 +171,21 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
               }
             }
           }
-        }
 
-        if(!(leptau)) {
-          for (unsigned int iGen2 = 0; iGen2 < mc_px->size(); iGen2++){
-            gen_part3.SetPxPyPzE(mc_px->at(iGen2),mc_py->at(iGen2),mc_pz->at(iGen2),mc_energy->at(iGen2));
-            if(fabs(mc_pdgId->at(iGen2))== 16 || fabs(mc_pdgId->at(iGen2))== 12 || fabs(mc_pdgId->at(iGen2))== 14 ) {
-              if((mc_mother_index->at(iGen2).at(0)) > 0) {
-                if(fabs(mc_pdgId->at(mc_mother_index->at(iGen2).at(0))) == 15. && int(mc_mother_index->at(iGen2).at(0)) == int(iGen) ) {
-
-
-                  neutrino++ ;
-                }
-              }
-            }
-          }
-        }
-        //if(neutrino =! 1) continue;
-        gen_part = gen_part - gen_part3; // subtracting neutrino 4 momentum
-        gen_tauh_p4.push_back(gen_part);
+	  if(!(leptau)) {
+	    for (unsigned int iGen2 = 0; iGen2 < mc_px->size(); iGen2++){
+	      if(fabs(mc_pdgId->at(iGen2))== 16 || fabs(mc_pdgId->at(iGen2))== 12 || fabs(mc_pdgId->at(iGen2))== 14 ) {
+		if((mc_mother_index->at(iGen2).at(0)) > 0) {
+		  if(fabs(mc_pdgId->at(mc_mother_index->at(iGen2).at(0))) == 15. && int(mc_mother_index->at(iGen2).at(0)) == int(iGen) ) {
+		    gen_part3.SetPxPyPzE(mc_px->at(iGen2),mc_py->at(iGen2),mc_pz->at(iGen2),mc_energy->at(iGen2));
+		  }
+		}
+	      }
+	    }
+	  }
+	  gen_part = gen_part - gen_part3; // subtracting neutrino 4 momentum
+	  anylepton_p4.push_back(gen_part);
+        }//close isTau condition
       }
     }
 
@@ -302,10 +300,10 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
           TLorentzVector tau_p4;
           tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));
 
-          // taus NOT matched to gen taus
+          // taus NOT matched to gen leptons
           bool is_gen_matched= false;
-          for (unsigned int iGen = 0; iGen < gen_tauh_p4.size(); ++iGen) {
-	    if(tau_p4.DeltaR(gen_tauh_p4[iGen]) < 0.2) {
+          for (unsigned int iGen = 0; iGen < anylepton_p4.size(); ++iGen) {
+	    if(tau_p4.DeltaR(anylepton_p4[iGen]) < 0.2) {
 	      is_gen_matched=true;
 	      break;
 	    }
@@ -383,13 +381,16 @@ void IIHEAnalysis::Loop(string phase, string type_of_data, string out_name) {
             continue;
           }
 
-          
+	  float ratio = 1.;
+	  if (jet_p4.Pt() == 0) continue;
+	  ratio = tau_p4.Pt()/jet_p4.Pt();
+
           //Tau histos
           if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) {
-            hh[0][j_dm][k_eta]->Fill(tau_pt->at(iTau), jet_p4.Pt(), final_weight);
+            hh[0][j_dm][k_eta]->Fill(tau_pt->at(iTau), ratio, final_weight);
           }
           if ((tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) && (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5)) {
-            hh[1][j_dm][k_eta]->Fill(tau_pt->at(iTau), jet_p4.Pt(), final_weight);
+            hh[1][j_dm][k_eta]->Fill(tau_pt->at(iTau), ratio, final_weight);
           }
         }//loop over taus
       }//loop over mus
