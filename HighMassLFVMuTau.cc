@@ -272,8 +272,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    systs.push_back("topreweight_down_");  systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
    if (CR_number == 101 || CR_number == 103) {
      //up or down are arbitrary labels, the important thing is they go on different directions
-     systs.push_back("fakerate_up_");     systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
-     systs.push_back("fakerate_down_");   systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
+     systs.push_back("fakerate_DY_up_");     systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
+     systs.push_back("fakerate_norm_up_");   systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
    }
 
    vector<TH1F*> h[Mth.size()][systs.size()][taun.size()];
@@ -956,24 +956,24 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 
 
-	  double fake_weight = 1, fake_weight_high = 1, fake_weight_low = 1;
+	  double fake_weight = 1, fake_weight_DY_high = 1, fake_weight_norm_high = 1;
 	  if ((CR_number == 101) || (CR_number == 103)) {
 	    double ratio = 0;
 	    if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
-	    //fake_weight = FakeRate_noratio(tau_p4.Pt(), eta_string); //FIXME
+	    //fake_weight = FakeRate_noratio(tau_p4.Pt(), eta_string);
 	    fake_weight = FakeRate_unfactorised(tau_p4.Pt(), ratio, eta_string);
 	    //fake_weight = FakeRate_factorised(tau_p4.Pt(), ratio, eta_string);
 	    //fake_weight = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);
-	    fake_weight_high = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);//FakeRate_mumu(tau_p4.Pt(), jet_p4.Pt()); //FIXME
-	    fake_weight_low = 2*fake_weight - fake_weight_high;
+	    fake_weight_DY_high = FakeRate_mumu(tau_p4.Pt(), jet_p4.Pt());
+	    fake_weight_norm_high = FakeRateHigh_unfactorised(tau_p4.Pt(), ratio, eta_string);
 
 	    if (fake_weight != 0) {
-	      syst_weights[systs_map["fakerate_up_"]] = fake_weight_high/fake_weight;
-	      syst_weights[systs_map["fakerate_down_"]] = fake_weight_low/fake_weight;
+	      syst_weights[systs_map["fakerate_DY_up_"]] = fake_weight_DY_high/fake_weight;
+	      syst_weights[systs_map["fakerate_norm_up_"]] = fake_weight_norm_high/fake_weight;
 	    }
 	    else {
 	      syst_weights[systs_map["fakerate_up_"]] = 1;
-	      syst_weights[systs_map["fakerate_down_"]] = 1;
+	      syst_weights[systs_map["fakerate_norm_up_"]] = 1;
 	    }
 	  }
 	  syst_weights[systs_map["topreweight_up_"]] = w_top_up/TT_ptreweight;
