@@ -13,6 +13,248 @@ float norm_F(float x, float y){
 
 }
 
+vector<TString> GetSys() {
+  vector<TString> systematics;
+  systematics.push_back("TES");
+  systematics.push_back("minbias");
+  systematics.push_back("muonID");
+  systematics.push_back("muonIso");
+  systematics.push_back("trigger");
+  systematics.push_back("tauID");
+  systematics.push_back("eletauFR");
+  systematics.push_back("mutauFR");
+  systematics.push_back("FRstat");
+  systematics.push_back("FRsys");
+  systematics.push_back("topPt");
+
+  return systematics;
+}
+
+
+double GetPUWeight(int PU, TString var) {
+  double pu_reweight = 0;
+  if (var == "nom") pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all");
+  else if (var == "up") pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all_up");
+  else if (var == "down") pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all_down");
+  else cout << "PU reweight error" << endl;
+
+  return pu_reweight;
+}
+
+
+double GetHighPtIDWeight(TLorentzVector mu_p4, TString var) {
+  TFile* ID_file_1 = new TFile("Reweighting/RunBCDEF_SF_ID.root","R");
+  TFile* ID_file_2 = new TFile("Reweighting/RunGH_SF_ID.root","R");
+  TFile* data_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_id.root","R");
+  TFile* data_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_id.root","R");
+
+  float mu_pt = mu_p4.Pt();
+  if (mu_pt > 120) mu_pt = 119;
+  float mu_eta = mu_p4.Eta();
+
+  //scale factors
+  //ID
+  TH2F* ID_histo_1 = (TH2F*) ID_file_1->Get("NUM_HighPtID_DEN_genTracks_eta_pair_newTuneP_probe_pt");
+  int bin_in = ID_histo_1->FindBin(fabs(mu_eta), mu_pt);
+  double highPtID_sf_1 = ID_histo_1->GetBinContent(bin_in);
+  double error_1 = ID_histo_1->GetBinError(bin_in);
+  double error_highpt = 0;
+  if (var == "down") {
+    if (fabs(mu_eta) < 1.6) {
+      if (mu_p4.P() > 100) {
+	TH2F* data_histo = (TH2F*) data_file_1->Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/efficienciesDATA/abseta_pair_ne_DATA");
+	bin_in = data_histo->FindBin(fabs(mu_eta), mu_pt);
+	//data eff modeled as flat, divide it by MC to get SF, get the difference wrt to the nominal SF
+	error_highpt = fabs( data_histo->GetBinContent(bin_in) / ( 0.9936 - 3.71e-6*mu_p4.P() ) - highPtID_sf_1); 
+      }
+    }
+    else if (fabs(mu_eta) < 2.4) {
+      if (mu_p4.P() > 200) {
+	//data and MC eff vary here, get the difference wrt to the nominal SF
+	error_highpt = fabs( ( 0.9784 - 4.73e-5*mu_p4.P() ) / ( 0.9908 - 1.26e-5*mu_p4.P() ) - highPtID_sf_1); 
+      }
+    }
+  }
+  error_1 += error_highpt;
+  double lumi_1 = 20.0; //luminosity of Runs BCDEF         
+
+
+  TH2F* ID_histo_2 = (TH2F*) ID_file_2->Get("NUM_HighPtID_DEN_genTracks_eta_pair_newTuneP_probe_pt");
+  bin_in = ID_histo_2->FindBin(fabs(mu_eta), mu_pt);
+  double highPtID_sf_2 = ID_histo_2->GetBinContent(bin_in);
+  double error_2 = ID_histo_2->GetBinError(bin_in);
+  error_highpt = 0;
+  if (var == "down") {
+    if (fabs(mu_eta) < 1.6) {
+      if (mu_p4.P() > 100) {
+	TH2F* data_histo = (TH2F*) data_file_2->Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/efficienciesDATA/abseta_pair_ne_DATA");
+	bin_in = data_histo->FindBin(fabs(mu_eta), mu_pt);
+	//data eff modeled as flat, divide it by MC to get SF, get the difference wrt to the nominal SF
+	error_highpt = fabs( data_histo->GetBinContent(bin_in) / ( 0.9936 - 3.71e-6*mu_p4.P() ) - highPtID_sf_2); 
+      }
+    }
+    else if (fabs(mu_eta) < 2.4) {
+      if (mu_p4.P() > 200) {
+	//data and MC eff vary here, get the difference wrt to the nominal SF
+	error_highpt = fabs( ( 0.9784 - 4.73e-5*mu_p4.P() ) / ( 0.9908 - 1.26e-5*mu_p4.P() ) - highPtID_sf_2); 
+      }
+    }
+  }
+  error_2 += error_highpt;
+  double lumi_2 = 16.0; //luminosity of Runs GH            
+
+  double highPtID_sf = (lumi_1*highPtID_sf_1 + lumi_2*highPtID_sf_2) / (lumi_1 + lumi_2);
+  double error = (lumi_1*error_1 + lumi_2*error_2) / (lumi_1 + lumi_2);
+
+  double weight = 0;
+  if (var == "nom") {
+    weight = highPtID_sf;
+  }
+  else if (var == "up") {
+    weight = highPtID_sf + error;
+  }
+  else if (var == "down") {
+    weight = highPtID_sf - error;
+  }
+
+  ID_file_1->Close("R");
+  ID_file_2->Close("R");
+  data_file_1->Close("R");
+  data_file_2->Close("R");
+
+  return weight;
+}
+
+
+double GetTkLooseIsoWeight(float mu_pt, float mu_eta, TString var) {
+
+}
+
+
+double GetReweight_highmass(int PU, float mu_pt, float mu_eta, bool tau_match, bool singlephoton) {
+  //scale factor files that need to be open
+  TFile* ID_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_id.root","R");
+  TFile* ID_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_id.root","R");
+  TFile* Iso_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_iso.root","R");
+  TFile* Iso_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_iso.root","R");
+  TFile* Trigger_file_1 = new TFile("Reweighting/EfficienciesAndSF_RunBtoF.root","R");
+  TFile* Trigger_file_2 = new TFile("Reweighting/EfficienciesAndSF_Period4.root","R");
+  TFile* Tracker_file = new TFile("Reweighting/Tracking_EfficienciesAndSF_BCDEFGH.root","R");
+
+
+  //PU reweight
+  double pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all");
+
+
+  //scale factors
+  //ID
+  TH2F* ID_histo_1 = (TH2F*) ID_file_1->Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/abseta_pair_ne_ratio");
+  int bin_in = ID_histo_1->FindBin(fabs(mu_eta), mu_pt);
+  double highPtID_sf_1 = ID_histo_1->GetBinContent(bin_in);
+  double lumi_1 = 20.0; //luminosity of Runs BCDEF         
+
+  TH2F* ID_histo_2 = (TH2F*) ID_file_2->Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/abseta_pair_ne_ratio");
+  bin_in = ID_histo_2->FindBin(fabs(mu_eta), mu_pt);
+  double highPtID_sf_2 = ID_histo_2->GetBinContent(bin_in);
+  double lumi_2 = 16.0; //luminosity of Runs GH            
+
+  double highPtID_sf = (lumi_1*highPtID_sf_1 + lumi_2*highPtID_sf_2) / (lumi_1 + lumi_2);
+
+
+  //Isolation                                                                                                                                                                                                                                                                                                                                                                     
+  TH2F* Iso_histo_1 = (TH2F*) Iso_file_1->Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
+  bin_in = Iso_histo_1->FindBin(fabs(mu_eta), mu_pt);
+  double tkLooseISO_sf_1 = Iso_histo_1->GetBinContent(bin_in);
+
+  TH2F* Iso_histo_2 = (TH2F*) Iso_file_2->Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
+  bin_in = Iso_histo_2->FindBin(fabs(mu_eta), mu_pt);
+  double tkLooseISO_sf_2 = Iso_histo_2->GetBinContent(bin_in); //Tight iso : < 0.15
+
+  double tkLooseISO_sf = (lumi_1*tkLooseISO_sf_1 + lumi_2*tkLooseISO_sf_2) / (lumi_1 + lumi_2);
+
+
+  //Trigger
+  //Careful, this uses IsoMu24 trigger, different from IsoMu22 trigger
+  TH2F* Trigger_histo_1 = (TH2F*) Trigger_file_1->Get("Mu50_OR_TkMu50_PtEtaBins/pt_abseta_ratio");
+  bin_in = Trigger_histo_1->FindBin(mu_pt, fabs(mu_eta));
+  double trigger_sf_1 = Trigger_histo_1->GetBinContent(bin_in);
+
+  TH2F* Trigger_histo_2 = (TH2F*) Trigger_file_2->Get("Mu50_OR_TkMu50_PtEtaBins/pt_abseta_ratio");
+  bin_in = Trigger_histo_2->FindBin(mu_pt, fabs(mu_eta));
+  double trigger_sf_2 = Trigger_histo_2->GetBinContent(bin_in);
+
+  double trigger_sf =  (lumi_1*trigger_sf_1 + lumi_2*trigger_sf_2) / (lumi_1 + lumi_2);
+
+
+  //Tracking
+  TGraphErrors* Tracker_graph = (TGraphErrors*) Tracker_file->Get("ratio_eff_eta3_dr030e030_corr");
+  double tracker_sf = Tracker_graph->Eval(mu_eta); //evaluate the graph function at this value of eta
+
+  if (highPtID_sf == 0) highPtID_sf = 1.0;
+  if (tkLooseISO_sf == 0) tkLooseISO_sf = 1.0;
+  if (trigger_sf == 0) trigger_sf = 1.0;
+  if (tracker_sf == 0) tracker_sf = 1.0;
+  if (pu_reweight == 0) pu_reweight = 1.0;
+
+  if (singlephoton) trigger_sf = 1.0;
+  double reweight = highPtID_sf * tkLooseISO_sf * trigger_sf * tracker_sf * pu_reweight;
+  if (tau_match) reweight = reweight*0.95;
+
+
+  ID_file_1->Close("R");
+  ID_file_2->Close("R");
+  Iso_file_1->Close("R");
+  Iso_file_2->Close("R");
+  Trigger_file_1->Close("R");
+  Trigger_file_2->Close("R");
+  Tracker_file->Close("R");
+
+
+  return reweight;
+}
+
+
+
+float GeneralWeightFunction(TString sys, int n_vert, TLorentzVector tau_p4, float ratio, TLorentzVector mu_p4, TString lepton, float top_pt, TString var) {
+  vector<TString> systematics = GetSys();
+
+  bool match = false;
+  for (unsigned int i=0; i<systematics.size(); ++i) {
+    if (systematics[i]=="TES") continue;
+    if (sys==systematics[i]) {
+      match = true;
+      break;
+    }
+  }
+
+  if (!match) {
+    cout << endl << endl <<  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    cout << "systematic [[ " << sys << " ]] not recognized" << endl;
+    cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl << endl << endl;
+    return 0;
+  }
+  else {
+    float mu_pt = mu_p4.Pt();
+    float mu_eta = mu_p4.Eta();
+    float tau_pt = tau_p4.Pt();
+    float tau_eta = tau_p4.Eta();
+
+    float weight = 0;
+
+    if (sys == "minbias") weight = GetPUWeight(n_vert,var);
+    else if (sys == "muonID") weight = GetHighPtIDWeight(mu_p4,var);
+    else if (sys == "muonIso") weight = GetTkLooseIsoWeight(mu_pt,mu_eta,var);
+    else if (sys == "trigger") weight = GetTriggerWeight(mu_pt,mu_eta,var);
+    else if (sys == "tauID") weight = GetTightTauIDSF(tau_pt,lepton,var);
+    else if (sys == "eletauFR") weight = GetEleTauFR(tau_eta,lepton,var);
+    else if (sys == "mutauFR") weight = GetMuTauFR(tau_eta,lepton,var);
+    else if (sys == "FRstat") weight = FakeRate_unfactorised(tau_pt,tau_eta,ratio,var);
+    else if (sys == "FRsys") weight = FakeRate_DY(tau_pt,tau_eta,ratio,var);
+    else if (sys == "topPt") weight = GetTopPtWeight(top_pt,var); 
+
+    return weight;
+  }
+}
 
 
 float top_reweighting_uncertainty(float top_pt_in){
@@ -351,87 +593,6 @@ double GetReweight(int PU, float mu_pt, float mu_eta) {
 }
 
 
-double GetReweight_highmass(int PU, float mu_pt, float mu_eta, bool tau_match, bool singlephoton) {
-  //scale factor files that need to be open
-  TFile* ID_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_id.root","R");
-  TFile* ID_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_id.root","R");
-  TFile* Iso_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_iso.root","R");
-  TFile* Iso_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_iso.root","R");
-  TFile* Trigger_file_1 = new TFile("Reweighting/EfficienciesAndSF_RunBtoF.root","R");
-  TFile* Trigger_file_2 = new TFile("Reweighting/EfficienciesAndSF_Period4.root","R");
-  TFile* Tracker_file = new TFile("Reweighting/Tracking_EfficienciesAndSF_BCDEFGH.root","R");
-
-
-  //PU reweight
-  double pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all");
-
-
-  //scale factors
-  //ID
-  TH2F* ID_histo_1 = (TH2F*) ID_file_1->Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/abseta_pair_ne_ratio");
-  int bin_in = ID_histo_1->FindBin(fabs(mu_eta), mu_pt);
-  double highPtID_sf_1 = ID_histo_1->GetBinContent(bin_in);
-  double lumi_1 = 20.0; //luminosity of Runs BCDEF         
-
-  TH2F* ID_histo_2 = (TH2F*) ID_file_2->Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/abseta_pair_ne_ratio");
-  bin_in = ID_histo_2->FindBin(fabs(mu_eta), mu_pt);
-  double highPtID_sf_2 = ID_histo_2->GetBinContent(bin_in);
-  double lumi_2 = 16.0; //luminosity of Runs GH            
-
-  double highPtID_sf = (lumi_1*highPtID_sf_1 + lumi_2*highPtID_sf_2) / (lumi_1 + lumi_2);
-
-
-  //Isolation                                                                                                                                                                                                                                                                                                                                                                     
-  TH2F* Iso_histo_1 = (TH2F*) Iso_file_1->Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
-  bin_in = Iso_histo_1->FindBin(fabs(mu_eta), mu_pt);
-  double tkLooseISO_sf_1 = Iso_histo_1->GetBinContent(bin_in);
-
-  TH2F* Iso_histo_2 = (TH2F*) Iso_file_2->Get("tkLooseISO_highptID_newpt_eta/abseta_pair_ne_ratio");
-  bin_in = Iso_histo_2->FindBin(fabs(mu_eta), mu_pt);
-  double tkLooseISO_sf_2 = Iso_histo_2->GetBinContent(bin_in); //Tight iso : < 0.15
-
-  double tkLooseISO_sf = (lumi_1*tkLooseISO_sf_1 + lumi_2*tkLooseISO_sf_2) / (lumi_1 + lumi_2);
-
-
-  //Trigger
-  //Careful, this uses IsoMu24 trigger, different from IsoMu22 trigger
-  TH2F* Trigger_histo_1 = (TH2F*) Trigger_file_1->Get("Mu50_OR_TkMu50_PtEtaBins/pt_abseta_ratio");
-  bin_in = Trigger_histo_1->FindBin(mu_pt, fabs(mu_eta));
-  double trigger_sf_1 = Trigger_histo_1->GetBinContent(bin_in);
-
-  TH2F* Trigger_histo_2 = (TH2F*) Trigger_file_2->Get("Mu50_OR_TkMu50_PtEtaBins/pt_abseta_ratio");
-  bin_in = Trigger_histo_2->FindBin(mu_pt, fabs(mu_eta));
-  double trigger_sf_2 = Trigger_histo_2->GetBinContent(bin_in);
-
-  double trigger_sf =  (lumi_1*trigger_sf_1 + lumi_2*trigger_sf_2) / (lumi_1 + lumi_2);
-
-
-  //Tracking
-  TGraphErrors* Tracker_graph = (TGraphErrors*) Tracker_file->Get("ratio_eff_eta3_dr030e030_corr");
-  double tracker_sf = Tracker_graph->Eval(mu_eta); //evaluate the graph function at this value of eta
-
-  if (highPtID_sf == 0) highPtID_sf = 1.0;
-  if (tkLooseISO_sf == 0) tkLooseISO_sf = 1.0;
-  if (trigger_sf == 0) trigger_sf = 1.0;
-  if (tracker_sf == 0) tracker_sf = 1.0;
-  if (pu_reweight == 0) pu_reweight = 1.0;
-
-  if (singlephoton) trigger_sf = 1.0;
-  double reweight = highPtID_sf * tkLooseISO_sf * trigger_sf * tracker_sf * pu_reweight;
-  if (tau_match) reweight = reweight*0.95;
-
-
-  ID_file_1->Close("R");
-  ID_file_2->Close("R");
-  Iso_file_1->Close("R");
-  Iso_file_2->Close("R");
-  Trigger_file_1->Close("R");
-  Trigger_file_2->Close("R");
-  Tracker_file->Close("R");
-
-
-  return reweight;
-}
 
 
 double GetReweight_mumu(int PU, float mu1_pt, float mu1_eta, float mu2_pt, float mu2_eta) {

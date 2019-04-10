@@ -645,8 +645,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	if (mu_ibt_pt->at(iMu) < 53.0) continue;
 	if (!mu_isHighPtMuon->at(iMu)) continue;
 	if (fabs(mu_ibt_eta->at(iMu)) > 2.4) continue;
-	bool goodGlob = mu_isGlobalMuon->at(iMu) && mu_gt_normalizedChi2->at(iMu) < 3 && mu_combinedQuality_chi2LocalPosition->at(iMu) < 12 && mu_combinedQuality_trkKink->at(iMu) < 20;
-	bool isMedium2016 = mu_isLooseMuon->at(iMu) && mu_innerTrack_validFraction->at(iMu) > 0.49 && mu_segmentCompatibility->at(iMu) > (goodGlob ? 0.303 : 0.451);
 
 
 	TLorentzVector mu_p4, mu_ibt_transp4;
