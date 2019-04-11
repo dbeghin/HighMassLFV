@@ -1,9 +1,7 @@
 #define IIHEAnalysis_cxx
-#include "IIHEAnalysis_2016.h"
-#include "TString.h"
-#include <iostream>
-#include <vector>
+#include "SF_and_systematics.cc"
 #include "meta.h"
+#include "TDirectory.h"
 
 using namespace std;
 
@@ -265,15 +263,13 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    Mth.push_back("MtLow_TT");  int k_low_TT= Mth.size()-1;
    Mth.push_back("MtHigh_TT"); int k_high_TT= Mth.size()-1;
 
-   //put all systematics here                                           
-   vector<TString> systs;                 map<TString, int> systs_map;                          vector<double> syst_weights;
-   systs.push_back("");                   systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
-   systs.push_back("topreweight_up_");    systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
-   systs.push_back("topreweight_down_");  systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
-   if (CR_number == 101 || CR_number == 103) {
-     //up or down are arbitrary labels, the important thing is they go on different directions
-     systs.push_back("fakerate_DY_up_");     systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
-     systs.push_back("fakerate_norm_up_");   systs_map[systs[systs.size()-1]] = systs.size()-1;    syst_weights.push_back(1);
+   //put all systematics here
+   vector<TString> systs;
+   systs.push_back("");
+   vector<TString> systs_aux = GetSys();
+   for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+     systs.push_back(systs_aux[iAux]+"_up_");
+     systs.push_back(systs_aux[iAux]+"_down_");
    }
 
    vector<TH1F*> h[Mth.size()][systs.size()][taun.size()];
@@ -341,10 +337,9 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       nb = fChain->GetEntry(jEntry);
       nbytes += nb;
 
-      float first_weight = 1;//fChain->GetLeaf("event_weight")->GetValue();
-      double final_weight = first_weight;
+      float first_weight = 1;
+      double final_weight = 1;
       
-
       //Do not consider events which should be rejected
       bool reject_event = false, Zmumu = false;
       if (DYinc) {
@@ -461,7 +456,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       //close the is this TT inclusive question
       if (reject_event) continue;
 
-      double TT_ptreweight = 1, w_top_up = 1, w_top_down = 1;
+      double top_pt_1 = 0, top_pt_2 = 0;
       if(TT) {
 	bool find_t1 = false;
 	bool find_t2 = false;
@@ -477,14 +472,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    find_t2 = true;
 	  }
 	  if(find_t1 && find_t2) {
-	    float tmp_t1 = exp(0.0615-0.0005*MC_p4_1.Pt());
-	    float tmp_t2 = exp(0.0615-0.0005*MC_p4_2.Pt());
-	    float tmp_t1_uncer = top_reweighting_uncertainty(MC_p4_1.Pt());
-	    float tmp_t2_uncer = top_reweighting_uncertainty(MC_p4_2.Pt());
-
-	    w_top_up = sqrt(tmp_t1*(1.0 + tmp_t1_uncer)*tmp_t2*(1.0 + tmp_t2_uncer) );
-	    w_top_down = sqrt(tmp_t1*(1.0 - tmp_t1_uncer)*tmp_t2*(1.0 - tmp_t2_uncer) );
-	    TT_ptreweight = sqrt(tmp_t1 * tmp_t2);
+	    top_pt_1 = MC_p4_1.Pt();
+	    top_pt_2 = MC_p4_2.Pt();
 	    break;
 	  }
 	}
@@ -787,6 +776,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    }
 	  }
 
+
 	  int sign_number = -1;
 	  if ( tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
 	    sign_number = OS_number;
@@ -795,11 +785,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    sign_number = SS_number;
 	  }
 
-	  double lepToTauFR = 1;
+	  TString lepton = "";
 
 	  //separate histos by tau realness
 	  int jTauN=j_real;
 	  bool tau_match = false;
+
 	  if (!data && !Signal) {
 	    //fill gen histos to understand wth is going on
 	    for (unsigned int iGen = 0; iGen<tauhp4.size(); ++iGen) {
@@ -824,8 +815,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      cout << "gen electron AND muon both match to same tau !!!" << endl << endl << endl;
 	      continue;
 	    }
-	    if (ele_match) lepToTauFR = GetLepToTauFR("ele", tau_p4.Eta());
-	    if (mu_match)  lepToTauFR = GetLepToTauFR("mu", tau_p4.Eta());
+	    if (ele_match) lepton = "ele";
+	    if (mu_match)  lepton = "mu";
 
 
 	    bool is_not_jet = false;
@@ -841,6 +832,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
 		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.2) {
 		  tau_match = true;
+		  lepton = "tau";
 		  break;
 		}
 	      }
@@ -852,70 +844,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	      jTauN=j_fake;
 	    }
 	    if (CR_number >= 2) tau_match = false;
-	    float reweight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton);
-	    h[lMth][0][jTauN][13]->Fill(reweight);
-	  }
-	  //FIXME
-	  first_weight = 1;
-	  if (!data) first_weight = GetReweight_highmass(mc_trueNumInteractions, mu_p4.Pt(), mu_p4.Eta(), tau_match, singlephoton) * 1.0 * mc_w_sign * TT_ptreweight * lepToTauFR;
-	  final_weight = first_weight;
-
-	  if (CR_number == 7 || CR_number == 9) {
-	    h[lMth][0][jTauN][16]->Fill(Mt, final_weight);
-	    if (Mt < 80 || Mt > 120) continue;
-	  }
-
-
-	  //Pzeta calculation
-	  float norm_zeta= norm_F( tau_p4.Px()/tau_p4.Pt()+mu_p4.Px()/mu_p4.Pt(), tau_p4.Py()/tau_p4.Pt()+mu_p4.Py()/mu_p4.Pt() );
-	  //cout << norm_zeta << endl;
-	  float x_zeta= (tau_p4.Px()/tau_p4.Pt()+mu_p4.Px()/mu_p4.Pt())/norm_zeta;
-	  float y_zeta= (tau_p4.Py()/tau_p4.Pt()+mu_p4.Py()/mu_p4.Pt())/norm_zeta;
-	  float p_zeta_mis=met_p4.Px()*x_zeta+met_p4.Py()*y_zeta;
-	  float pzeta_vis=(tau_p4.Px()+mu_p4.Px())*x_zeta+(tau_p4.Py()+mu_p4.Py())*y_zeta;
-	  float cut_zeta= p_zeta_mis-0.85*pzeta_vis;
-
-
-	  if (first_weight != first_weight) {
-	    cout << "Not a number!!!!!!!" << endl;
-	    continue;
-	  }
-
-
-
-	  
-	  float dR = tau_p4.DeltaR(mu_p4);
-	  float dphi_mutau = 100, dphi_METtau = 100;
-	  float large_phi = 100;
-	  float small_phi = 100;
-	  if (tau_p4.Phi() > mu_p4.Phi()) {
-	    large_phi = tau_p4.Phi();
-	    small_phi = mu_p4.Phi();
-	  }
-	  else {
-	    small_phi = tau_p4.Phi();
-	    large_phi = mu_p4.Phi();
-	  }
-	  if (fabs(large_phi-small_phi) > fabs(large_phi-(small_phi+2*pi))) {
-	    dphi_mutau = fabs(large_phi-(small_phi+2*pi));
-	  }
-	  else {
-	    dphi_mutau = fabs(large_phi-small_phi);
-	  }
-
-	  if (tau_p4.Phi() > met_p4.Phi()) {
-	    large_phi = tau_p4.Phi();
-	    small_phi = met_p4.Phi();
-	  }
-	  else {
-	    small_phi = tau_p4.Phi();
-	    large_phi = met_p4.Phi();
-	  }
-	  if (fabs(large_phi-small_phi) > fabs(large_phi-(small_phi+2*pi))) {
-	    dphi_METtau = fabs(large_phi-(small_phi+2*pi));
-	  }
-	  else {
-	    dphi_METtau = fabs(large_phi-small_phi);
 	  }
 
 
@@ -937,6 +865,42 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  if(!(matched_to_reco_jet)) continue;
 
 
+	  float ratio = 0;
+	  if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
+
+	  map<TString, float> weightsSys;
+	  first_weight = 1;
+	  if (!data) {
+	    //weights and systematics
+	    weightsSys = GetWeightSys(CR_number, mc_trueNumInteractions, tau_p4, ratio, mu_p4, lepton, top_pt_1, top_pt_2);
+	    first_weight = weightsSys["nominal"];
+	    h[lMth][0][jTauN][13]->Fill(first_weight);
+	  }
+	  final_weight = first_weight;
+
+
+	  //Pzeta calculation
+	  float norm_zeta= norm_F( tau_p4.Px()/tau_p4.Pt()+mu_p4.Px()/mu_p4.Pt(), tau_p4.Py()/tau_p4.Pt()+mu_p4.Py()/mu_p4.Pt() );
+	  //cout << norm_zeta << endl;
+	  float x_zeta= (tau_p4.Px()/tau_p4.Pt()+mu_p4.Px()/mu_p4.Pt())/norm_zeta;
+	  float y_zeta= (tau_p4.Py()/tau_p4.Pt()+mu_p4.Py()/mu_p4.Pt())/norm_zeta;
+	  float p_zeta_mis=met_p4.Px()*x_zeta+met_p4.Py()*y_zeta;
+	  float pzeta_vis=(tau_p4.Px()+mu_p4.Px())*x_zeta+(tau_p4.Py()+mu_p4.Py())*y_zeta;
+	  float cut_zeta= p_zeta_mis-0.85*pzeta_vis;
+
+
+	  if (first_weight != first_weight) {
+	    cout << "Not a number!!!!!!!" << endl;
+	    continue;
+	  }
+
+
+
+	  
+	  float dR = tau_p4.DeltaR(mu_p4);
+
+
+
 
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
 	  TString eta_string = "";
@@ -953,29 +917,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    continue;
 	  }
 
-
-	  double fake_weight = 1, fake_weight_DY_high = 1, fake_weight_norm_high = 1;
-	  if ((CR_number == 101) || (CR_number == 103)) {
-	    double ratio = 0;
-	    if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
-	    //fake_weight = FakeRate_noratio(tau_p4.Pt(), eta_string);
-	    fake_weight = FakeRate_unfactorised(tau_p4.Pt(), ratio, eta_string);
-	    //fake_weight = FakeRate_factorised(tau_p4.Pt(), ratio, eta_string);
-	    //fake_weight = FakeRate_SSMtLow(tau_p4.Pt(), jet_p4.Pt(), eta_string);
-	    fake_weight_DY_high = FakeRate_mumu(tau_p4.Pt(), jet_p4.Pt());
-	    fake_weight_norm_high = FakeRateHigh_unfactorised(tau_p4.Pt(), ratio, eta_string);
-
-	    if (fake_weight != 0) {
-	      syst_weights[systs_map["fakerate_DY_up_"]] = fake_weight_DY_high/fake_weight;
-	      syst_weights[systs_map["fakerate_norm_up_"]] = fake_weight_norm_high/fake_weight;
-	    }
-	    else {
-	      syst_weights[systs_map["fakerate_up_"]] = 1;
-	      syst_weights[systs_map["fakerate_norm_up_"]] = 1;
-	    }
-	  }
-	  syst_weights[systs_map["topreweight_up_"]] = w_top_up/TT_ptreweight;
-	  syst_weights[systs_map["topreweight_down_"]] = w_top_down/TT_ptreweight;
 
 	  //TH2's for the fake rate
 	  int iJetPt = -1, iRatio = -1;
@@ -1011,9 +952,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 	  if (dR < 0.5) continue;
 	  filled_histos = true;
-	  float ratio = 0;
 
-	  if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
+
 	  if (CR_number == 100) {
 	    hh[iJetPt][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), jet_p4.Pt(), final_weight);
 	    hh[iRatio][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), ratio, final_weight);
@@ -1021,17 +961,16 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  }
 
 
-	  cout << endl << TT_ptreweight << " " << first_weight << endl;
 	  for (unsigned int k_syst=0; k_syst<systs.size(); ++k_syst) {
-	    final_weight = first_weight*fake_weight*syst_weights[k_syst];
+	    final_weight = weightsSys[systs[k_syst]];
+	    if (k_syst==0) final_weight = first_weight;
+	    cout << "systematic: " << systs[k_syst] << "  weight: " << final_weight << endl;
 
 	    bool stopFilling = false;
 	    int l_value = lMth;
 	    int n_fuel = 0;
 	    while (!stopFilling && n_fuel<2) {
 	      ++n_fuel;
-	      h[l_value][k_syst][jTauN][9]->Fill(dphi_mutau, final_weight);
-	      h[l_value][k_syst][jTauN][10]->Fill(dphi_METtau, final_weight);
 	      
 	      h[l_value][k_syst][jTauN][0]->Fill(vis_p4.M(), final_weight);
 	      h[l_value][k_syst][jTauN][1]->Fill(total_p4.M(), final_weight);
@@ -1074,7 +1013,21 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    h_total_events->Fill(0.5, nEvents);
    file_out->cd();
    h_total_events->Write();
-   for (unsigned int i = 0; i<histo_names.size(); ++i) for (unsigned int j = 0; j<taun.size(); ++j) for (unsigned int k = 0; k<systs.size(); ++k) for (unsigned int l = 0; l<Mth.size(); ++l) h[l][k][j][i]->Write();
+
+   TDirectory* d_nom = file_out->mkdir("nominal");
+   d_nom->cd();
+   for (unsigned int i = 0; i<histo_names.size(); ++i) for (unsigned int j = 0; j<taun.size(); ++j) for (unsigned int l = 0; l<Mth.size(); ++l) h[l][0][j][i]->Write();
+   d_nom->Close();
+
+
+   vector<TDirectory*> d_sys;
+   for (unsigned int k = 1; k<systs.size(); ++k) {
+     d_sys.push_back( file_out->mkdir( systs[k] ) );
+     d_sys[k-1]->cd();
+     for (unsigned int i = 0; i<histo_names.size(); ++i) for (unsigned int j = 0; j<taun.size(); ++j) for (unsigned int l = 0; l<Mth.size(); ++l) h[l][k][j][i]->Write();
+     d_sys[k]->Close();
+   }
+   
    for (unsigned int i = 0; i<h_names.size(); ++i) for (unsigned int j = 0; j<Mth.size(); ++j) for (unsigned int k = 0; k<dms.size(); ++k) for (unsigned int l = 0; l<eta.size(); ++l) for (unsigned int m = 0; m<taun.size(); ++m) hh[i][j][k][l][m]->Write();
    for (unsigned int i = 0; i<hgen.size(); ++i) hgen[i]->Write();
    file_out->Close();

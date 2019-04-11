@@ -15,7 +15,6 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TGraphErrors.h"
-#include "MC_pileup_weight.cc"
 #include "aux.h"
 
 using namespace std;
