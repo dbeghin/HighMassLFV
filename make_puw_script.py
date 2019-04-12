@@ -12,7 +12,7 @@ print file_list
 str_head='''
 #include <map>
 #include <iostream>
-namespace PU_2017_Rereco{
+namespace PU_2016{
 '''
 str_end='''
 double MC_pileup_weight(int NumTrueInteraction, string mc, string data_scale){
@@ -26,8 +26,8 @@ else {std::cout<<"no "<<mc<<" or no "<<data_scale<<std::endl;return  1;}
 '''
 README='''
 /*
-.L PU_reWeighting.C+
-PU_2017_Rereco::MC_pileup_weight(int NumTrueInteraction, string mc, string data_scale)
+.L PU_reWeighting.cc+
+PU_2016::MC_pileup_weight(int NumTrueInteraction, string mc, string data_scale)
 Possible string mc and string data_scale list below:
 '''
 sep=","

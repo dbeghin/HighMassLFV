@@ -4,7 +4,7 @@
 #include <iostream>
 #include "TString.h"
 #include "TLorentzVector.h"
-#include "MC_pileup_weight.cc"
+#include "PU_reWeighting.cc"
 
 using namespace std;
 
@@ -50,9 +50,9 @@ TString GetEtaString(float eta) {
 
 double GetPUWeight(int PU, TString var) {
   double pu_reweight = 0;
-  if (var == "nom") pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all");
-  else if (var == "up") pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all_up");
-  else if (var == "down") pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all_down");
+  if (var == "nom") pu_reweight = PU_2016::MC_pileup_weight(PU, "MC_pileup", "Data_pileup_normalized");
+  else if (var == "up") pu_reweight = PU_2016::MC_pileup_weight(PU, "MC_pileup","Data_pileup_normalized_UP");
+  else if (var == "down") pu_reweight = PU_2016::MC_pileup_weight(PU, "MC_pileup","Data_pileup_normalized_DOWN");
   else cout << "PU reweight error" << endl;
 
   return pu_reweight;
@@ -604,210 +604,6 @@ double GetCollinearMass(TLorentzVector tau, TLorentzVector mu,  TLorentzVector M
 
 
 
-double GetReweight(int PU, float mu_pt, float mu_eta) {
-  //scale factor files that need to be open
-  TFile* ID_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_id.root","R");
-  TFile* ID_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_id.root","R");
-  TFile* Iso_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_iso.root","R");
-  TFile* Iso_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_iso.root","R");
-  TFile* Trigger_file_1 = new TFile("Reweighting/EfficienciesAndSF_RunBtoF.root","R");
-  TFile* Trigger_file_2 = new TFile("Reweighting/EfficienciesAndSF_Period4.root","R");
-  TFile* Tracker_file = new TFile("Reweighting/Tracking_EfficienciesAndSF_BCDEFGH.root","R");
-
-
-  //PU reweight
-  double pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all");
-
-
-  //scale factors
-  //ID           
-  TH2F* ID_histo_1 = (TH2F*) ID_file_1->Get("MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio");
-  int bin_in = ID_histo_1->FindBin(mu_pt, fabs(mu_eta));
-  double mediumID2016_sf_1 = ID_histo_1->GetBinContent(bin_in);
-  double lumi_1 = 20.0; //luminosity of Runs BCDEF             
-
-  TH2F* ID_histo_2 = (TH2F*) ID_file_2->Get("MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio");
-  bin_in = ID_histo_2->FindBin(mu_pt, fabs(mu_eta));
-  double mediumID2016_sf_2 = ID_histo_2->GetBinContent(bin_in);
-  double lumi_2 = 16.0; //luminosity of Runs GH                
-
-  double mediumID2016_sf = (lumi_1*mediumID2016_sf_1 + lumi_2*mediumID2016_sf_2) / (lumi_1 + lumi_2);
-
-
-  //Isolation
-  TH2F* Iso_histo_1 = (TH2F*) Iso_file_1->Get("TightISO_MediumID_pt_eta/pt_abseta_ratio");
-  bin_in = Iso_histo_1->FindBin(mu_pt, fabs(mu_eta));
-  double tightISO_sf_1 = Iso_histo_1->GetBinContent(bin_in); //Tight iso : < 0.15.
-
-  TH2F* Iso_histo_2 = (TH2F*) Iso_file_2->Get("TightISO_MediumID_pt_eta/pt_abseta_ratio");
-  bin_in = Iso_histo_2->FindBin(mu_pt, fabs(mu_eta));
-  double tightISO_sf_2 = Iso_histo_2->GetBinContent(bin_in); //Tight iso : < 0.15
-
-  double tightISO_sf = (lumi_1*tightISO_sf_1 + lumi_2*tightISO_sf_2) / (lumi_1 + lumi_2);
-
-
-  //Trigger
-  //Careful, this uses IsoMu24 trigger, different from IsoMu22 trigger
-  TH2F* Trigger_histo_1 = (TH2F*) Trigger_file_1->Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/pt_abseta_ratio");
-  bin_in = Trigger_histo_1->FindBin(mu_pt, fabs(mu_eta));
-  double trigger_sf_1 = Trigger_histo_1->GetBinContent(bin_in);
-
-  TH2F* Trigger_histo_2 = (TH2F*) Trigger_file_2->Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/pt_abseta_ratio");
-  bin_in = Trigger_histo_2->FindBin(mu_pt, fabs(mu_eta));
-  double trigger_sf_2 = Trigger_histo_2->GetBinContent(bin_in);
-
-  double trigger_sf =  (lumi_1*trigger_sf_1 + lumi_2*trigger_sf_2) / (lumi_1 + lumi_2);
-
-
-  //Tracking
-  TGraphErrors* Tracker_graph = (TGraphErrors*) Tracker_file->Get("ratio_eff_eta3_dr030e030_corr");
-  double tracker_sf = Tracker_graph->Eval(mu_eta); //evaluate the graph function at this value of eta
-
-  if (mediumID2016_sf == 0) mediumID2016_sf = 1.0; 
-  if (tightISO_sf == 0) tightISO_sf = 1.0; 
-  if (trigger_sf == 0) trigger_sf = 1.0; 
-  if (tracker_sf == 0) tracker_sf = 1.0; 
-  if (pu_reweight == 0) pu_reweight = 1.0; 
-  
-  double reweight = mediumID2016_sf * tightISO_sf * trigger_sf * tracker_sf * pu_reweight;
-
-
-  ID_file_1->Close("R");
-  ID_file_2->Close("R");
-  Iso_file_1->Close("R");
-  Iso_file_2->Close("R");
-  Trigger_file_1->Close("R");
-  Trigger_file_2->Close("R");
-  Tracker_file->Close("R");
-
-
-  return reweight;
-}
-
-
-
-
-double GetReweight_mumu(int PU, float mu1_pt, float mu1_eta, float mu2_pt, float mu2_eta) {
-  if (mu1_pt >= 120) mu1_pt = 100;
-  if (mu2_pt >= 120) mu2_pt = 100;
-  //scale factor files that need to be open
-  TFile* ID_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_id.root","R");
-  TFile* ID_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_id.root","R");
-  TFile* Iso_file_1 = new TFile("Reweighting/EfficienciesAndSF_BCDEF_iso.root","R");
-  TFile* Iso_file_2 = new TFile("Reweighting/EfficienciesAndSF_GH_iso.root","R");
-  TFile* Trigger_file_1 = new TFile("Reweighting/EfficienciesAndSF_RunBtoF.root","R");
-  TFile* Trigger_file_2 = new TFile("Reweighting/EfficienciesAndSF_Period4.root","R");
-  TFile* Tracker_file = new TFile("Reweighting/Tracking_EfficienciesAndSF_BCDEFGH.root","R");
-
-
-  //PU reweight
-  double pu_reweight = PU_reReco_Morind17::MC_pileup_weight(PU,0,"all");
-
-
-  //scale factors
-  //ID
-  TH2F* ID_histo_1 = (TH2F*) ID_file_1->Get("MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio");
-  int bin_in = ID_histo_1->FindBin(mu1_pt, fabs(mu1_eta));
-  double mediumID2016_sf_1 = ID_histo_1->GetBinContent(bin_in);
-  double lumi_1 = 20.0; //luminosity of Runs BCDEF
-
-  TH2F* ID_histo_2 = (TH2F*) ID_file_2->Get("MC_NUM_MediumID2016_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio");
-  bin_in = ID_histo_2->FindBin(mu1_pt, fabs(mu1_eta));
-  double mediumID2016_sf_2 = ID_histo_2->GetBinContent(bin_in);
-  double lumi_2 = 16.0; //luminosity of Runs GH                
-
-  double mediumID2016_sf_mu1 = (lumi_1*mediumID2016_sf_1 + lumi_2*mediumID2016_sf_2) / (lumi_1 + lumi_2);
-
-
-  bin_in = ID_histo_1->FindBin(mu2_pt, fabs(mu2_eta));
-  mediumID2016_sf_1 = ID_histo_1->GetBinContent(bin_in);
-
-  bin_in = ID_histo_2->FindBin(mu2_pt, fabs(mu2_eta));
-  mediumID2016_sf_2 = ID_histo_2->GetBinContent(bin_in);
-
-
-  double mediumID2016_sf_mu2 = (lumi_1*mediumID2016_sf_1 + lumi_2*mediumID2016_sf_2) / (lumi_1 + lumi_2);
-  double mediumID2016_sf = mediumID2016_sf_mu1*mediumID2016_sf_mu2;
-
-
-  //Isolation
-  TH2F* Iso_histo_1 = (TH2F*) Iso_file_1->Get("TightISO_MediumID_pt_eta/pt_abseta_ratio");
-  bin_in = Iso_histo_1->FindBin(mu1_pt, fabs(mu1_eta));
-  double tightISO_sf_1 = Iso_histo_1->GetBinContent(bin_in); //Tight iso : < 0.15
-
-  TH2F* Iso_histo_2 = (TH2F*) Iso_file_2->Get("TightISO_MediumID_pt_eta/pt_abseta_ratio");
-  bin_in = Iso_histo_2->FindBin(mu1_pt, fabs(mu1_eta));
-  double tightISO_sf_2 = Iso_histo_2->GetBinContent(bin_in); //Tight iso : < 0.15
-
-  double tightISO_sf_mu1 = (lumi_1*tightISO_sf_1 + lumi_2*tightISO_sf_2) / (lumi_1 + lumi_2);
-
-
-  bin_in = Iso_histo_1->FindBin(mu2_pt, fabs(mu2_eta));
-  tightISO_sf_1 = Iso_histo_1->GetBinContent(bin_in); //Tight iso : < 0.15
-
-  bin_in = Iso_histo_2->FindBin(mu2_pt, fabs(mu2_eta));
-  tightISO_sf_2 = Iso_histo_2->GetBinContent(bin_in); //Tight iso : < 0.15
-
-  double tightISO_sf_mu2 = (lumi_1*tightISO_sf_1 + lumi_2*tightISO_sf_2) / (lumi_1 + lumi_2);
-  double tightISO_sf = tightISO_sf_mu1 * tightISO_sf_mu2;
-
-
-  //Trigger
-  //Careful, this is using IsoMu24 eff., ehich is different from IsoMu22
-  TH2F* Trigger_histo_data_1 = (TH2F*) Trigger_file_1->Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesDATA/pt_abseta_DATA");
-  bin_in = Trigger_histo_data_1->FindBin(mu1_pt, fabs(mu1_eta));
-  double eff_data_mu1 = Trigger_histo_data_1->GetBinContent(bin_in);
-  bin_in = Trigger_histo_data_1->FindBin(mu2_pt, fabs(mu2_eta));
-  double eff_data_mu2 = Trigger_histo_data_1->GetBinContent(bin_in);
-  double eff_data = 1 - (1-eff_data_mu1) * (1-eff_data_mu2);
-
-  TH2F* Trigger_histo_MC_1 = (TH2F*) Trigger_file_1->Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesMC/pt_abseta_MC");
-  bin_in = Trigger_histo_MC_1->FindBin(mu1_pt, fabs(mu1_eta));
-  double eff_MC_mu1 = Trigger_histo_MC_1->GetBinContent(bin_in);
-  bin_in = Trigger_histo_MC_1->FindBin(mu2_pt, fabs(mu2_eta));
-  double eff_MC_mu2 = Trigger_histo_MC_1->GetBinContent(bin_in);
-  double eff_MC = 1 - (1-eff_MC_mu1) * (1-eff_MC_mu2);
-  double trigger_sf_1 = eff_data/eff_MC;
-
-
-  TH2F* Trigger_histo_data_2 = (TH2F*) Trigger_file_2->Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesDATA/pt_abseta_DATA");
-  bin_in = Trigger_histo_data_2->FindBin(mu1_pt, fabs(mu1_eta));
-  eff_data_mu1 = Trigger_histo_data_2->GetBinContent(bin_in);
-  bin_in = Trigger_histo_data_2->FindBin(mu2_pt, fabs(mu2_eta));
-  eff_data_mu2 = Trigger_histo_data_2->GetBinContent(bin_in);
-  eff_data = 1 - (1-eff_data_mu1) * (1-eff_data_mu2);
-
-  TH2F* Trigger_histo_MC_2 = (TH2F*) Trigger_file_2->Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesMC/pt_abseta_MC");
-  bin_in = Trigger_histo_MC_2->FindBin(mu1_pt, fabs(mu1_eta));
-  eff_MC_mu1 = Trigger_histo_MC_2->GetBinContent(bin_in);
-  bin_in = Trigger_histo_MC_2->FindBin(mu2_pt, fabs(mu2_eta));
-  eff_MC_mu2 = Trigger_histo_MC_2->GetBinContent(bin_in);
-  eff_MC = 1 - (1-eff_MC_mu1) * (1-eff_MC_mu2);
-  double trigger_sf_2 = eff_data/eff_MC;
-
-  double trigger_sf = (lumi_1*trigger_sf_1 + lumi_2*trigger_sf_2) / (lumi_1 + lumi_2);
-
-
-  //Tracking
-  TGraphErrors* Tracker_graph = (TGraphErrors*) Tracker_file->Get("ratio_eff_eta3_dr030e030_corr");
-  double tracker_sf_mu1 = Tracker_graph->Eval(mu1_eta); //evaluate the graph function at this value of eta
-  double tracker_sf_mu2 = Tracker_graph->Eval(mu2_eta); //evaluate the graph function at this value of eta
-  double tracker_sf = tracker_sf_mu1 * tracker_sf_mu2;
-
-  double reweight = mediumID2016_sf * tightISO_sf * trigger_sf * tracker_sf * pu_reweight;
-
-
-  ID_file_1->Close("R");
-  ID_file_2->Close("R");
-  Iso_file_1->Close("R");
-  Iso_file_2->Close("R");
-  Trigger_file_1->Close("R");
-  Trigger_file_2->Close("R");
-  Tracker_file->Close("R");
-
-
-  return reweight;
-}
 
 
 
