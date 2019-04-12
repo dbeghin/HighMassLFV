@@ -5,6 +5,7 @@
 #include "TString.h"
 #include "TLorentzVector.h"
 #include "PU_reWeighting.cc"
+#include "GeneralizedEndpoint.cc"
 
 using namespace std;
 
@@ -16,7 +17,9 @@ float norm_F(float x, float y){
 
 vector<TString> GetSys() {
   vector<TString> systematics;
-  //systematics.push_back("TES");
+  systematics.push_back("TES");
+  systematics.push_back("MES");
+  systematics.push_back("mres");
   systematics.push_back("minbias");
   systematics.push_back("muonID");
   systematics.push_back("muonIso");
@@ -413,21 +416,26 @@ double GetTopPtWeightUnc(float top_pt_in) {
 
 
 double GetTopPtWeight(float top_pt_1, float top_pt_2, TString var){
-  double tmp_t1 = exp(0.0615-0.0005*top_pt_1);
-  double tmp_t2 = exp(0.0615-0.0005*top_pt_2);
-  double tmp_t1_uncer = GetTopPtWeightUnc(top_pt_1);
-  double tmp_t2_uncer = GetTopPtWeightUnc(top_pt_2);
-
-  double w_top_up = sqrt(tmp_t1*(1.0 + tmp_t1_uncer)*tmp_t2*(1.0 + tmp_t2_uncer) );
-  double w_top_down = sqrt(tmp_t1*(1.0 - tmp_t1_uncer)*tmp_t2*(1.0 - tmp_t2_uncer) );
-  double w_top_nom = sqrt(tmp_t1 * tmp_t2);
-
-  double weight = 0;
-  if (var=="nom") weight = w_top_nom;
-  else if (var=="up") weight = w_top_up;
-  else if (var=="down") weight = w_top_down;
-
-  return weight;
+  if (top_pt_1 < 0 || top_pt_2 <0) {
+    return 1;
+  }
+  else {
+    double tmp_t1 = exp(0.0615-0.0005*top_pt_1);
+    double tmp_t2 = exp(0.0615-0.0005*top_pt_2);
+    double tmp_t1_uncer = GetTopPtWeightUnc(top_pt_1);
+    double tmp_t2_uncer = GetTopPtWeightUnc(top_pt_2);
+    
+    double w_top_up = sqrt(tmp_t1*(1.0 + tmp_t1_uncer)*tmp_t2*(1.0 + tmp_t2_uncer) );
+    double w_top_down = sqrt(tmp_t1*(1.0 - tmp_t1_uncer)*tmp_t2*(1.0 - tmp_t2_uncer) );
+    double w_top_nom = sqrt(tmp_t1 * tmp_t2);
+    
+    double weight = 0;
+    if (var=="nom") weight = w_top_nom;
+    else if (var=="up") weight = w_top_up;
+    else if (var=="down") weight = w_top_down;
+    
+    return weight;
+  }
 }
 
 
@@ -602,8 +610,111 @@ double GetCollinearMass(TLorentzVector tau, TLorentzVector mu,  TLorentzVector M
 }
 
 
+pair<TLorentzVector,TLorentzVector> TauEnergyScale(TLorentzVector tau_p4, TLorentzVector met_p4, TString var) {
+  TLorentzVector tau_TES_p4;
+  tau_TES_p4.SetPxPyPzE(0,0,0,0);
+  TLorentzVector met_TES_p4;
+  met_TES_p4.SetPxPyPzE(0,0,0,0);
+  
+  float scale = 0.03; //3 percent for high pt taus
+  if (var=="nom")  tau_TES_p4 = tau_p4;
+  else if (var=="up")   tau_TES_p4 = tau_p4*(1+scale);
+  else if (var=="down") tau_TES_p4 = tau_p4*(1-scale);
+
+  met_TES_p4 = met_p4 - tau_TES_p4 + tau_p4;
+
+  pair<TLorentzVector,TLorentzVector> tes;
+  tes.first = tau_TES_p4;
+  tes.second = met_TES_p4;
+  return tes;
+}
 
 
+pair<TLorentzVector,TLorentzVector> MuResolution(TLorentzVector mu_p4, TLorentzVector met_p4, TString var) {
+  TLorentzVector mu_res_p4;
+  mu_res_p4.SetPxPyPzE(0,0,0,0);
+  TLorentzVector met_res_p4;
+  met_res_p4.SetPxPyPzE(0,0,0,0);
+  
+  float scale = 0;
+  TString eta_string = GetEtaString(mu_p4.Eta());
+  if (eta_string == "barrel") {
+    if (mu_p4.Pt() < 200) scale = 0.003;
+    else if (mu_p4.Pt() < 500) scale = 0.005;
+    else scale = 0.01;
+  }
+  else if (eta_string == "endcap") {
+    if (mu_p4.Pt() < 200) scale = 0.006;
+    else if (mu_p4.Pt() < 500) scale = 0.01;
+    else scale = 0.02;
+  }
+
+  if (var=="nom")  mu_res_p4 = mu_p4;
+  else if (var=="up")   mu_res_p4 = mu_p4*(1+scale);
+  else if (var=="down") mu_res_p4 = mu_p4*(1-scale);
+
+  met_res_p4 = met_p4 - mu_res_p4 + mu_p4;
+
+  pair<TLorentzVector,TLorentzVector> mes;
+  mes.first = mu_res_p4;
+  mes.second = met_res_p4;
+  return mes;
+}
 
 
+pair<TLorentzVector,TLorentzVector> MuEnergyScale(TLorentzVector mu_p4, int mu_charge, TLorentzVector met_p4, TString var) {
+  TLorentzVector mu_mes_p4;
+  mu_mes_p4.SetPxPyPzE(0,0,0,0);
+  TLorentzVector met_mes_p4;
+  met_mes_p4.SetPxPyPzE(0,0,0,0);
+  
+  int mode = 0, verbose = 1;
+
+  if (var=="nom")  mode = 0;
+  else if (var=="up")   mode = 1;
+  else if (var=="down") mode = 2;
+
+  GeneralizedEndpoint* g = new GeneralizedEndpoint();
+  float mu_mes_pt = 0;
+  mu_mes_pt = g->GeneralizedEndpointPt(mu_p4.Pt(), mu_charge, mu_p4.Eta(), mu_p4.Phi(), mode, verbose);
+  mu_mes_p4.SetPtEtaPhiE(mu_mes_pt,mu_p4.Eta(),mu_p4.Phi(),mu_p4.E());
+  met_mes_p4 = met_p4 - mu_mes_p4 + mu_p4;
+
+  pair<TLorentzVector,TLorentzVector> mes;
+  mes.first = mu_mes_p4;
+  mes.second = met_mes_p4;
+  return mes;
+}
+
+
+vector<TLorentzVector> GetScaleVariation(TString syst, TString tau_gen, TString mu_gen, TLorentzVector tau_p4, TLorentzVector mu_p4, int mu_charge, TLorentzVector met_p4) {
+  TLorentzVector tau_newp4, mu_newp4, met_newp4;
+
+  TString var = "nom";
+  if (syst.First("up") >= 0) var = "up";
+  else if (syst.First("down") >= 0) var = "down";
+
+  if (syst.First("TES") >= 0) {
+    if (tau_gen != "tau") var = "nom";
+    tau_newp4 = TauEnergyScale(tau_p4,met_p4,var).first, met_newp4 = TauEnergyScale(tau_p4,met_p4,var).second;
+    mu_newp4 = mu_p4;
+  }
+  else if (syst.First("MES") >= 0) {
+    if (mu_gen != "mu") var = "nom";
+    mu_newp4 = MuEnergyScale(mu_p4,mu_charge,met_p4,var).first, met_newp4 = MuEnergyScale(mu_p4,mu_charge,met_p4,var).second;
+    tau_newp4 = tau_p4;
+  }
+  else if (syst.First("mres") >= 0) {
+    if (mu_gen != "mu") var = "nom";
+    mu_newp4 = MuResolution(mu_p4,met_p4,var).first, met_newp4 = MuResolution(mu_p4,met_p4,var).second;
+    tau_newp4 = tau_p4;
+  }
+
+  vector<TLorentzVector> newp4;
+  newp4.push_back(tau_newp4);
+  newp4.push_back(mu_newp4);
+  newp4.push_back(met_newp4);
+
+  return newp4;
+}
 

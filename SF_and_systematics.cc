@@ -9,6 +9,8 @@ map<TString, float> GetWeightSys(int CR_number, int n_vert, TLorentzVector tau_p
   vector<TString> systematics = GetSys();      
   vector<TString> ignore;
   ignore.push_back("TES");
+  ignore.push_back("MES");
+  ignore.push_back("mres");
 
   vector<TString> setto1;
   if (CR_number == 100 || CR_number == 102) {
