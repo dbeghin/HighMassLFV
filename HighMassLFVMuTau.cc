@@ -145,6 +145,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    if (type_of_data == "singlephoton" || type_of_data == "SinglePhoton") singlephoton = true;
    if (type_of_data == "singlemu" || type_of_data == "SingleMu") singlemu = true;
 
+   cout << type_of_data << endl << endl;
    
    cout << "TT-inclusive:    " << TTinc << endl; 
    cout << "TT-any:          " << TT << endl; 
