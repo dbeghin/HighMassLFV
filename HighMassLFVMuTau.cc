@@ -288,7 +288,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      for (unsigned int j = 0; j<taun.size(); ++j) {
        for (unsigned int k = 0; k<systs.size(); ++k) {
 	 for (unsigned int l = 0; l<Mth.size(); ++l) {
-	   h[l][k][j].push_back( new TH1F(histo_names[i]+"_"+taun[j]+"_"+systs[k]+Mth[l], histo_names[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l], nBins[i], x_min[i], x_max[i]) ); 
+	   h[l][k][j].push_back( new TH1F(histo_names[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l], histo_names[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l], nBins[i], x_min[i], x_max[i]) ); 
 	   h[l][k][j][i]->Sumw2();
 	 }
        }
@@ -766,6 +766,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  //separate histos by tau realness
 	  int jTauN=j_real;
 	  bool tau_match = false;
+	  float dR_threshold = 0.4;
 
 	  if (!data && !Signal) {
 	    //fill gen histos to understand wth is going on
@@ -778,15 +779,15 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    bool ele_match = false;
 	    if (genelep4.size() != 0) {
 	      for (unsigned int iGen = 0; iGen < genelep4.size(); ++iGen) {
-		if (tau_p4.DeltaR(genelep4[iGen]) < 0.2) ele_match = true;
+		if (tau_p4.DeltaR(genelep4[iGen]) < dR_threshold) ele_match = true;
 	      }
 	    }
 	    bool mu_match = false;
 	    bool recogen_mu_match = false;
 	    if (genmup4.size() != 0) {
 	      for (unsigned int iGen = 0; iGen < genmup4.size(); ++iGen) {
-		if (tau_p4.DeltaR(genmup4[iGen]) < 0.2) mu_match = true;
-		if (mu_p4.DeltaR(genmup4[iGen]) < 0.2) recogen_mu_match = true;
+		if (tau_p4.DeltaR(genmup4[iGen]) < dR_threshold) mu_match = true;
+		if (mu_p4.DeltaR(genmup4[iGen]) < dR_threshold) recogen_mu_match = true;
 	      }
 	    }
 	    if (ele_match && mu_match) {
@@ -801,7 +802,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    bool is_not_jet = false;
 	    if (anyleptonp4.size() != 0) {
 	      for (unsigned int iGen = 0; iGen < anyleptonp4.size(); ++iGen) {
-		if (tau_p4.DeltaR(anyleptonp4[iGen]) < 0.2) {
+		if (tau_p4.DeltaR(anyleptonp4[iGen]) < dR_threshold) {
 		  is_not_jet = true;
 		  break;
 		}
@@ -809,7 +810,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    }
 	    if (tauhp4.size() != 0) {
 	      for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
-		if (tau_p4.DeltaR(tauhp4[iGen]) < 0.2) {
+		if (tau_p4.DeltaR(tauhp4[iGen]) < dR_threshold) {
 		  tau_match = true;
 		  lepton = "tau";
 		  break;
@@ -834,7 +835,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
             if(!(jet_isJetIDLoose->at(ijet))) continue;
             TLorentzVector jet_p4_tmp;
             jet_p4_tmp.SetPxPyPzE(jet_px->at(ijet), jet_py->at(ijet), jet_pz->at(ijet), jet_energy->at(ijet));
-            if(!(tau_p4.DeltaR(jet_p4_tmp) < 0.2)) continue;
+            if(!(tau_p4.DeltaR(jet_p4_tmp) < dR_threshold)) continue;
             matched_to_reco_jet=true;
             jet_p4=jet_p4_tmp;
             break;
@@ -949,10 +950,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
 	  }
 
+	  
+	  cout << endl << "PU: " << mc_trueNumInteractions << endl;
 
+	  TLorentzVector tau_p4_copy = tau_p4, mu_p4_copy = mu_p4, met_p4_copy = met_p4;
 	  for (unsigned int k_syst=0; k_syst<systs.size(); ++k_syst) {
 	    TString argument = systs[k_syst];
-	    TLorentzVector tau_p4_copy = tau_p4, mu_p4_copy = mu_p4, met_p4_copy = met_p4;
 	    for (unsigned int iSpecial=0; iSpecial<specialSyst.size(); ++iSpecial) {
 	      if (systs[k_syst] == specialSyst[iSpecial]) {
 		argument = "nominal";
@@ -968,8 +971,15 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 		met_p4 = met_p4_copy;
 	      }
 	    }
-		
-	    final_weight = weightsSys[argument];
+	    
+	    if (!data) {
+	      final_weight = weightsSys[argument];
+	    }
+	    else {
+	      final_weight = first_weight;
+	      if (k_syst>0) final_weight = 0;
+	    }
+
 	    cout << "systematic: " << systs[k_syst] << "  weight: " << final_weight << endl;
 	    cout << "tau: " << lepton << "  pt: " << tau_p4.Pt() << endl;
 	    cout << "mu: " << mu_lepton << "  pt: " << mu_p4.Pt() << endl << endl;

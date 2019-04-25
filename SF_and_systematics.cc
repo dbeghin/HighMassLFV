@@ -52,15 +52,23 @@ map<TString, float> GetWeightSys(int CR_number, int n_vert, TLorentzVector tau_p
     }
 
     TString key_nom = systematics[i]+"_nom";
-    simple_weights[key_nom] = GeneralWeightFunction(systematics[i],n_vert,tau_p4,ratio,mu_p4,lepton,top_pt_1,top_pt_2,"nom");
-    if (bSetto1) simple_weights[key_nom] = 1;
+    if (bSetto1) {
+      simple_weights[key_nom] = 1;
+    }
+    else {
+      simple_weights[key_nom] = GeneralWeightFunction(systematics[i],n_vert,tau_p4,ratio,mu_p4,lepton,top_pt_1,top_pt_2,"nom");
+    }
     nom_weight *= simple_weights[key_nom];
-
+    if (simple_weights[key_nom] == 0) cout << "Weight is ZERO: " << systematics[i] << endl;
 
     for (unsigned int j = 0; j<variations.size(); ++j) {
       TString key = systematics[i]+"_"+variations[j];
-      simple_weights[key] = GeneralWeightFunction(systematics[i],n_vert,tau_p4,ratio,mu_p4,lepton,top_pt_1,top_pt_2,variations[j]);
-      if (bSetto1) simple_weights[key] = 1;
+      if (bSetto1) {
+	simple_weights[key] = 1;
+      }
+      else {
+	simple_weights[key] = GeneralWeightFunction(systematics[i],n_vert,tau_p4,ratio,mu_p4,lepton,top_pt_1,top_pt_2,variations[j]);
+      }
     }
 
   }

@@ -14,7 +14,6 @@
 #include "TLeaf.h"
 #include "TH1.h"
 #include "TH2.h"
-#include "TGraphErrors.h"
 #include "aux.h"
 
 using namespace std;

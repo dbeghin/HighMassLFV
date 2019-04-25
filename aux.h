@@ -6,6 +6,7 @@
 #include "TLorentzVector.h"
 #include "PU_reWeighting.cc"
 #include "GeneralizedEndpoint.cc"
+#include "TGraphErrors.h"
 
 using namespace std;
 
@@ -147,6 +148,7 @@ double GetHighPtIDWeight(TLorentzVector mu_p4, TString var) {
 
 
 double GetTkLooseIsoWeight(float mu_pt, float mu_eta, TString var) {
+  if (mu_pt > 120) mu_pt = 119;
   TFile* Iso_file_1 = new TFile("Reweighting/RunBCDEF_SF_ISO.root","R");
   TFile* Iso_file_2 = new TFile("Reweighting/RunGH_SF_ISO.root","R");
   double lumi_1 = 20.0; //luminosity of Runs BCDEF         
@@ -161,8 +163,8 @@ double GetTkLooseIsoWeight(float mu_pt, float mu_eta, TString var) {
   double tkLooseISO_sf_2 = Iso_histo_2->GetBinContent(bin_in); //TkLoose iso : < 0.1
 
   double tkLooseISO_sf = (lumi_1*tkLooseISO_sf_1 + lumi_2*tkLooseISO_sf_2) / (lumi_1 + lumi_2);
-  double weight_plus = sqrt(pow(1.005,2) + pow(1.02,2))*tkLooseISO_sf; //stat 0.5% syst 2%
-  double weight_minus = sqrt(pow(0.995,2) + pow(0.98,2))*tkLooseISO_sf; //stat 0.5% syst 2%
+  double weight_plus = (1+sqrt(pow(.005,2) + pow(.02,2)))*tkLooseISO_sf; //stat 0.5% syst 2%
+  double weight_minus = (1-sqrt(pow(.005,2) + pow(.02,2)))*tkLooseISO_sf; //stat 0.5% syst 2%
 
   double weight = 0;
   if (var=="nom") weight = tkLooseISO_sf;
@@ -176,6 +178,7 @@ double GetTkLooseIsoWeight(float mu_pt, float mu_eta, TString var) {
 
 
 double GetTrackingWeight(float mu_pt, float mu_eta, TString var) {
+  if (mu_pt > 120) mu_pt = 119;
   TFile* Tracker_file = new TFile("Reweighting/Tracking_EfficienciesAndSF_BCDEFGH.root","R");
   TGraphErrors* Tracker_graph = (TGraphErrors*) Tracker_file->Get("ratio_eff_eta3_dr030e030_corr");
   double lumi_1 = 20.0; //luminosity of Runs BCDEF         
@@ -201,6 +204,7 @@ double GetTrackingWeight(float mu_pt, float mu_eta, TString var) {
 
 
 double GetTriggerWeight(float mu_pt, float mu_eta, TString var) {
+  if (mu_pt > 1200) mu_pt = 1199;
   TFile* Trigger_file_1 = new TFile("Reweighting/EfficienciesAndSF_RunBtoF.root","R");
   TFile* Trigger_file_2 = new TFile("Reweighting/EfficienciesAndSF_Period4.root","R");
   double lumi_1 = 20.0; //luminosity of Runs BCDEF         
@@ -218,11 +222,11 @@ double GetTriggerWeight(float mu_pt, float mu_eta, TString var) {
   double weight_other = 0;
   double factor_up = 1;
   double factor_down = 1;
-  if (mu_pt < 300) factor_up = 1.02, factor_down = 0.98; //normal syst
-  else  factor_up = 1.02, factor_down = 0.94;
+  if (mu_pt < 300) factor_up = .02, factor_down = .02; //normal syst
+  else  factor_up = .02, factor_down = 0.06;
   //add prefiring syst
-  factor_up = sqrt(pow(factor_up,2) + pow(1.02,2));
-  factor_down = sqrt(pow(factor_down,2) + pow(0.98,2));
+  factor_up = 1+sqrt(pow(factor_up,2) * pow(.02,2));
+  factor_down = 1-sqrt(pow(factor_down,2) * pow(.02,2));
 
   if (var=="up") weight_other = trigger_sf*factor_up;
   else if (var=="down") weight_other = trigger_sf*factor_down;
@@ -323,6 +327,10 @@ double FakeRate_unfactorised(double taupt, double taueta, double ratio, TString 
   TFile* fake_file = new TFile("Reweighting/fakerate_unfactorised_MtLow.root","R");
 
   TString eta_string = GetEtaString(taueta);
+  if (eta_string == "") {
+    fake_file->Close("R");
+    return 0;
+  }
 
   TString hname = "eta_"+eta_string;
   if (taupt > 150) {
@@ -341,6 +349,8 @@ double FakeRate_unfactorised(double taupt, double taueta, double ratio, TString 
   if (var=="nom") weight = base_SF;
   else if (var=="up") weight = base_SF+error;
   else if (var=="down") weight = base_SF-error;
+
+  fake_file->Close("R");
 
   return weight;
 }
@@ -676,8 +686,9 @@ pair<TLorentzVector,TLorentzVector> MuEnergyScale(TLorentzVector mu_p4, int mu_c
 
   GeneralizedEndpoint* g = new GeneralizedEndpoint();
   float mu_mes_pt = 0;
+  float mu_mass = 0.105;
   mu_mes_pt = g->GeneralizedEndpointPt(mu_p4.Pt(), mu_charge, mu_p4.Eta(), mu_p4.Phi(), mode, verbose);
-  mu_mes_p4.SetPtEtaPhiE(mu_mes_pt,mu_p4.Eta(),mu_p4.Phi(),mu_p4.E());
+  mu_mes_p4.SetPtEtaPhiM(mu_mes_pt,mu_p4.Eta(),mu_p4.Phi(),mu_mass);
   met_mes_p4 = met_p4 - mu_mes_p4 + mu_p4;
 
   pair<TLorentzVector,TLorentzVector> mes;
@@ -691,20 +702,20 @@ vector<TLorentzVector> GetScaleVariation(TString syst, TString tau_gen, TString 
   TLorentzVector tau_newp4, mu_newp4, met_newp4;
 
   TString var = "nom";
-  if (syst.First("up") >= 0) var = "up";
-  else if (syst.First("down") >= 0) var = "down";
+  if (syst.Contains("up")) var = "up";
+  else if (syst.Contains("down")) var = "down";
 
-  if (syst.First("TES") >= 0) {
+  if (syst.Contains("TES")) {
     if (tau_gen != "tau") var = "nom";
     tau_newp4 = TauEnergyScale(tau_p4,met_p4,var).first, met_newp4 = TauEnergyScale(tau_p4,met_p4,var).second;
     mu_newp4 = mu_p4;
   }
-  else if (syst.First("MES") >= 0) {
+  else if (syst.Contains("MES")) {
     if (mu_gen != "mu") var = "nom";
     mu_newp4 = MuEnergyScale(mu_p4,mu_charge,met_p4,var).first, met_newp4 = MuEnergyScale(mu_p4,mu_charge,met_p4,var).second;
     tau_newp4 = tau_p4;
   }
-  else if (syst.First("mres") >= 0) {
+  else if (syst.Contains("mres")) {
     if (mu_gen != "mu") var = "nom";
     mu_newp4 = MuResolution(mu_p4,met_p4,var).first, met_newp4 = MuResolution(mu_p4,met_p4,var).second;
     tau_newp4 = tau_p4;

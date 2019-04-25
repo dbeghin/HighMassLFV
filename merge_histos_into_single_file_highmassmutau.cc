@@ -12,6 +12,8 @@
 #include "TLegend.h"
 #include "THStack.h"
 #include "TStyle.h"
+#include "aux.h"
+#include "TDirectory.h"
 
 
 using namespace std;
@@ -189,12 +191,11 @@ int main(int argc, char** argv) {
   Mth.push_back("MtHigh_TT"); //FIXME
 
   vector<TString> systs;              
-  systs.push_back("");
-  systs.push_back("topreweight_up_");
-  systs.push_back("topreweight_down_");
-  if (CR == "CR101" || CR == "CR103") {
-    systs.push_back("fakerate_DY_up_");
-    systs.push_back("fakerate_norm_up_");
+  systs.push_back("nominal");
+  vector<TString> systs_aux = GetSys();
+  for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    systs.push_back(systs_aux[iAux]+"_up");
+    systs.push_back(systs_aux[iAux]+"_down");
   }
 
   //cross-sections
@@ -239,17 +240,19 @@ int main(int argc, char** argv) {
 
   file_out->cd();
   //options = is it the DY Sig?, variable name, which file to get the histo from, process cross-section
-  for (unsigned int i = 0; i<vars.size(); ++i) {
-    for (unsigned int j = 0; j<taun.size(); ++j) {
-      for (unsigned int k = 0; k<systs.size(); ++k) {
+  for (unsigned int k = 0; k<systs.size(); ++k) {
+    TDirectory* dir = file_out->mkdir( systs[k] );
+    dir->cd();
+    for (unsigned int i = 0; i<vars.size(); ++i) {
+      for (unsigned int j = 0; j<taun.size(); ++j) {
 	for (unsigned int l = 0; l<Mth.size(); ++l) {
-
-          var_in = vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
+          //var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l];
+          var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
 	  if (CR == "CR100") {
-	    var_out = systs[k]+vars[i]+"_"+Mth[l];
+	    var_out = systs[k]+"_"+vars[i]+"_"+Mth[l];
 	  }
 	  else {
-	    var_out = var_in;
+	    var_out = vars[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l];
 	  }
           
           cout << endl << endl <<var_in << endl;
@@ -334,31 +337,31 @@ int main(int argc, char** argv) {
           h_data -> SetName("data_"+var_out);
           h_data->Rebin(rebin);
           h_data->Write();
+
+	  if (j>0) continue;
+          var_in = systs[k]+"_"+vars[i]+"_"+Mth[l];
+	  cout << file_in_faketau->GetName() << endl;
+	  TH1F* h_faketaus = (TH1F*) file_in_faketau -> Get("faketau_"+var_in);
+	  h_faketaus->Write();
 	}
       }
     }
-    if ((CR == "CR100") || (CR == "CR102")) {
-      for (unsigned int k = 0; k<Mth.size(); ++k) {
-	cout << file_in_faketau->GetName() << endl;
-	TH1F* h_faketaus = (TH1F*) file_in_faketau -> Get("faketau_"+vars[i]+"_"+Mth[k]);
-	h_faketaus->Write();
-
-	TH1F* h_faketaus_high = (TH1F*) file_in_faketau -> Get("faketau_fakerate_up_"+vars[i]+"_"+Mth[k]);
-	h_faketaus_high->Write();
-
-	TH1F* h_faketaus_low = (TH1F*) file_in_faketau -> Get("faketau_fakerate_down_"+vars[i]+"_"+Mth[k]);
-	h_faketaus_low->Write();
-
-	TH1F* h_faketaus_TT_high = (TH1F*) file_in_faketau -> Get("faketau_topreweight_up_"+vars[i]+"_"+Mth[k]);
-	h_faketaus_TT_high->Write();
-
-	TH1F* h_faketaus_TT_low = (TH1F*) file_in_faketau -> Get("faketau_topreweight_down_"+vars[i]+"_"+Mth[k]);
-	h_faketaus_TT_low->Write();
-      }
-    }
+    dir->Close();
   }
-  file_out->Close();
+  cout << "done" << endl;
+  for (unsigned int iFile=0; iFile<DY_files.size(); ++iFile) DY_files[iFile]->Close();
+  for (unsigned int iFile=0; iFile<WJets_files.size(); ++iFile) WJets_files[iFile]->Close();
+  for (unsigned int iFile=0; iFile<TT_files.size(); ++iFile) TT_files[iFile]->Close();
+  for (unsigned int iFile=0; iFile<WW_files.size(); ++iFile) WW_files[iFile]->Close();
+  file_in_faketau->Close();
 
+  file_in_ST->Close();
+  file_in_WZ->Close();
+  file_in_ZZ->Close();
+
+  file_in_data->Close();
+
+  file_out->Close();
 
   return 0;
 }
