@@ -225,8 +225,8 @@ double GetTriggerWeight(float mu_pt, float mu_eta, TString var) {
   if (mu_pt < 300) factor_up = .02, factor_down = .02; //normal syst
   else  factor_up = .02, factor_down = 0.06;
   //add prefiring syst
-  factor_up = 1+sqrt(pow(factor_up,2) * pow(.02,2));
-  factor_down = 1-sqrt(pow(factor_down,2) * pow(.02,2));
+  factor_up = 1+sqrt(pow(factor_up,2) + pow(.02,2));
+  factor_down = 1-sqrt(pow(factor_down,2) + pow(.02,2));
 
   if (var=="up") weight_other = trigger_sf*factor_up;
   else if (var=="down") weight_other = trigger_sf*factor_down;
@@ -249,9 +249,9 @@ double GetTightTauIDWeight(float tau_pt, TString lepton, TString var) {
   }
   else {
     double base_weight = 0.95;
-    double factor_up   = sqrt( pow(1.05,2) + pow(1+0.05*tau_pt/1000,2) );
-    double factor_down = sqrt( pow(0.95,2) + pow(1-0.35*tau_pt/1000,2) );
-    
+    double factor_up   = 1+sqrt( pow(.05,2) + pow(0.05*tau_pt/1000,2) );
+    double factor_down = 1-sqrt( pow(.05,2) + pow(-0.35*tau_pt/1000,2) );
+
     double weight = 0;
     if (var=="nom") weight = base_weight;
     else if (var=="up") weight = base_weight*factor_up;
