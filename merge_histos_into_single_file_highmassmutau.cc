@@ -246,8 +246,8 @@ int main(int argc, char** argv) {
     for (unsigned int i = 0; i<vars.size(); ++i) {
       for (unsigned int j = 0; j<taun.size(); ++j) {
 	for (unsigned int l = 0; l<Mth.size(); ++l) {
-          //var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l];
-          var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
+          var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l];
+          //var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
 	  if (CR == "CR100") {
 	    var_out = systs[k]+"_"+vars[i]+"_"+Mth[l];
 	  }

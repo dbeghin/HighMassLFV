@@ -128,6 +128,7 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, sq_combined_error):
     errorBand.SetFillStyle(3001)
     errorBand.SetLineWidth(1)
     
+    errorBand_ersatz = errorBand.Clone()
 
     for iii in range(1, errorBand.GetNbinsX()+1):
         bin_error_up = pow(sq_combined_error["up"].GetBinContent(iii) + pow(errorBand.GetBinError(iii),2), 0.5)
@@ -137,8 +138,8 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, sq_combined_error):
         bin_content += midpoint
         sym_error = bin_error_up-midpoint
 
-        errorBand.SetBinContent(iii, bin_content)
-        errorBand.SetBinError(iii, sym_error)
+        errorBand_ersatz.SetBinContent(iii, bin_content)
+        errorBand_ersatz.SetBinError(iii, sym_error)
 
     
     pad1 = ROOT.TPad("pad1","pad1",0,0.35,1,1)
@@ -173,7 +174,7 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, sq_combined_error):
     Data.Draw("e")
     #ST.Draw("hist")
     stack.Draw("histsame")
-    errorBand.Draw("e2same")
+    errorBand_ersatz.Draw("e2same")
     Data.Draw("esame")
     
     
@@ -242,10 +243,10 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, sq_combined_error):
     pad2.Draw()
     pad2.cd()
     h1=Data.Clone()
-    h1.SetMaximum(1.6)#FIXME(1.6)
-    h1.SetMinimum(0.4)#FIXME(0.4)
+    h1.SetMaximum(2.0)#FIXME(1.6)
+    h1.SetMinimum(0.0)#FIXME(0.4)
     h1.SetMarkerStyle(20)
-    h3=errorBand.Clone()
+    h3=errorBand_ersatz.Clone()
     hwoE=errorBand.Clone()
     for iii in range (1,hwoE.GetSize()-2):
         hwoE.SetBinError(iii,0)
@@ -548,12 +549,16 @@ for k in range (0,nvar):
                 MC[vary][j].Add(DY[vary][j])
                 MC[vary][j].Add(ST[vary][j])
 
-                htemp = sq_combined_error[vary].Clone()
-                for iBin in range(1, sq_combined_error[vary].GetNbinsX()+1):
-                    bin_content = pow(MC[vary][j].GetBinContent(iBin)-MC["nominal"].GetBinContent(iBin),2)
-                    if MC[vary][j].GetBinContent(iBin)-MC["nominal"].GetBinContent(iBin) < 0 and vary == "up": print "unexpected error direction", systs_up[j]
-                    htemp.SetBinContent(iBin, bin_content)
-                sq_combined_error[vary].Add(htemp)
+                htemp_up = sq_combined_error["up"].Clone()
+                htemp_down = sq_combined_error["down"].Clone()
+                for iBin in range(1, htemp_up.GetNbinsX()+1):
+                    bin_content = MC[vary][j].GetBinContent(iBin)-MC["nominal"].GetBinContent(iBin)
+                    if bin_content < 0:
+                        htemp_down.SetBinContent(iBin, pow(bin_content,2))
+                    else:
+                        htemp_up.SetBinContent(iBin, pow(bin_content,2))
+                sq_combined_error["up"].Add(htemp_up)
+                sq_combined_error["down"].Add(htemp_down)
 
 
                 if "MtLow_SS" in var_in:
@@ -571,12 +576,16 @@ for k in range (0,nvar):
                     Faketau_MtLow[vary][j].Add(Faketau_OS[vary][j])
                     MC_MtLow[vary][j].Add(MC_OS[vary][j])
 
-                    htemp = sq_combined_error_MtLow[vary].Clone()
-                    for iBin in range(1, sq_combined_error_MtLow[vary].GetNbinsX()+1):
-                        bin_content = pow(MC_MtLow[vary][j].GetBinContent(iBin)-MC_MtLow["nominal"].GetBinContent(iBin),2)
-                        if MC_MtLow[vary][j].GetBinContent(iBin)-MC_MtLow["nominal"].GetBinContent(iBin) < 0 and vary == "up": print "unexpected error direction", systs_up[j]
-                        htemp.SetBinContent(iBin, bin_content)
-                    sq_combined_error_MtLow[vary].Add(htemp)
+                    htemp_up = sq_combined_error_MtLow["up"].Clone()
+                    htemp_down = sq_combined_error_MtLow["down"].Clone()
+                    for iBin in range(1, htemp_up.GetNbinsX()+1):
+                        bin_content = MC_MtLow[vary][j].GetBinContent(iBin)-MC_MtLow["nominal"].GetBinContent(iBin)
+                        if bin_content < 0:
+                            htemp_down.SetBinContent(iBin, pow(bin_content,2))
+                        else:
+                            htemp_up.SetBinContent(iBin, pow(bin_content,2))
+                    sq_combined_error_MtLow["up"].Add(htemp_up)
+                    sq_combined_error_MtLow["down"].Add(htemp_down)
     
         
         make_plot(var[k]+Mth[l], Data, DY["nominal"], TT["nominal"], VV["nominal"], ST["nominal"], Faketau["nominal"], sq_combined_error)
