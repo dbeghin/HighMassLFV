@@ -339,10 +339,12 @@ int main(int argc, char** argv) {
           h_data->Write();
 
 	  if (j>0) continue;
-          var_in = systs[k]+"_"+vars[i]+"_"+Mth[l];
-	  cout << file_in_faketau->GetName() << endl;
-	  TH1F* h_faketaus = (TH1F*) file_in_faketau -> Get("faketau_"+var_in);
-	  h_faketaus->Write();
+	  if (CR == "CR100" || CR == "CR102") {
+	    var_in = systs[k]+"_"+vars[i]+"_"+Mth[l];
+	    cout << file_in_faketau->GetName() << endl;
+	    TH1F* h_faketaus = (TH1F*) file_in_faketau -> Get("faketau_"+var_in);
+	    h_faketaus->Write();
+	  }
 	}
       }
     }
@@ -361,7 +363,9 @@ int main(int argc, char** argv) {
 
   file_in_data->Close();
 
+  cout << "almost" << endl;
   file_out->Close();
+  cout << "end" << endl;
 
   return 0;
 }

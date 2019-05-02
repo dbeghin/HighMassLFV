@@ -67,7 +67,7 @@ Float_t meta::Loop(string type_of_data) {
 
 
 /////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//Currently set up to calculate fake rates in the etau region
+//Currently set up to calculate fake rates in the mutau region
 ////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //main analysis loop
@@ -173,22 +173,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       if (!PassMuonTrigger) continue;
 
 
-      //start muon counting loop
-      //FIXME
-      /*int Nmu = 0;
-      for (unsigned int iMu = 0; iMu < mu_gt_pt->size(); ++iMu) {
-        if(mu_isPFMuon->at(iMu) && mu_gt_pt->at(iMu) > 10 && fabs(mu_gt_eta->at(iMu)) < 2.4 && fabs(mu_gt_dxy_firstPVtx->at(iMu)) < 0.045 && fabs(mu_gt_dz_firstPVtx->at(iMu)) < 0.2 && mu_pfIsoDbCorrected04->at(iMu) < 0.3 && mu_isMediumMuon->at(iMu)) ++Nmu;
-        if (Nmu > 2) break;
-      }
-      if (Nmu > 2) continue; //2nd muon veto
-
-      //electron veto
-      bool electron = false;
-      for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
-        if (gsf_VIDLoose->at(iEle) && gsf_pt->at(iEle) > 10 && fabs(gsf_eta->at(iEle)) < 2.5 && fabs(gsf_dxy_firstPVtx->at(iEle)) < 0.045 && fabs(gsf_dz_firstPVtx->at(iEle)) < 0.2 && gsf_passConversionVeto->at(iEle) && gsf_nLostInnerHits->at(iEle) <= 1 && gsf_relIso->at(iEle) < 0.3) electron = true;
-        if (electron) break;
-      }
-      if (electron) continue;*/
 
 
       //Sort muons, taus, by increasing isolation/decreasing pt                                                                                                                   
@@ -292,10 +276,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (tau_pt->at(iTau) < 30.0) continue;
 	    if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	    //if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
-	    //if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-	    if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;  //FIXME
-	    if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
+	    if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
+	    if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	    //if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;  //FIXME
+	    //if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
 
 	    TLorentzVector tau_p4;
 	    tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));
@@ -356,10 +340,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (tau_decayMode->at(iTau) == 0) {
 	      j_dm = 0;
 	    }
-	    else if (tau_decayMode->at(iTau) == 1 || tau_decayMode->at(iTau) == 2) {
+	    else if (tau_decayMode->at(iTau) == 1) {
 	      j_dm = 1;
 	    }
-	    else if (tau_decayMode->at(iTau) == 10 || tau_decayMode->at(iTau) == 11) {
+	    else if (tau_decayMode->at(iTau) == 10) {
 	      j_dm = 2;
 	    }
 

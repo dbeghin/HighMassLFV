@@ -76,52 +76,54 @@ double GetHighPtIDWeight(TLorentzVector mu_p4, TString var) {
   //scale factors
   //ID
   TH2F* ID_histo_1 = (TH2F*) ID_file_1->Get("NUM_HighPtID_DEN_genTracks_eta_pair_newTuneP_probe_pt");
-  int bin_in = ID_histo_1->FindBin(fabs(mu_eta), mu_pt);
+  int bin_in = ID_histo_1->FindBin(mu_eta, mu_pt);
   double highPtID_sf_1 = ID_histo_1->GetBinContent(bin_in);
-  double error_1 = ID_histo_1->GetBinError(bin_in);
+  double error_1 = pow(ID_histo_1->GetBinError(bin_in),2);
   double error_highpt = 0;
   if (var == "down") {
-    if (fabs(mu_eta) < 1.6) {
+    if (mu_eta < 1.6) {
       if (mu_p4.P() > 100) {
 	TH2F* data_histo = (TH2F*) data_file_1->Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/efficienciesDATA/abseta_pair_ne_DATA");
-	bin_in = data_histo->FindBin(fabs(mu_eta), mu_pt);
+	bin_in = data_histo->FindBin(mu_eta, mu_pt);
 	//data eff modeled as flat, divide it by MC to get SF, get the difference wrt to the nominal SF
-	error_highpt = fabs( data_histo->GetBinContent(bin_in) / ( 0.9936 - 3.71e-6*mu_p4.P() ) - highPtID_sf_1); 
+	error_highpt = fabs( ( 0.9936 - 3.71e-6*mu_p4.P() ) - highPtID_sf_1); 
       }
     }
-    else if (fabs(mu_eta) < 2.4) {
+    else if (mu_eta < 2.4) {
       if (mu_p4.P() > 200) {
 	//data and MC eff vary here, get the difference wrt to the nominal SF
 	error_highpt = fabs( ( 0.9784 - 4.73e-5*mu_p4.P() ) / ( 0.9908 - 1.26e-5*mu_p4.P() ) - highPtID_sf_1); 
       }
     }
   }
-  error_1 += error_highpt;
+  error_1 += pow(error_highpt,2);
+  error_1 = sqrt(error_1);
   double lumi_1 = 20.0; //luminosity of Runs BCDEF         
 
 
   TH2F* ID_histo_2 = (TH2F*) ID_file_2->Get("NUM_HighPtID_DEN_genTracks_eta_pair_newTuneP_probe_pt");
-  bin_in = ID_histo_2->FindBin(fabs(mu_eta), mu_pt);
+  bin_in = ID_histo_2->FindBin(mu_eta, mu_pt);
   double highPtID_sf_2 = ID_histo_2->GetBinContent(bin_in);
-  double error_2 = ID_histo_2->GetBinError(bin_in);
+  double error_2 = pow(ID_histo_2->GetBinError(bin_in),2);
   error_highpt = 0;
   if (var == "down") {
-    if (fabs(mu_eta) < 1.6) {
+    if (mu_eta < 1.6) {
       if (mu_p4.P() > 100) {
 	TH2F* data_histo = (TH2F*) data_file_2->Get("MC_NUM_HighPtID_DEN_genTracks_PAR_newpt_eta/efficienciesDATA/abseta_pair_ne_DATA");
-	bin_in = data_histo->FindBin(fabs(mu_eta), mu_pt);
+	bin_in = data_histo->FindBin(mu_eta, mu_pt);
 	//data eff modeled as flat, divide it by MC to get SF, get the difference wrt to the nominal SF
 	error_highpt = fabs( data_histo->GetBinContent(bin_in) / ( 0.9936 - 3.71e-6*mu_p4.P() ) - highPtID_sf_2); 
       }
     }
-    else if (fabs(mu_eta) < 2.4) {
+    else if (mu_eta < 2.4) {
       if (mu_p4.P() > 200) {
 	//data and MC eff vary here, get the difference wrt to the nominal SF
 	error_highpt = fabs( ( 0.9784 - 4.73e-5*mu_p4.P() ) / ( 0.9908 - 1.26e-5*mu_p4.P() ) - highPtID_sf_2); 
       }
     }
   }
-  error_2 += error_highpt;
+  error_2 += pow(error_highpt,2);
+  error_2 = sqrt(error_2);
   double lumi_2 = 16.0; //luminosity of Runs GH            
 
   double highPtID_sf = (lumi_1*highPtID_sf_1 + lumi_2*highPtID_sf_2) / (lumi_1 + lumi_2);
@@ -155,11 +157,11 @@ double GetTkLooseIsoWeight(float mu_pt, float mu_eta, TString var) {
   double lumi_2 = 16.0; //luminosity of Runs GH            
 
   TH2F* Iso_histo_1 = (TH2F*) Iso_file_1->Get("NUM_LooseRelTkIso_DEN_HighPtIDandIPCut_eta_pair_newTuneP_probe_pt");
-  int bin_in = Iso_histo_1->FindBin(fabs(mu_eta), mu_pt);
+  int bin_in = Iso_histo_1->FindBin(mu_eta, mu_pt);
   double tkLooseISO_sf_1 = Iso_histo_1->GetBinContent(bin_in);
 
   TH2F* Iso_histo_2 = (TH2F*) Iso_file_2->Get("NUM_LooseRelTkIso_DEN_HighPtIDandIPCut_eta_pair_newTuneP_probe_pt");
-  bin_in = Iso_histo_2->FindBin(fabs(mu_eta), mu_pt);
+  bin_in = Iso_histo_2->FindBin(mu_eta, mu_pt);
   double tkLooseISO_sf_2 = Iso_histo_2->GetBinContent(bin_in); //TkLoose iso : < 0.1
 
   double tkLooseISO_sf = (lumi_1*tkLooseISO_sf_1 + lumi_2*tkLooseISO_sf_2) / (lumi_1 + lumi_2);

@@ -55,7 +55,7 @@ map<TString, float> GetWeightSys(int CR_number, int n_vert, TLorentzVector tau_p
     if (bSetto1) {
       simple_weights[key_nom] = 1;
     }
-    else {
+    else {                      
       simple_weights[key_nom] = GeneralWeightFunction(systematics[i],n_vert,tau_p4,ratio,mu_p4,lepton,top_pt_1,top_pt_2,"nom");
     }
     nom_weight *= simple_weights[key_nom];
@@ -66,7 +66,7 @@ map<TString, float> GetWeightSys(int CR_number, int n_vert, TLorentzVector tau_p
       if (bSetto1) {
 	simple_weights[key] = 1;
       }
-      else {
+      else {                  
 	simple_weights[key] = GeneralWeightFunction(systematics[i],n_vert,tau_p4,ratio,mu_p4,lepton,top_pt_1,top_pt_2,variations[j]);
       }
     }

@@ -133,6 +133,7 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, sq_combined_error):
     for iii in range(1, errorBand.GetNbinsX()+1):
         bin_error_up = pow(sq_combined_error["up"].GetBinContent(iii) + pow(errorBand.GetBinError(iii),2), 0.5)
         bin_error_down = pow(sq_combined_error["down"].GetBinContent(iii) + pow(errorBand.GetBinError(iii),2), 0.5)
+
         bin_content=errorBand.GetBinContent(iii)
         midpoint = (bin_error_up-bin_error_down)/2
         bin_content += midpoint
@@ -304,11 +305,11 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 var=[]
 #var.append("ev_Mvis")          
 #var.append("ev_Mtot")          
-#var.append("tau_pt")           
-#var.append("tau_eta")          
+var.append("tau_pt")           
+var.append("tau_eta")          
 #var.append("tau_phi")          
-#var.append("mu_pt")            
-#var.append("mu_eta")           
+var.append("mu_pt")            
+var.append("mu_eta")           
 #var.append("mu_phi")           
 #var.append("mu_isolation")           
 #var.append("ev_DRmutau")       
@@ -317,7 +318,7 @@ var=[]
 #var.append("ev_MET")           
 var.append("ev_Mcol")          
 #var.append("ev_Mt")            
-#var.append("sign")
+var.append("sign")
 
 var_log_dic = {
 "ev_Mvis"          : True,           
@@ -381,7 +382,7 @@ systs_aux=[
 "eletauFR",
 "mutauFR",
 "FRstat",
-"FRsys",
+#"FRsys",
 "topPt",
 ]
 
@@ -396,6 +397,8 @@ variation=[
 for i in range(0,len(systs_aux)):
     systs_up.append(systs_aux[i]+"_up")
     systs_down.append(systs_aux[i]+"_down")
+    #systs_up.append("nominal")
+    #systs_down.append("nominal")
 
 systs={}
 systs["up"]=systs_up
@@ -555,7 +558,9 @@ for k in range (0,nvar):
                     bin_content = MC[vary][j].GetBinContent(iBin)-MC["nominal"].GetBinContent(iBin)
                     if bin_content < 0:
                         htemp_down.SetBinContent(iBin, pow(bin_content,2))
+                        htemp_up.SetBinContent(iBin, 0)
                     else:
+                        htemp_down.SetBinContent(iBin, 0)
                         htemp_up.SetBinContent(iBin, pow(bin_content,2))
                 sq_combined_error["up"].Add(htemp_up)
                 sq_combined_error["down"].Add(htemp_down)
@@ -590,6 +595,6 @@ for k in range (0,nvar):
         
         make_plot(var[k]+Mth[l], Data, DY["nominal"], TT["nominal"], VV["nominal"], ST["nominal"], Faketau["nominal"], sq_combined_error)
 
-        if "MtLow_SS" in var[k]:
+        if "MtLow_SS" in Mth[l]:
             make_plot(var[k]+"_MtLow", Data_MtLow, DY_MtLow["nominal"], TT_MtLow["nominal"], VV_MtLow["nominal"], ST_MtLow["nominal"], Faketau_MtLow["nominal"], sq_combined_error_MtLow)
 

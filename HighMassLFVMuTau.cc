@@ -977,7 +977,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    }
 	    else {
 	      final_weight = first_weight;
-	      if (k_syst>0) final_weight = 0;
+	      if (CR_number == 101 || CR_number == 103) final_weight *= FakeRate_unfactorised(tau_p4.Pt(),tau_p4.Eta(),ratio,"nom");
 	    }
 
 	    cout << "systematic: " << systs[k_syst] << "  weight: " << final_weight << endl;
