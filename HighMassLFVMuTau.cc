@@ -534,13 +534,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       if(!trig_Flag_BadPFMuonFilter_accept) continue;
       
 
-      //Sort muons, taus by decreasing pt
-      float pt = 0.0;
-      int highest = -1;
-      vector<int> orderedMu, orderedTau;
-      vector<int> rest, rest2;
-
-
 
       //bjet pair finding (medium WP for the bjet)                                                                                                                           
       int nbjet = 0;
@@ -589,59 +582,75 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       }
 
 
-
-      //sorting muons
+      //classify mu-tau pairs by their collinear mass
+      map<vector<int>, float> Mcol_map;
+      vector<vector<int>> mutau_ind_temp;
       for (unsigned int ii = 0; ii < mu_ibt_pt->size(); ++ii) {
-        rest.push_back(ii);
+        TLorentzVector mu_p4;
+        mu_p4.SetPtEtaPhiM(mu_ibt_pt->at(ii), mu_ibt_eta->at(ii), mu_ibt_phi->at(ii), mu_mass);
+        for (unsigned int jj = 0; jj < tau_pt->size(); ++jj) {
+	  float met_px = MET_T1Txy_Px;
+	  float met_py = MET_T1Txy_Py;
+	  float met_pt = MET_T1Txy_Pt;
+          TLorentzVector tau_p4, met_p4;
+          tau_p4.SetPtEtaPhiE(tau_pt->at(jj), tau_eta->at(jj), tau_phi->at(jj), tau_energy->at(jj));
+          met_p4.SetPxPyPzE(met_px, met_py, 0, met_pt);
+	  
+
+          //MET recalculation because we're using the high-pt muon ID
+          TLorentzVector mu_gt_p4, mu_gt_transp4;
+          mu_gt_p4.SetPxPyPzE(0, 0, 0, 0);
+          mu_gt_transp4.SetPxPyPzE(0, 0, 0, 0);
+
+          float min_dR = 0.2;
+          for (unsigned int kk=0; kk<mu_gt_pt->size(); ++kk) {
+            if (!mu_isPFMuon->at(kk)) continue;
+            mu_gt_p4.SetPtEtaPhiM(mu_gt_pt->at(kk), mu_gt_eta->at(kk), mu_gt_phi->at(kk), mu_mass);
+            if ( (abs(mu_gt_p4.Pt()) >= 998.999 && abs(mu_gt_p4.Pt()) <= 999.001) )continue;
+            if ( (abs(mu_p4.Pt()) >= 998.999 && abs(mu_p4.Pt()) <= 999.001) )continue;
+            if (mu_gt_p4.DeltaR(mu_p4) > min_dR) continue;
+            min_dR = mu_gt_p4.DeltaR(mu_p4);
+            mu_gt_transp4.SetPtEtaPhiM(mu_gt_pt->at(kk), 0, mu_gt_phi->at(kk), mu_mass);
+          }
+          met_p4 = met_p4 + mu_gt_transp4 - mu_p4;
+
+          float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
+          vector<int> index;
+          index.push_back(ii); //mu index
+          index.push_back(jj); //tau index
+          Mcol_map[index] = Mcol;
+          mutau_ind_temp.push_back(index);
+        }
       }
-      while (rest.size()>0) {
-	rest2.clear();
-	highest = -1;
-        pt = -10000;
-        for (unsigned int ii = 0; ii < rest.size(); ++ii) {
-          if (mu_ibt_pt->at(rest[ii]) > pt) {
-            pt = mu_ibt_pt->at(rest[ii]);
-            if (highest > -1) rest2.push_back(highest);
-            highest = rest[ii];
+
+      vector<vector<int>> rest, mutau_ind;
+      mutau_ind.clear();
+      while (mutau_ind_temp.size()>0) {
+        rest.clear();
+        float max_mcol = -1;
+        vector<int> highest_ind;
+        highest_ind.clear();
+        for (unsigned int iInd = 0; iInd < mutau_ind_temp.size(); ++iInd) {
+	  //cout << Mcol_map[mutau_ind_temp[iInd]] << " " << max_mcol << endl;
+          if (Mcol_map[mutau_ind_temp[iInd]] > max_mcol) {
+            if (highest_ind.size() > 0) rest.push_back(highest_ind);
+            highest_ind = mutau_ind_temp[iInd];
           }
           else {
-	    rest2.push_back(rest[ii]);
-	  }
-        }
-        orderedMu.push_back(highest);
-        rest = rest2;
-      }
-
-      //sorting taus
-      rest.clear();
-      for (unsigned int ii = 0; ii < tau_pt->size(); ++ii) {
-        rest.push_back(ii);
-      }
-      while (rest.size()>0) {
-	rest2.clear();
-	highest = -1;
-        pt = -10000;
-        for (unsigned int ii = 0; ii < rest.size(); ++ii) {
-          if (tau_pt->at(rest[ii]) > pt) {
-            pt = tau_pt->at(rest[ii]);
-            if (highest > -1) rest2.push_back(highest);
-            highest = rest[ii];
+            rest.push_back(mutau_ind_temp[iInd]);
           }
-          else {
-	    rest2.push_back(rest[ii]);
-	  }
         }
-        orderedTau.push_back(highest);
-        rest = rest2;
+        mutau_ind.push_back(highest_ind);
+        mutau_ind_temp = rest;
       }
 
 
-
-      //start loop over reconstructed muons
+      //start loop over reconstructed mu-tau pairs
       bool filled_histos = false;
-      for (unsigned int ii = 0; ii < orderedMu.size(); ++ii) {
-	if (filled_histos) break;//if we've filled the histos once, break out of the loop
-	int iMu = orderedMu[ii];
+      for (unsigned int ii = 0; ii < mutau_ind.size(); ++ii) {
+        if (filled_histos) break;
+	int iMu = mutau_ind[ii][0];
+	int iTau = mutau_ind[ii][1];
 	if (mu_ibt_pt->at(iMu) < 45.0) continue;
 	if (!mu_isHighPtMuon->at(iMu)) continue;
 	if (fabs(mu_ibt_eta->at(iMu)) > 2.4) continue;
@@ -651,415 +660,406 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	mu_p4.SetPtEtaPhiM(mu_ibt_pt->at(iMu), mu_ibt_eta->at(iMu), mu_ibt_phi->at(iMu), mu_mass);
 	mu_ibt_transp4.SetPxPyPzE(mu_ibt_px->at(iMu), mu_ibt_py->at(iMu), 0, mu_ibt_pt->at(iMu));
 
-	//start loop over reconstructed taus
-	for (unsigned int jj = 0; jj < orderedTau.size(); ++jj) {
-	  if (filled_histos) break;//if we've filled the histos once, break out of the loop
-	  int iTau = orderedTau[jj];
+	TLorentzVector tau_p4, tau_TES_p4, vis_p4, met_p4, metmu_p4, total_p4;
+	float met_px = MET_T1Txy_Px;
+	float met_py = MET_T1Txy_Py;
+	float met_pt = MET_T1Txy_Pt;
+	tau_p4.SetPtEtaPhiE(tau_pt->at(iTau), tau_eta->at(iTau), tau_phi->at(iTau), tau_energy->at(iTau));
+	met_p4.SetPxPyPzE(met_px, met_py, 0, met_pt);
+	
+	vis_p4 = tau_p4 + mu_p4;
+	total_p4 = vis_p4 + met_p4;
+	metmu_p4 = met_p4 + mu_p4;
+	
+	if (tau_pt->at(iTau) < 0) continue;
+	if (tau_p4.Pt() < 27.0) continue;
+	if (fabs(tau_eta->at(iTau)) > 2.3) continue;
+	if (tau_decayModeFinding->at(iTau) < 0.5) continue;
+	if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
+	if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	if (fabs(tau_charge->at(iTau)) != 1) continue;
 
-	  TLorentzVector tau_p4, tau_TES_p4, vis_p4, met_p4, metmu_p4, total_p4;
-	  float met_px = MET_T1Txy_Px;
-	  float met_py = MET_T1Txy_Py;
-	  float met_pt = MET_T1Txy_Pt;
-	  tau_p4.SetPtEtaPhiE(tau_pt->at(iTau), tau_eta->at(iTau), tau_phi->at(iTau), tau_energy->at(iTau));
-	  met_p4.SetPxPyPzE(met_px, met_py, 0, met_pt);
-	  
-	  vis_p4 = tau_p4 + mu_p4;
-	  total_p4 = vis_p4 + met_p4;
-	  metmu_p4 = met_p4 + mu_p4;
-	  
-	  if (tau_pt->at(iTau) < 0) continue;
-	  if (tau_p4.Pt() < 27.0) continue;
-	  if (fabs(tau_eta->at(iTau)) > 2.3) continue;
-	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
-	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-	  if (fabs(tau_charge->at(iTau)) != 1) continue;
-
-	  //control regions : sign selection, muon isolation and tau ID
-	  if (CR_number == -1) {
-	    cout << "Error: Control region not recognized" << endl;
-	    break;
-	  }
-	  
-	  float reliso = mu_isoTrackerBased03->at(iMu); //use instead sumofpts divided by muon ibt pt
+	//control regions : sign selection, muon isolation and tau ID
+	if (CR_number == -1) {
+	  cout << "Error: Control region not recognized" << endl;
+	  break;
+	}
+	
+	float reliso = mu_isoTrackerBased03->at(iMu); //use instead sumofpts divided by muon ibt pt
 
 
-	  //MET recalculation because we're using the high-pt muon ID
-	  TLorentzVector mu_gt_p4, mu_gt_transp4;
-	  mu_gt_p4.SetPxPyPzE(0, 0, 0, 0);
-	  mu_gt_transp4.SetPxPyPzE(0, 0, 0, 0);
+	//MET recalculation because we're using the high-pt muon ID
+	TLorentzVector mu_gt_p4, mu_gt_transp4;
+	mu_gt_p4.SetPxPyPzE(0, 0, 0, 0);
+	mu_gt_transp4.SetPxPyPzE(0, 0, 0, 0);
 
-	  float min_dR = 0.2;
-	  for (unsigned int kk=0; kk<mu_gt_pt->size(); ++kk) {
-	    if (!mu_isPFMuon->at(kk)) continue;
-	    mu_gt_p4.SetPtEtaPhiM(mu_gt_pt->at(kk), mu_gt_eta->at(kk), mu_gt_phi->at(kk), mu_mass);
-	    if ( (abs(mu_gt_p4.Pt()) >= 998.99) && (abs(mu_gt_p4.Pt()) <= 999.01) )continue;
-	    if (mu_gt_p4.DeltaR(mu_p4) > min_dR) continue;
-	    min_dR = mu_gt_p4.DeltaR(mu_p4);
-	    mu_gt_transp4.SetPtEtaPhiM(mu_gt_pt->at(kk), 0, mu_gt_phi->at(kk), mu_mass);
-	  }
-	  met_p4 = met_p4 + mu_gt_transp4 - mu_ibt_transp4;
+	float min_dR = 0.2;
+	for (unsigned int kk=0; kk<mu_gt_pt->size(); ++kk) {
+	  if (!mu_isPFMuon->at(kk)) continue;
+	  mu_gt_p4.SetPtEtaPhiM(mu_gt_pt->at(kk), mu_gt_eta->at(kk), mu_gt_phi->at(kk), mu_mass);
+	  if ( (abs(mu_gt_p4.Pt()) >= 998.99) && (abs(mu_gt_p4.Pt()) <= 999.01) )continue;
+	  if (mu_gt_p4.DeltaR(mu_p4) > min_dR) continue;
+	  min_dR = mu_gt_p4.DeltaR(mu_p4);
+	  mu_gt_transp4.SetPtEtaPhiM(mu_gt_pt->at(kk), 0, mu_gt_phi->at(kk), mu_mass);
+	}
+	met_p4 = met_p4 + mu_gt_transp4 - mu_ibt_transp4;
 
 
-	  
-	  float Mt = -1;
-	  if (2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) < 0) {
-	    Mt = 0;
+	
+	float Mt = -1;
+	if (2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) < 0) {
+	  Mt = 0;
+	}
+	else {
+	  Mt = sqrt(2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) );
+	}
+
+	if (CR_number<100) {
+	  //sign selection
+	  if (CR_number%2 == 0) {
+	    if (tau_charge->at(iTau) * mu_ibt_charge->at(iMu) > 0) continue; //OS selection
 	  }
 	  else {
-	    Mt = sqrt(2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) );
+	    if (tau_charge->at(iTau) * mu_ibt_charge->at(iMu) < 0) continue; //SS selection
 	  }
-
-	  if (CR_number<100) {
-	    //sign selection
-	    if (CR_number%2 == 0) {
-	      if (tau_charge->at(iTau) * mu_ibt_charge->at(iMu) > 0) continue; //OS selection
-	    }
-	    else {
-	      if (tau_charge->at(iTau) * mu_ibt_charge->at(iMu) < 0) continue; //SS selection
-	    }
+	  
+	  //muon isolation
+	  if (CR_number < 4 || CR_number >= 7) {
+	    if (reliso > 0.1) continue;
+	  }
+	  else {
+	    if (reliso < 0.1) continue;
+	  }
 	    
-	    //muon isolation
-	    if (CR_number < 4 || CR_number >= 7) {
-	      if (reliso > 0.1) continue;
-	    }
-	    else {
-	      if (reliso < 0.1) continue;
-	    }
-	      
-	    //tau isolation
-	    if (CR_number < 2 || CR_number == 9) {
-	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	    }
-	    else {
-	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
-	      if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	    }
+	  //tau isolation
+	  if (CR_number < 2 || CR_number == 9) {
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
 	  }
 	  else {
-	    if (CR_number == 100) {
-	      if (reliso > 0.1) continue;
-	      //if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	      if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	    }	      
-	    if (CR_number == 101) {
-	      if (reliso > 0.1) continue;
-	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
-	      if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	    }	      
-	    if (CR_number == 102) {
-	      if (reliso > 0.1) continue;
-	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	      if (Mt<80) continue;
-	    }	      
-	    if (CR_number == 103) {
-	      if (reliso > 0.1) continue;
-	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
-	      if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	      if (Mt<80) continue;
-	    }	      
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
+	    if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	  }
+	}
+	else {
+	  if (CR_number == 100) {
+	    if (reliso > 0.1) continue;
+	    //if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	  }	      
+	  if (CR_number == 101) {
+	    if (reliso > 0.1) continue;
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
+	    if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	  }	      
+	  if (CR_number == 102) {
+	    if (reliso > 0.1) continue;
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    if (Mt<80) continue;
+	  }	      
+	  if (CR_number == 103) {
+	    if (reliso > 0.1) continue;
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) continue;
+	    if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	    if (Mt<80) continue;
+	  }	      
+	}
+
+
+	TString lepton = "", mu_lepton = "";
+
+	//separate histos by tau realness
+	int jTauN=j_real;
+	bool tau_match = false;
+	float dR_threshold = 0.4;
+
+	if (!data && !Signal) {
+	  //fill gen histos to understand wth is going on
+	  for (unsigned int iGen = 0; iGen<tauhp4.size(); ++iGen) {
+	    hgen[0]->Fill(tauhp4[iGen].Pt(), mc_w_sign);
+	    hgen[1]->Fill(tauhp4[iGen].Eta(), mc_w_sign);
+	    hgen[2]->Fill(tauhp4[iGen].Phi(), mc_w_sign);
 	  }
 
-
-	  TString lepton = "", mu_lepton = "";
-
-	  //separate histos by tau realness
-	  int jTauN=j_real;
-	  bool tau_match = false;
-	  float dR_threshold = 0.4;
-
-	  if (!data && !Signal) {
-	    //fill gen histos to understand wth is going on
-	    for (unsigned int iGen = 0; iGen<tauhp4.size(); ++iGen) {
-	      hgen[0]->Fill(tauhp4[iGen].Pt(), mc_w_sign);
-	      hgen[1]->Fill(tauhp4[iGen].Eta(), mc_w_sign);
-	      hgen[2]->Fill(tauhp4[iGen].Phi(), mc_w_sign);
+	  bool ele_match = false;
+	  if (genelep4.size() != 0) {
+	    for (unsigned int iGen = 0; iGen < genelep4.size(); ++iGen) {
+	      if (tau_p4.DeltaR(genelep4[iGen]) < dR_threshold) ele_match = true;
 	    }
+	  }
+	  bool mu_match = false;
+	  bool recogen_mu_match = false;
+	  if (genmup4.size() != 0) {
+	    for (unsigned int iGen = 0; iGen < genmup4.size(); ++iGen) {
+	      if (tau_p4.DeltaR(genmup4[iGen]) < dR_threshold) mu_match = true;
+	      if (mu_p4.DeltaR(genmup4[iGen]) < dR_threshold) recogen_mu_match = true;
+	    }
+	  }
+	  if (ele_match && mu_match) {
+	    cout << "gen electron AND muon both match to same tau !!!" << endl << endl << endl;
+	    continue;
+	  }
+	  if (ele_match) lepton = "ele";
+	  if (mu_match)  lepton = "mu";
+	  if (recogen_mu_match) mu_lepton = "mu";
 
-	    bool ele_match = false;
-	    if (genelep4.size() != 0) {
-	      for (unsigned int iGen = 0; iGen < genelep4.size(); ++iGen) {
-		if (tau_p4.DeltaR(genelep4[iGen]) < dR_threshold) ele_match = true;
+
+	  bool is_not_jet = false;
+	  if (anyleptonp4.size() != 0) {
+	    for (unsigned int iGen = 0; iGen < anyleptonp4.size(); ++iGen) {
+	      if (tau_p4.DeltaR(anyleptonp4[iGen]) < dR_threshold) {
+		is_not_jet = true;
+		break;
 	      }
 	    }
-	    bool mu_match = false;
-	    bool recogen_mu_match = false;
-	    if (genmup4.size() != 0) {
-	      for (unsigned int iGen = 0; iGen < genmup4.size(); ++iGen) {
-		if (tau_p4.DeltaR(genmup4[iGen]) < dR_threshold) mu_match = true;
-		if (mu_p4.DeltaR(genmup4[iGen]) < dR_threshold) recogen_mu_match = true;
+	  }
+	  if (tauhp4.size() != 0) {
+	    for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
+	      if (tau_p4.DeltaR(tauhp4[iGen]) < dR_threshold) {
+		tau_match = true;
+		lepton = "tau";
+		break;
 	      }
 	    }
-	    if (ele_match && mu_match) {
-	      cout << "gen electron AND muon both match to same tau !!!" << endl << endl << endl;
-	      continue;
-	    }
-	    if (ele_match) lepton = "ele";
-	    if (mu_match)  lepton = "mu";
-	    if (recogen_mu_match) mu_lepton = "mu";
+	  }
+	  if (is_not_jet) {
+	    jTauN=j_real;
+	  }
+	  else {
+	    jTauN=j_fake;
+	  }
+	  if (CR_number >= 2) tau_match = false;
+	}
 
 
-	    bool is_not_jet = false;
-	    if (anyleptonp4.size() != 0) {
-	      for (unsigned int iGen = 0; iGen < anyleptonp4.size(); ++iGen) {
-		if (tau_p4.DeltaR(anyleptonp4[iGen]) < dR_threshold) {
-		  is_not_jet = true;
-		  break;
-		}
-	      }
-	    }
-	    if (tauhp4.size() != 0) {
-	      for (unsigned int iGen = 0; iGen < tauhp4.size(); ++iGen) {
-		if (tau_p4.DeltaR(tauhp4[iGen]) < dR_threshold) {
-		  tau_match = true;
-		  lepton = "tau";
-		  break;
-		}
-	      }
-	    }
-	    if (is_not_jet) {
-	      jTauN=j_real;
+	// MATCH TAUS TO AK4 jets
+        bool matched_to_reco_jet=false;
+        TLorentzVector jet_p4(0.,0.,0.,0.);
+        for (unsigned int ijet = 0; ijet < jet_pt->size(); ijet++){
+          if(!(fabs(jet_eta->at(ijet)) < 2.3)) continue;
+          if(!(jet_isJetIDLoose->at(ijet))) continue;
+          TLorentzVector jet_p4_tmp;
+          jet_p4_tmp.SetPxPyPzE(jet_px->at(ijet), jet_py->at(ijet), jet_pz->at(ijet), jet_energy->at(ijet));
+          if(!(tau_p4.DeltaR(jet_p4_tmp) < dR_threshold)) continue;
+          matched_to_reco_jet=true;
+          jet_p4=jet_p4_tmp;
+          break;
+
+        }
+
+	if(!(matched_to_reco_jet)) continue;
+
+
+	float ratio = 0;
+	if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
+
+	int lMth = -1;
+	if (Mt < 120) {
+	  if ( tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
+	    lMth = k_low_OS;
+	  }
+	  else {
+	    lMth = k_low_SS;
+	  }
+	}
+	else {
+	  lMth = k_high;
+	}
+
+
+	float nVert = -1, mcWeight = 1;
+	if (!data) {
+	  nVert = mc_trueNumInteractions;
+	  if (mc_weight > 0) mcWeight = 1;
+	  else if (mc_weight < 0) mcWeight = -1;
+	  else mcWeight = 0;
+	}
+	cout << mcWeight << endl;
+
+	map<TString, float> weightsSys;
+	//weights and systematics
+	weightsSys = GetWeightSys(CR_number, nVert, tau_p4, ratio, mu_p4, lepton, top_pt_1, top_pt_2);
+	first_weight = weightsSys["nominal"]*mcWeight;
+	h[lMth][0][jTauN][13]->Fill(first_weight);
+	final_weight = first_weight;
+
+
+	if (first_weight != first_weight) {
+	  cout << "Not a number!!!!!!!" << endl;
+	  continue;
+	}
+
+	
+	float dR = tau_p4.DeltaR(mu_p4);
+
+	int sign_number = -1;
+	if ( tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
+	  sign_number = OS_number;
+	}
+	else {
+	  sign_number = SS_number;
+	}
+	
+
+
+	TString eta_string = GetEtaString(tau_p4.Eta());
+	int l_eta = -1;
+	if (eta_string == "barrel") {
+	  l_eta = l_barrel;
+	}
+	else if (eta_string == "endcap") {
+	  l_eta = l_endcap;
+	}
+	else {
+	  continue;
+	}
+
+
+	//TH2's for the fake rate
+	int iJetPt = -1, iRatio = -1;
+	//Tau histos
+	if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) {
+	  iJetPt = iJetPtPass;
+	  iRatio  = iRatioPass;
+	}
+	else {
+	  iJetPt = iJetPtFail;
+	  iRatio  = iRatioFail;
+	}
+
+	//decay mode
+	int k_dm = -1;
+	if (tau_decayMode->at(iTau) == 0) {
+	  k_dm = k_DM0;
+	}
+	else if (tau_decayMode->at(iTau) == 1 || tau_decayMode->at(iTau) == 2) {
+	  k_dm = k_DM1;
+	}
+	else if (tau_decayMode->at(iTau) == 10 || tau_decayMode->at(iTau) == 11) {
+	  k_dm = k_DM10;
+	}
+
+	//electron veto
+	bool electron = false;
+	for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
+	  if (gsf_isHeepV7->at(iEle) && gsf_pt->at(iEle) > 40) electron = true;
+	  if (electron) break;
+	}
+	if (electron) continue;
+
+	if (dR < 0.5) continue;
+
+
+	if (CR_number == 100) {
+	  hh[iJetPt][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), jet_p4.Pt(), final_weight);
+	  hh[iRatio][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), ratio, final_weight);
+	  if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	}
+
+	
+	cout << endl << "PU: " << mc_trueNumInteractions << endl;
+
+	TLorentzVector tau_p4_copy = tau_p4, mu_p4_copy = mu_p4, met_p4_copy = met_p4;
+	for (unsigned int k_syst=0; k_syst<systs.size(); ++k_syst) {
+	  TString argument = systs[k_syst];
+	  for (unsigned int iSpecial=0; iSpecial<specialSyst.size(); ++iSpecial) {
+	    if (systs[k_syst] == specialSyst[iSpecial]) {
+	      argument = "nominal";
+	      vector<TLorentzVector> newp4 = GetScaleVariation(systs[k_syst], lepton, mu_lepton, tau_p4_copy, mu_p4_copy, mu_ibt_charge->at(iMu), met_p4_copy);
+	      tau_p4 = newp4[0];
+	      mu_p4 = newp4[1];
+	      met_p4 = newp4[2];
+	      break;
 	    }
 	    else {
-	      jTauN=j_fake;
+	      tau_p4 = tau_p4_copy;
+	      mu_p4 = mu_p4_copy;
+	      met_p4 = met_p4_copy;
 	    }
-	    if (CR_number >= 2) tau_match = false;
 	  }
+	  
+	  final_weight = weightsSys[argument]*mcWeight;
 
+	  cout << "systematic: " << systs[k_syst] << "  weight: " << final_weight << endl;
+	  cout << "tau: " << lepton << "  pt: " << tau_p4.Pt() << endl;
+	  cout << "mu: " << mu_lepton << "  pt: " << mu_p4.Pt() << endl << endl;
 
-	  // MATCH TAUS TO AK4 jets
-          bool matched_to_reco_jet=false;
-          TLorentzVector jet_p4(0.,0.,0.,0.);
-          for (unsigned int ijet = 0; ijet < jet_pt->size(); ijet++){
-            if(!(fabs(jet_eta->at(ijet)) < 2.3)) continue;
-            if(!(jet_isJetIDLoose->at(ijet))) continue;
-            TLorentzVector jet_p4_tmp;
-            jet_p4_tmp.SetPxPyPzE(jet_px->at(ijet), jet_py->at(ijet), jet_pz->at(ijet), jet_energy->at(ijet));
-            if(!(tau_p4.DeltaR(jet_p4_tmp) < dR_threshold)) continue;
-            matched_to_reco_jet=true;
-            jet_p4=jet_p4_tmp;
-            break;
+	  //tau and mu pt selections
+	  if (tau_p4.Pt() < 30.0) continue;
+	  if (mu_p4.Pt() < 53.0) continue;
+	  
+	  //Mt recalculation
+	  Mt = sqrt(2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) );
 
-          }
-
-	  if(!(matched_to_reco_jet)) continue;
-
-
-	  float ratio = 0;
-	  if (jet_p4.Pt() != 0) ratio = tau_p4.Pt()/jet_p4.Pt();
-
-	  int lMth = -1;
+	  lMth = -1;
+	  bool isLowTTCR = false, isHighTTCR = false;
+	  TString sign_string = ""; 
 	  if (Mt < 120) {
 	    if ( tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
 	      lMth = k_low_OS;
+	      sign_string = "OS";
+	      if (nbjet >= 2) isLowTTCR = true;
 	    }
 	    else {
 	      lMth = k_low_SS;
+	      sign_string = "SS";
+	      if (nbjet >= 2) isLowTTCR = true;
 	    }
 	  }
 	  else {
 	    lMth = k_high;
-	  }
-
-
-	  map<TString, float> weightsSys;
-	  first_weight = 1;
-	  if (!data) {
-	    //weights and systematics
-	    weightsSys = GetWeightSys(CR_number, mc_trueNumInteractions, tau_p4, ratio, mu_p4, lepton, top_pt_1, top_pt_2);
-	    first_weight = weightsSys["nominal"];
-	    h[lMth][0][jTauN][13]->Fill(first_weight);
-	  }
-	  final_weight = first_weight;
-
-
-
-
-	  if (first_weight != first_weight) {
-	    cout << "Not a number!!!!!!!" << endl;
-	    continue;
-	  }
-
-
-
-	  
-	  float dR = tau_p4.DeltaR(mu_p4);
-
-	  int sign_number = -1;
-	  if ( tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
-	    sign_number = OS_number;
-	  }
-	  else {
-	    sign_number = SS_number;
-	  }
-	  
-
-
-	  TString eta_string = GetEtaString(tau_p4.Eta());
-	  int l_eta = -1;
-	  if (eta_string == "barrel") {
-	    l_eta = l_barrel;
-	  }
-	  else if (eta_string == "endcap") {
-	    l_eta = l_endcap;
-	  }
-	  else {
-	    continue;
-	  }
-
-
-	  //TH2's for the fake rate
-	  int iJetPt = -1, iRatio = -1;
-	  //Tau histos
-	  if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) {
-	    iJetPt = iJetPtPass;
-	    iRatio  = iRatioPass;
-	  }
-	  else {
-	    iJetPt = iJetPtFail;
-	    iRatio  = iRatioFail;
-	  }
-
-	  //decay mode
-	  int k_dm = -1;
-	  if (tau_decayMode->at(iTau) == 0) {
-	    k_dm = k_DM0;
-	  }
-	  else if (tau_decayMode->at(iTau) == 1 || tau_decayMode->at(iTau) == 2) {
-	    k_dm = k_DM1;
-	  }
-	  else if (tau_decayMode->at(iTau) == 10 || tau_decayMode->at(iTau) == 11) {
-	    k_dm = k_DM10;
-	  }
-
-	  //electron veto
-	  bool electron = false;
-	  for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
-	    if (gsf_isHeepV7->at(iEle) && gsf_pt->at(iEle) > 40) electron = true;
-	    if (electron) break;
-	  }
-	  if (electron) continue;
-
-	  if (dR < 0.5) continue;
-	  filled_histos = true;
-
-
-	  if (CR_number == 100) {
-	    hh[iJetPt][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), jet_p4.Pt(), final_weight);
-	    hh[iRatio][lMth][k_dm][l_eta][jTauN]->Fill(tau_p4.Pt(), ratio, final_weight);
-	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	  }
-
-	  
-	  cout << endl << "PU: " << mc_trueNumInteractions << endl;
-
-	  TLorentzVector tau_p4_copy = tau_p4, mu_p4_copy = mu_p4, met_p4_copy = met_p4;
-	  for (unsigned int k_syst=0; k_syst<systs.size(); ++k_syst) {
-	    TString argument = systs[k_syst];
-	    for (unsigned int iSpecial=0; iSpecial<specialSyst.size(); ++iSpecial) {
-	      if (systs[k_syst] == specialSyst[iSpecial]) {
-		argument = "nominal";
-		vector<TLorentzVector> newp4 = GetScaleVariation(systs[k_syst], lepton, mu_lepton, tau_p4_copy, mu_p4_copy, mu_ibt_charge->at(iMu), met_p4_copy);
-		tau_p4 = newp4[0];
-		mu_p4 = newp4[1];
-		met_p4 = newp4[2];
-		break;
-	      }
-	      else {
-		tau_p4 = tau_p4_copy;
-		mu_p4 = mu_p4_copy;
-		met_p4 = met_p4_copy;
-	      }
-	    }
-	    
-	    if (!data) {
-	      final_weight = weightsSys[argument];
+	    if (tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
+	      sign_string = "OS";
+	      if (nbjet >= 2) isHighTTCR = true;
 	    }
 	    else {
-	      final_weight = first_weight;
-	      if (CR_number == 101 || CR_number == 103) final_weight *= FakeRate_unfactorised(tau_p4.Pt(),tau_p4.Eta(),ratio,"nom");
+	      sign_string = "SS";
+	      if (nbjet >= 2) isHighTTCR = true;
 	    }
+	  }
+	  
+	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
 
-	    cout << "systematic: " << systs[k_syst] << "  weight: " << final_weight << endl;
-	    cout << "tau: " << lepton << "  pt: " << tau_p4.Pt() << endl;
-	    cout << "mu: " << mu_lepton << "  pt: " << mu_p4.Pt() << endl << endl;
+	  //only fill histos once for the signal (high mass) region
+          if (lMth == k_high && k_syst == 0) filled_histos = true;
 
-	    //tau and mu pt selections
-	    if (tau_p4.Pt() < 30.0) continue;
-	    if (mu_p4.Pt() < 53.0) continue;
+	  bool stopFilling = false;
+	  int l_value = lMth;
+	  int n_fuel = 0;
+	  while (!stopFilling && n_fuel<2) {
+	    ++n_fuel;
 	    
-	    //Mt recalculation
-	    Mt = sqrt(2 * ( mu_p4.Pt() * met_p4.Pt()  - mu_p4.Px()*met_p4.Px() - mu_p4.Py()*met_p4.Py() ) );
-
-	    lMth = -1;
-	    bool isLowTTCR = false, isHighTTCR = false;
-	    TString sign_string = ""; 
-	    if (Mt < 120) {
-	      if ( tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
-	        lMth = k_low_OS;
-	        sign_string = "OS";
-	        if (nbjet >= 2) isLowTTCR = true;
+	    h[l_value][k_syst][jTauN][0]->Fill(vis_p4.M(), final_weight);
+	    h[l_value][k_syst][jTauN][1]->Fill(total_p4.M(), final_weight);
+	    h[l_value][k_syst][jTauN][2]->Fill(tau_p4.Pt(), final_weight);
+	    h[l_value][k_syst][jTauN][3]->Fill(tau_p4.Eta(), final_weight);
+	    h[l_value][k_syst][jTauN][4]->Fill(tau_p4.Phi(), final_weight);
+	    h[l_value][k_syst][jTauN][5]->Fill(mu_p4.Pt(), final_weight);
+	    h[l_value][k_syst][jTauN][6]->Fill(mu_p4.Eta(), final_weight);
+	    h[l_value][k_syst][jTauN][7]->Fill(mu_p4.Phi(), final_weight);
+	    h[l_value][k_syst][jTauN][8]->Fill(dR, final_weight);
+	    h[l_value][k_syst][jTauN][11]->Fill(met_p4.Pt(), final_weight);
+	    h[l_value][k_syst][jTauN][13]->Fill(met_p4.Px()-met_px, final_weight);
+	    h[l_value][k_syst][jTauN][14]->Fill(Mcol, final_weight);
+	    h[l_value][k_syst][jTauN][15]->Fill(Mt, final_weight);
+	    h[l_value][k_syst][jTauN][16]->Fill(reliso, final_weight);
+	    h[l_value][k_syst][jTauN][17]->Fill(final_weight, 1);
+	    h[l_value][k_syst][jTauN][18]->Fill(sign_number, final_weight);
+	    if (l_value == k_high_TT || l_value == k_low_TT) stopFilling = true;
+	    if (l_value == lMth) {
+	      if (isHighTTCR) {
+		l_value = k_high_TT;
+		final_weight *= bjet_weight;
 	      }
+	      else if (isLowTTCR) {
+		l_value = k_low_TT;
+		final_weight *= bjet_weight;
+	      } 
 	      else {
-	        lMth = k_low_SS;
-	        sign_string = "SS";
-	        if (nbjet >= 2) isLowTTCR = true;
-	      }
-	    }
-	    else {
-	      lMth = k_high;
-	      if (tau_charge->at(iTau)*mu_ibt_charge->at(iMu) < 0) {
-	        sign_string = "OS";
-	        if (nbjet >= 2) isHighTTCR = true;
-	      }
-	      else {
-	        sign_string = "SS";
-	        if (nbjet >= 2) isHighTTCR = true;
-	      }
-	    }
-	    
-	    float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
-
-
-	    bool stopFilling = false;
-	    int l_value = lMth;
-	    int n_fuel = 0;
-	    while (!stopFilling && n_fuel<2) {
-	      ++n_fuel;
-	      
-	      h[l_value][k_syst][jTauN][0]->Fill(vis_p4.M(), final_weight);
-	      h[l_value][k_syst][jTauN][1]->Fill(total_p4.M(), final_weight);
-	      h[l_value][k_syst][jTauN][2]->Fill(tau_p4.Pt(), final_weight);
-	      h[l_value][k_syst][jTauN][3]->Fill(tau_p4.Eta(), final_weight);
-	      h[l_value][k_syst][jTauN][4]->Fill(tau_p4.Phi(), final_weight);
-	      h[l_value][k_syst][jTauN][5]->Fill(mu_p4.Pt(), final_weight);
-	      h[l_value][k_syst][jTauN][6]->Fill(mu_p4.Eta(), final_weight);
-	      h[l_value][k_syst][jTauN][7]->Fill(mu_p4.Phi(), final_weight);
-	      h[l_value][k_syst][jTauN][8]->Fill(dR, final_weight);
-	      h[l_value][k_syst][jTauN][11]->Fill(met_p4.Pt(), final_weight);
-	      h[l_value][k_syst][jTauN][13]->Fill(met_p4.Px()-met_px, final_weight);
-	      h[l_value][k_syst][jTauN][14]->Fill(Mcol, final_weight);
-	      h[l_value][k_syst][jTauN][15]->Fill(Mt, final_weight);
-	      h[l_value][k_syst][jTauN][16]->Fill(reliso, final_weight);
-	      h[l_value][k_syst][jTauN][17]->Fill(final_weight, 1);
-	      h[l_value][k_syst][jTauN][18]->Fill(sign_number, final_weight);
-	      if (l_value == k_high_TT || l_value == k_low_TT) stopFilling = true;
-	      if (l_value == lMth) {
-		if (isHighTTCR) {
-		  l_value = k_high_TT;
-		  final_weight *= bjet_weight;
-		}
-		else if (isLowTTCR) {
-		  l_value = k_low_TT;
-		  final_weight *= bjet_weight;
-		} 
-		else {
-		  stopFilling = true;
-		}
+		stopFilling = true;
 	      }
 	    }
 	  }
-	}//loop over taus
+	}
       }//loop over muons
    }//loop over events
 

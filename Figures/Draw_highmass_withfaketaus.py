@@ -495,7 +495,7 @@ for k in range (0,nvar):
             ST_MtLow["nominal"].Add(ST_OS["nominal"])
             VV_MtLow["nominal"].Add(VV_OS["nominal"])
             Faketau_MtLow["nominal"].Add(Faketau_OS["nominal"])
-            MC_MtLow["nominal"].Add(Faketau_OS["nominal"])
+            MC_MtLow["nominal"].Add(MC_OS["nominal"])
             Data_MtLow.Add(Data_OS)
     
         #end nominal
@@ -587,12 +587,13 @@ for k in range (0,nvar):
                         bin_content = MC_MtLow[vary][j].GetBinContent(iBin)-MC_MtLow["nominal"].GetBinContent(iBin)
                         if bin_content < 0:
                             htemp_down.SetBinContent(iBin, pow(bin_content,2))
+                            htemp_up.SetBinContent(iBin, 0)
                         else:
+                            htemp_down.SetBinContent(iBin, 0)
                             htemp_up.SetBinContent(iBin, pow(bin_content,2))
                     sq_combined_error_MtLow["up"].Add(htemp_up)
                     sq_combined_error_MtLow["down"].Add(htemp_down)
-    
-        
+
         make_plot(var[k]+Mth[l], Data, DY["nominal"], TT["nominal"], VV["nominal"], ST["nominal"], Faketau["nominal"], sq_combined_error)
 
         if "MtLow_SS" in Mth[l]:

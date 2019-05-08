@@ -90,7 +90,9 @@ map<TString, float> GetWeightSys(int CR_number, int n_vert, TLorentzVector tau_p
     for (unsigned int j = 0; j<variations.size(); ++j) {
       TString key_nom = systematics[i]+"_nom";
       TString key = systematics[i]+"_"+variations[j];
-      weights[key] = nom_weight/simple_weights[key_nom]*simple_weights[key];
+      float temp_weight= 0;
+      if (simple_weights[key_nom] != 0) temp_weight = nom_weight/simple_weights[key_nom]*simple_weights[key];
+      weights[key] = temp_weight;
     }
   }
 

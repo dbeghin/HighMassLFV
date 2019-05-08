@@ -79,7 +79,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      DY = true;
      data = false;
    }
-   else if (type_of_data == "Data" || type_of_data == "data") {
+   else   if (type_of_data == "Data" || type_of_data == "data" || type_of_data == "singlephoton" || type_of_data == "SinglePhoton" || type_of_data == "singlemu" || type_of_data == "SingleMu") {
      DY = false;
      data = true;
    }
@@ -165,13 +165,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
       float final_weight = 1;
 
-      
-
       //Is one of the triggers fired?
       bool PassMuonTrigger = false;
       if (trig_HLT_IsoMu24_accept || trig_HLT_IsoTkMu24_accept) PassMuonTrigger = true;
       if (!PassMuonTrigger) continue;
-
 
 
 
@@ -212,7 +209,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         orderedMu.push_back(lowest);
         rest = rest2;
       }
-
 
 
 
@@ -259,7 +255,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  
 	  met_p4.SetPtEtaPhiM(MET_T1Txy_Pt, 0, MET_T1Txy_phi, 0);
 	  metmu_p4 = met_p4 + mu1_p4;
-
+	  
 
 	  if (final_weight != final_weight) continue;
 
@@ -354,6 +350,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    else if (eta_string == "endcap"){
 	      k_eta = 1;
 	    }
+	    if (j_dm == -1 || k_eta == -1) continue;
 
 	    cout << eta_string << endl;
 	    cout << "vloose " << tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) << endl;
