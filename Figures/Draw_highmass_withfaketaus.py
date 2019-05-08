@@ -54,7 +54,7 @@ def make_legend():
     return output
 
 
-def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low, Faketau_topreweight_high, Faketau_topreweight_low, TT_topreweight_high, TT_topreweight_low):
+def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, sq_combined_error):
     Data.GetXaxis().SetTitle("")
     Data.GetXaxis().SetTitleSize(0)
     #if var_in == "ev_Mcol": Data.GetXaxis().SetRangeUser(0,500) 
@@ -69,7 +69,8 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low,
         Data.GetYaxis().SetTitle("Events/GeV")
     else:
         Data.GetYaxis().SetTitle("Events/bin")
-    
+
+    print Data.GetBinContent(5)
     
     #ST.GetXaxis().SetTitle("")
     ST.GetXaxis().SetTitleSize(0.06)
@@ -127,15 +128,19 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low,
     errorBand.SetFillStyle(3001)
     errorBand.SetLineWidth(1)
     
-    h4=Faketau_high.Clone()
-    h4.Add(Faketau, -1)
-    h5=Faketau_topreweight_high.Clone() #FIXME
-    h5.Add(TT_topreweight_high)
-    h5.Add(Faketau, -1)
-    h5.Add(TT, -1)
-    for iii in range(1, h4.GetNbinsX()+1):
-        bin_error = pow(pow(h4.GetBinContent(iii),2) + pow(errorBand.GetBinError(iii),2) + pow(h5.GetBinContent(iii),2), 0.5)
-        errorBand.SetBinError(iii, bin_error)
+    errorBand_ersatz = errorBand.Clone()
+
+    for iii in range(1, errorBand.GetNbinsX()+1):
+        bin_error_up = pow(sq_combined_error["up"].GetBinContent(iii) + pow(errorBand.GetBinError(iii),2), 0.5)
+        bin_error_down = pow(sq_combined_error["down"].GetBinContent(iii) + pow(errorBand.GetBinError(iii),2), 0.5)
+
+        bin_content=errorBand.GetBinContent(iii)
+        midpoint = (bin_error_up-bin_error_down)/2
+        bin_content += midpoint
+        sym_error = bin_error_up-midpoint
+
+        errorBand_ersatz.SetBinContent(iii, bin_content)
+        errorBand_ersatz.SetBinError(iii, sym_error)
 
     
     pad1 = ROOT.TPad("pad1","pad1",0,0.35,1,1)
@@ -170,7 +175,7 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low,
     Data.Draw("e")
     #ST.Draw("hist")
     stack.Draw("histsame")
-    errorBand.Draw("e2same")
+    errorBand_ersatz.Draw("e2same")
     Data.Draw("esame")
     
     
@@ -239,10 +244,10 @@ def make_plot(var_out, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low,
     pad2.Draw()
     pad2.cd()
     h1=Data.Clone()
-    h1.SetMaximum(1.6)#FIXME(1.6)
-    h1.SetMinimum(0.4)#FIXME(0.4)
+    h1.SetMaximum(2.0)#FIXME(1.6)
+    h1.SetMinimum(0.0)#FIXME(0.4)
     h1.SetMarkerStyle(20)
-    h3=errorBand.Clone()
+    h3=errorBand_ersatz.Clone()
     hwoE=errorBand.Clone()
     for iii in range (1,hwoE.GetSize()-2):
         hwoE.SetBinError(iii,0)
@@ -302,15 +307,15 @@ var=[]
 #var.append("ev_Mtot")          
 var.append("tau_pt")           
 var.append("tau_eta")          
-var.append("tau_phi")          
+#var.append("tau_phi")          
 var.append("mu_pt")            
 var.append("mu_eta")           
-var.append("mu_phi")           
-var.append("mu_isolation")           
-var.append("ev_DRmutau")       
-#var.append("ev_DeltaPhimutau") 
-#var.append("ev_DeltaPhiMETtau")
-var.append("ev_MET")           
+#var.append("mu_phi")           
+#var.append("mu_isolation")           
+#var.append("ev_DRmutau")       
+##var.append("ev_DeltaPhimutau") 
+##var.append("ev_DeltaPhiMETtau")
+#var.append("ev_MET")           
 var.append("ev_Mcol")          
 #var.append("ev_Mt")            
 var.append("sign")
@@ -364,79 +369,233 @@ Mth=[
 "_MtLow_SS"
 ]
 
+systs_aux=[
+"TES",
+"MES",
+"mres",
+"minbias",
+"muonID",
+"muonIso",
+"tracking",
+"trigger",
+"tauID",
+"eletauFR",
+"mutauFR",
+"FRstat",
+#"FRsys",
+"topPt",
+]
 
+systs_up=[]
+systs_down=[]
 
+variation=[
+"up",
+"down",
+]
+
+for i in range(0,len(systs_aux)):
+    systs_up.append(systs_aux[i]+"_up")
+    systs_down.append(systs_aux[i]+"_down")
+    #systs_up.append("nominal")
+    #systs_down.append("nominal")
+
+systs={}
+systs["up"]=systs_up
+systs["down"]=systs_down
 
 
 for k in range (0,nvar):
-    var_in = var[k]+"_MtLow_OS"
-    Data_OS=file.Get("data_"+var_in)
-    W_OS=file.Get("WJets_"+var_in)
-    TT_OS=file.Get("TT_"+var_in)
-    VV_OS=file.Get("VV_"+var_in)
-    DY_OS=file.Get("DY_"+var_in)
-    ST_OS=file.Get("ST_"+var_in)
-    Faketau_OS=file.Get("faketau_"+var_in)
-    Faketau_high_OS=file.Get("faketau_fakerate_up_"+var_in)
-    Faketau_low_OS=file.Get("faketau_fakerate_down_"+var_in)
-    Faketau_topreweight_high_OS=file.Get("faketau_topreweight_up_"+var_in)
-    Faketau_topreweight_low_OS=file.Get("faketau_topreweight_down_"+var_in)
-    TT_topreweight_high_OS=file.Get("TT_topreweight_up_"+var_in)
-    TT_topreweight_low_OS=file.Get("TT_topreweight_down_"+var_in)
+    TT_MtLow={}
+    VV_MtLow={}
+    DY_MtLow={}
+    ST_MtLow={}
+    Faketau_MtLow={}
+    MC_MtLow={}
+    sq_combined_error_MtLow={}
+
+    TT_OS={}
+    VV_OS={}
+    DY_OS={}
+    ST_OS={}
+    Faketau_OS={}
+    MC_OS={}
+    
+    Data_OS=file.Get("nominal/data_nominal_"+var[k]+"_MtLow_OS")
+
+    for iVar in range(0,len(variation)):
+        vary=variation[iVar]
+        TT_MtLow[vary]=[]
+        VV_MtLow[vary]=[]
+        DY_MtLow[vary]=[]
+        ST_MtLow[vary]=[]
+        Faketau_MtLow[vary]=[]
+        MC_MtLow[vary]=[]
+
+        TT_OS[vary]=[]
+        VV_OS[vary]=[]
+        DY_OS[vary]=[]
+        ST_OS[vary]=[]
+        Faketau_OS[vary]=[]
+        MC_OS[vary]=[]
 
 
     for l in range (0,len(Mth)):
-        var_in = var[k]+Mth[l]
+        TT={}
+        VV={}
+        DY={}
+        ST={}
+        Faketau={}
+        MC={}
+        sq_combined_error={}
+
+        ###########################################
+        ###########################################
+        #nominal plots
+        var_in = "nominal_"+var[k]+Mth[l]
         print var_in
-        Data=file.Get("data_"+var_in)
-        #QCD=file.Get("QCD_"+var_in)
-        W=file.Get("WJets_"+var_in)
-        TT=file.Get("TT_"+var_in)
-        VV=file.Get("VV_"+var_in)
-        DY=file.Get("DY_"+var_in)
-        ST=file.Get("ST_"+var_in)
-        #Signal=file.Get("Signal_"+var_in)
-        Faketau=file.Get("faketau_"+var_in)
-        Faketau_high=file.Get("faketau_fakerate_up_"+var_in)
-        Faketau_low=file.Get("faketau_fakerate_down_"+var_in)
-        Faketau_topreweight_high=file.Get("faketau_topreweight_up_"+var_in)
-        Faketau_topreweight_low=file.Get("faketau_topreweight_down_"+var_in)
-        TT_topreweight_high=file.Get("TT_topreweight_up_"+var_in)
-        TT_topreweight_low=file.Get("TT_topreweight_down_"+var_in)
+        if "MtLow_OS" in var_in:
+            TT_OS["nominal"]=file.Get("nominal/TT_"+var_in)
+            VV_OS["nominal"]=file.Get("nominal/VV_"+var_in)
+            DY_OS["nominal"]=file.Get("nominal/DY_"+var_in)
+            ST_OS["nominal"]=file.Get("nominal/ST_"+var_in)
+            Faketau_OS["nominal"]=file.Get("nominal/faketau_"+var_in)
+            MC_OS["nominal"]=Faketau_OS["nominal"].Clone()
+            MC_OS["nominal"].Add(TT_OS["nominal"])
+            MC_OS["nominal"].Add(VV_OS["nominal"])
+            MC_OS["nominal"].Add(DY_OS["nominal"])
+            MC_OS["nominal"].Add(ST_OS["nominal"])
+            
+            
 
-        Data_MtLow=Data.Clone()
-        DY_MtLow=DY.Clone()
-        TT_MtLow=TT.Clone()
-        ST_MtLow=ST.Clone()
-        VV_MtLow=VV.Clone()
-        Faketau_MtLow=Faketau.Clone()
-        Faketau_high_MtLow=Faketau_high.Clone()
-        Faketau_low_MtLow=Faketau_low.Clone()
-        Faketau_topreweight_high_MtLow =Faketau_topreweight_high.Clone()
-        Faketau_topreweight_low_MtLow  =Faketau_topreweight_low.Clone()
-        TT_topreweight_high_MtLow      =TT_topreweight_high.Clone()
-        TT_topreweight_low_MtLow       =TT_topreweight_low.Clone()
+        TT["nominal"]=file.Get("nominal/TT_"+var_in)
+        VV["nominal"]=file.Get("nominal/VV_"+var_in)
+        DY["nominal"]=file.Get("nominal/DY_"+var_in)
+        ST["nominal"]=file.Get("nominal/ST_"+var_in)
+        Faketau["nominal"]=file.Get("nominal/faketau_"+var_in)
+        MC["nominal"]=Faketau["nominal"].Clone()
+        MC["nominal"].Add(TT["nominal"])
+        MC["nominal"].Add(VV["nominal"])
+        MC["nominal"].Add(DY["nominal"])
+        MC["nominal"].Add(ST["nominal"])
 
-
-        make_plot(var_in, Data, DY, TT, VV, ST, Faketau, Faketau_high, Faketau_low, Faketau_topreweight_high, Faketau_topreweight_low, TT_topreweight_high, TT_topreweight_low)
-        
-
+        Data=file.Get("nominal/data_"+var_in)
+    
         if "MtLow_SS" in var_in:
+            DY_MtLow["nominal"]=DY["nominal"].Clone()
+            TT_MtLow["nominal"]=TT["nominal"].Clone()
+            ST_MtLow["nominal"]=ST["nominal"].Clone()
+            VV_MtLow["nominal"]=VV["nominal"].Clone()
+            Faketau_MtLow["nominal"]=Faketau["nominal"].Clone()
+            MC_MtLow["nominal"]=MC["nominal"].Clone()
+            Data_MtLow=Data.Clone()
+
+            DY_MtLow["nominal"].Add(DY_OS["nominal"])
+            TT_MtLow["nominal"].Add(TT_OS["nominal"])
+            ST_MtLow["nominal"].Add(ST_OS["nominal"])
+            VV_MtLow["nominal"].Add(VV_OS["nominal"])
+            Faketau_MtLow["nominal"].Add(Faketau_OS["nominal"])
+            MC_MtLow["nominal"].Add(MC_OS["nominal"])
             Data_MtLow.Add(Data_OS)
-            DY_MtLow.Add(DY_OS)
-            TT_MtLow.Add(TT_OS)
-            ST_MtLow.Add(ST_OS)
-            VV_MtLow.Add(VV_OS)
-            Faketau_MtLow.Add(Faketau_OS)
-            Faketau_high_MtLow.Add(Faketau_high_OS)
-            Faketau_low_MtLow.Add(Faketau_low_OS)
-            Faketau_topreweight_high_MtLow.Add(Faketau_topreweight_high_OS)
-            Faketau_topreweight_low_MtLow.Add(Faketau_topreweight_low_OS)
-            TT_topreweight_high_MtLow.Add(TT_topreweight_high_OS)
-            TT_topreweight_low_MtLow.Add(TT_topreweight_low_OS)
+    
+        #end nominal
+        ###########################################
+        ###########################################
+
+        #systematics
+        for iVar in range(0,len(variation)):
+            vary=variation[iVar]
+            TT[vary]=[]
+            VV[vary]=[]
+            DY[vary]=[]
+            ST[vary]=[]
+            Faketau[vary]=[]
+            MC[vary]=[]
+
+            sq_combined_error[vary]=MC["nominal"].Clone()
+            for iBin in range(1,sq_combined_error[vary].GetNbinsX()+1):
+                sq_combined_error[vary].SetBinContent(iBin, 0)
+                sq_combined_error[vary].SetBinError(iBin, 0)
+
+            if "MtLow_SS" in var_in:
+                sq_combined_error_MtLow[vary]=MC["nominal"].Clone()
+                for iBin in range(1,sq_combined_error_MtLow[vary].GetNbinsX()+1):
+                    sq_combined_error_MtLow[vary].SetBinContent(iBin, 0)
+                    sq_combined_error_MtLow[vary].SetBinError(iBin, 0)
+
+        for j in range(0,len(systs_up)):
+            for iVar in range(0,len(variation)):
+                vary=variation[iVar]
+                var_in = systs[vary][j]+"_"+var[k]+Mth[l]
+                print var_in
+                if "MtLow_OS" in var_in:
+                    TT_OS[vary].append(file.Get(systs[vary][j]+"/TT_"+var_in))
+                    VV_OS[vary].append(file.Get(systs[vary][j]+"/VV_"+var_in))
+                    DY_OS[vary].append(file.Get(systs[vary][j]+"/DY_"+var_in))
+                    ST_OS[vary].append(file.Get(systs[vary][j]+"/ST_"+var_in))
+                    Faketau_OS[vary].append(file.Get(systs[vary][j]+"/faketau_"+var_in))
+                    MC_OS[vary].append(Faketau_OS[vary][j].Clone())
+                    MC_OS[vary][j].Add(TT_OS[vary][j])
+                    MC_OS[vary][j].Add(VV_OS[vary][j])
+                    MC_OS[vary][j].Add(DY_OS[vary][j])
+                    MC_OS[vary][j].Add(ST_OS[vary][j])
 
 
-            make_plot(var[k]+"_MtLow", Data_MtLow, DY_MtLow, TT_MtLow, VV_MtLow, ST_MtLow, Faketau_MtLow, Faketau_high_MtLow, Faketau_low_MtLow, Faketau_topreweight_high_MtLow, Faketau_topreweight_low_MtLow, TT_topreweight_high_MtLow, TT_topreweight_low_MtLow)
+                TT[vary].append(file.Get(systs[vary][j]+"/TT_"+var_in))
+                VV[vary].append(file.Get(systs[vary][j]+"/VV_"+var_in))
+                DY[vary].append(file.Get(systs[vary][j]+"/DY_"+var_in))
+                ST[vary].append(file.Get(systs[vary][j]+"/ST_"+var_in))
+                Faketau[vary].append(file.Get(systs[vary][j]+"/faketau_"+var_in))
+                MC[vary].append(Faketau[vary][j].Clone())
+                MC[vary][j].Add(TT[vary][j])
+                MC[vary][j].Add(VV[vary][j])
+                MC[vary][j].Add(DY[vary][j])
+                MC[vary][j].Add(ST[vary][j])
+
+                htemp_up = sq_combined_error["up"].Clone()
+                htemp_down = sq_combined_error["down"].Clone()
+                for iBin in range(1, htemp_up.GetNbinsX()+1):
+                    bin_content = MC[vary][j].GetBinContent(iBin)-MC["nominal"].GetBinContent(iBin)
+                    if bin_content < 0:
+                        htemp_down.SetBinContent(iBin, pow(bin_content,2))
+                        htemp_up.SetBinContent(iBin, 0)
+                    else:
+                        htemp_down.SetBinContent(iBin, 0)
+                        htemp_up.SetBinContent(iBin, pow(bin_content,2))
+                sq_combined_error["up"].Add(htemp_up)
+                sq_combined_error["down"].Add(htemp_down)
+
+
+                if "MtLow_SS" in var_in:
+                    DY_MtLow[vary].append(DY[vary][j].Clone())
+                    TT_MtLow[vary].append(TT[vary][j].Clone())
+                    ST_MtLow[vary].append(ST[vary][j].Clone())
+                    VV_MtLow[vary].append(VV[vary][j].Clone())
+                    Faketau_MtLow[vary].append(Faketau[vary][j].Clone())
+                    MC_MtLow[vary].append(MC[vary][j].Clone())
         
+                    DY_MtLow[vary][j].Add(DY_OS[vary][j])
+                    TT_MtLow[vary][j].Add(TT_OS[vary][j])
+                    ST_MtLow[vary][j].Add(ST_OS[vary][j])
+                    VV_MtLow[vary][j].Add(VV_OS[vary][j])
+                    Faketau_MtLow[vary][j].Add(Faketau_OS[vary][j])
+                    MC_MtLow[vary][j].Add(MC_OS[vary][j])
 
+                    htemp_up = sq_combined_error_MtLow["up"].Clone()
+                    htemp_down = sq_combined_error_MtLow["down"].Clone()
+                    for iBin in range(1, htemp_up.GetNbinsX()+1):
+                        bin_content = MC_MtLow[vary][j].GetBinContent(iBin)-MC_MtLow["nominal"].GetBinContent(iBin)
+                        if bin_content < 0:
+                            htemp_down.SetBinContent(iBin, pow(bin_content,2))
+                            htemp_up.SetBinContent(iBin, 0)
+                        else:
+                            htemp_down.SetBinContent(iBin, 0)
+                            htemp_up.SetBinContent(iBin, pow(bin_content,2))
+                    sq_combined_error_MtLow["up"].Add(htemp_up)
+                    sq_combined_error_MtLow["down"].Add(htemp_down)
+
+        make_plot(var[k]+Mth[l], Data, DY["nominal"], TT["nominal"], VV["nominal"], ST["nominal"], Faketau["nominal"], sq_combined_error)
+
+        if "MtLow_SS" in Mth[l]:
+            make_plot(var[k]+"_MtLow", Data_MtLow, DY_MtLow["nominal"], TT_MtLow["nominal"], VV_MtLow["nominal"], ST_MtLow["nominal"], Faketau_MtLow["nominal"], sq_combined_error_MtLow)
 

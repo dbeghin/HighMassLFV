@@ -62,8 +62,11 @@ for k in range (0,len(var)):
                 ratio_lowEdge=round(Data.GetYaxis().GetBinLowEdge(iBinY),1)
                 ratio_upEdge=round(Data.GetYaxis().GetBinUpEdge(iBinY),1)
 
-                file_out.write("%s-%s & %s-%s & %s $\\pm$ %s & %s $\\pm$ %s \\\\\n" %(pt_lowEdge, pt_upEdge, ratio_lowEdge, ratio_upEdge, fakeRate_b, error_b, fakeRate_e, error_e ) )
-                
+                if (iBinY == 1):
+                    file_out.write("\\hline\n")
+                    file_out.write("\\multirow{8}{*}{%s-%s} & %s-%s & %s $\\pm$ %s & %s $\\pm$ %s \\\\\n" %(pt_lowEdge, pt_upEdge, ratio_lowEdge, ratio_upEdge, fakeRate_b, error_b, fakeRate_e, error_e ) )
+                else:
+                    file_out.write(" & %s-%s & %s $\\pm$ %s & %s $\\pm$ %s \\\\\n" %(ratio_lowEdge, ratio_upEdge, fakeRate_b, error_b, fakeRate_e, error_e ) )
 
 
 file_out.close()

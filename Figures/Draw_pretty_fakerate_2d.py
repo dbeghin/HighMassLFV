@@ -56,6 +56,9 @@ ROOT.gStyle.SetFrameLineWidth(3)
 ROOT.gStyle.SetLineWidth(3)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetPaintTextFormat("0.2f")
+kInvertedDarkBodyRadiator=56
+ROOT.gStyle.SetPalette(kInvertedDarkBodyRadiator)
+kAzure=860
 
 c=ROOT.TCanvas("canvas","",0,0,1200,900)
 c.cd()
@@ -139,13 +142,13 @@ for k in range (0,nvar):
             Data.GetXaxis().SetTitleSize(0.05)
             Data.GetYaxis().SetTitleOffset(1.32)
             #Data.GetXaxis().SetTitleOffset(1.04)
-            Data.SetTitle("Fake rate - " + ph_ends[ends[l]])
+            Data.SetTitle("Fake factor - " + ph_ends[ends[l]])
             Data.GetYaxis().SetTitle(photogenic_var2[k])
             Data.GetXaxis().SetTitle(photogenic_var[k])
             Data.SetMarkerStyle(20)
             Data.SetMarkerSize(0.97)
-            Data.SetMarkerColor(1)
-            Data.SetLineColor(1)
+            Data.SetMarkerColor(kAzure+7)
+            Data.SetLineColor(kAzure+7)
                     
                     
             pad1 = ROOT.TPad("pad1","pad1",0,0,1,1)
@@ -166,8 +169,8 @@ for k in range (0,nvar):
             pad1.SetFrameBorderMode(0)
             pad1.SetFrameBorderSize(10)
                     
-            #Data.SetMaximum(Data.GetMaximum())#2.5)#FIXME
-            #Data.SetMinimum(0.0)
+            Data.SetMaximum(0.6)#2.5)#FIXME
+            Data.SetMinimum(0.0)
             Data.Draw("colztexte2")
                     
                     
