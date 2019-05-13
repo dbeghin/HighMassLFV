@@ -17,15 +17,11 @@
 using namespace std;
 
 
-TH1F* MC_histo(TString var, TFile* file_in, TFile* file_in_d, double xs, int rebin) {
+TH1F* MC_histo(TString var, TFile* file_in, double xs, int rebin) {
 
   cout << file_in->GetName() << endl;
 
-  TH1F* h_events_data = (TH1F*) file_in_d->Get("weighted_events");
-  double full_data = 7.86454e+08;
-  double succ_data_ratio = h_events_data->Integral()/full_data;
-  cout << "succesfull data ratio " << succ_data_ratio << endl;
-  double lumi = 35.9 * pow(10,3) * succ_data_ratio; //luminosity in pb^-1                                                                                                                                                           
+  double lumi = 35.9 * pow(10,3); //luminosity in pb^-1                                                                                                                                                           
 
   TH1F* h_events = (TH1F*) file_in->Get("weighted_events");
   double Nevents = h_events->Integral();
@@ -55,9 +51,8 @@ int main(int argc, char** argv) {
   int rebin = 1;
   //string CR = *(argv + 1);
 
-  TString folder_in = "HighMassLFVMuTau/SignalRegion_CR100";
-  //TString folder_in = "HighMassLFVMuTau/MassResolution";
-  TString name_out = "histos_signal";
+  TString folder_in = "HighMassLFVMuTau/MassResolution";
+  TString name_out = "histos_massresolution";
 
   TFile* file_out = new TFile("Figures/"+name_out+".root", "RECREATE");
 
@@ -99,13 +94,17 @@ int main(int argc, char** argv) {
 
   TFile* file_in_data = new TFile(folder_in+"/Arranged_data/data.root", "R");
 
-  vector<TString> vars                                       , vars_out;
-  vars.push_back("nominal/ev_Mvis_realtau_nominal_MtHigh");  vars_out.push_back("Mvis");        
-  vars.push_back("nominal/ev_Mcol_realtau_nominal_MtHigh");  vars_out.push_back("Mcol");
-  vars.push_back("nominal/ev_Mtot_realtau_nominal_MtHigh");  vars_out.push_back("Mtot");
+  vector<TString> vars  ,      vars_out;
+  vars.push_back("Mgen");      vars_out.push_back("Mgen");
+  vars.push_back("Mvis");      vars_out.push_back("Mvis");
+  vars.push_back("Mtot");      vars_out.push_back("Mtot");
+  vars.push_back("Mcol");      vars_out.push_back("Mcol");
+  vars.push_back("Mvis_res");  vars_out.push_back("Mvis_res");
+  vars.push_back("Mtot_res");  vars_out.push_back("Mtot_res");
+  vars.push_back("Mcol_res");  vars_out.push_back("Mcol_res");
 
 
-  TString var_in, var_out;
+  TString var_in;
 
   file_out->cd();
   for (unsigned int i = 0; i<vars.size(); ++i) {

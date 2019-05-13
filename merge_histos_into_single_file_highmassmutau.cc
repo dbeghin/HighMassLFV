@@ -248,7 +248,7 @@ int main(int argc, char** argv) {
 	for (unsigned int l = 0; l<Mth.size(); ++l) {
           var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l];
           //var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
-	  if (CR == "CR100") {
+	  if (CR == "CR100" || CR == "CR102") {
 	    var_out = systs[k]+"_"+vars[i]+"_"+Mth[l];
 	  }
 	  else {
@@ -350,9 +350,11 @@ int main(int argc, char** argv) {
     }
     dir->Close();
   }
-  cout << "done" << endl;
+  cout << "almost" << endl;
+  file_out->Close();
+  cout << "end" << endl;
   for (unsigned int iFile=0; iFile<DY_files.size(); ++iFile) DY_files[iFile]->Close();
-  for (unsigned int iFile=0; iFile<WJets_files.size(); ++iFile) WJets_files[iFile]->Close();
+  //for (unsigned int iFile=0; iFile<WJets_files.size(); ++iFile) WJets_files[iFile]->Close();
   for (unsigned int iFile=0; iFile<TT_files.size(); ++iFile) TT_files[iFile]->Close();
   for (unsigned int iFile=0; iFile<WW_files.size(); ++iFile) WW_files[iFile]->Close();
   file_in_faketau->Close();
@@ -362,10 +364,8 @@ int main(int argc, char** argv) {
   file_in_ZZ->Close();
 
   file_in_data->Close();
+  cout << "done" << endl;
 
-  cout << "almost" << endl;
-  file_out->Close();
-  cout << "end" << endl;
 
   return 0;
 }

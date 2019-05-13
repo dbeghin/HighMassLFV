@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
   }
 
   for (unsigned int j=0; j<mass.size(); ++j) {
-    TString name_in = mass[j]+"_ev_Mcol_realtau_MtHigh";
+    TString name_in = mass[j]+"_Mcol";
     TString name_out = "Zprime_"+mass[j];
     TH1F* h = (TH1F*) file_in_signal->Get(name_in);
     h->SetName(name_out);

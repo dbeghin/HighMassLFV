@@ -383,8 +383,12 @@ double FakeRate_DY(double taupt, double taueta, double ratio, TString var) {
   
   double weight = 0;
   if (var=="nom") weight = 1;
-  else if (var=="up") weight = DY_SF/norm_SF;
-  else if (var=="down") weight = (2*norm_SF-DY_SF)/norm_SF;
+  else if (var=="up") {
+    if (norm_SF != 0) weight = DY_SF/norm_SF;
+  }
+  else if (var=="down") {
+    if (norm_SF != 0) weight = (2*norm_SF-DY_SF)/norm_SF;
+  }
   return weight;
 }
 
@@ -494,6 +498,8 @@ double GeneralWeightFunction(TString sys, int n_vert, TLorentzVector tau_p4, flo
       else if (sys == "FRsys") weight = FakeRate_DY(tau_pt,tau_eta,ratio,var);
     }
 
+    if (weight != weight) weight = 0;
+    if (weight < 0) weight = 0;
     return weight;
   }
 }
