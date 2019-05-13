@@ -68,9 +68,9 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    if (fChain == 0) return;
 
 
-   bool Signal, data, singlephoton, singlemu, DYinc, WJetsinc, TTinc, WWinc, TT;
+   bool signal, data, singlephoton, singlemu, DYinc, WJetsinc, TTinc, WWinc, TT;
    if (type_of_data == "Signal" || type_of_data == "signal") {
-     Signal = true;
+     signal = true;
      data = false;
      DYinc = false;
      WJetsinc = false;
@@ -79,7 +79,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      WWinc = false;
    }
    else if (type_of_data == "Data" || type_of_data == "data" || type_of_data == "singlephoton" || type_of_data == "SinglePhoton" || type_of_data == "singlemu" || type_of_data == "SingleMu") {
-     Signal = false;
+     signal = false;
      data = true;
      DYinc = false;
      WJetsinc = false;
@@ -88,7 +88,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      WWinc = false;
    }
    else if (type_of_data == "DYinc") {
-     Signal = false;
+     signal = false;
      data = false;
      DYinc = true;
      WJetsinc = false;
@@ -97,7 +97,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      WWinc = false;
    }
    else if (type_of_data == "WJetsinc") {
-     Signal = false;
+     signal = false;
      data = false;
      DYinc = false;
      WJetsinc = true;
@@ -106,7 +106,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      WWinc = false;
    }
    else if (type_of_data == "TTinc") {
-     Signal = false;
+     signal = false;
      data = false;
      DYinc = false;
      WJetsinc = false;
@@ -115,7 +115,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      WWinc = false;
    }
    else if (type_of_data == "TT") {
-     Signal = false;
+     signal = false;
      data = false;
      DYinc = false;
      WJetsinc = false;
@@ -124,7 +124,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      WWinc = false;
    }
    else if (type_of_data == "WWinc") {
-     Signal = false;
+     signal = false;
      data = false;
      DYinc = false;
      WJetsinc = false;
@@ -133,7 +133,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      WWinc = true;
    }
    else {
-     Signal = false;
+     signal = false;
      data = false;
      DYinc = false;
      WJetsinc = false;
@@ -149,7 +149,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    
    cout << "TT-inclusive:    " << TTinc << endl; 
    cout << "TT-any:          " << TT << endl; 
-   cout << "Signal:          " << Signal << endl; 
+   cout << "Signal:          " << signal << endl; 
    cout << "DY-inclusive:    " << DYinc << endl; 
    cout << "data:            " << data << endl; 
    cout << "WW-inclusive:    " << WWinc << endl; 
@@ -264,24 +264,31 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    Mth.push_back("MtLow_TT");  int k_low_TT= Mth.size()-1;
    Mth.push_back("MtHigh_TT"); int k_high_TT= Mth.size()-1;
 
+
    //put all systematics here
    vector<TString> systs;
    systs.push_back("nominal");
-   vector<TString> systs_aux = GetSys();
-   for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
-     systs.push_back(systs_aux[iAux]+"_up");
-     systs.push_back(systs_aux[iAux]+"_down");
-   }
 
    vector<TString> specialSyst;
-   vector<TString> special_aux;
-   special_aux.push_back("TES");
-   special_aux.push_back("MES");
-   special_aux.push_back("mres");
-   for (unsigned int iAux=0; iAux<special_aux.size(); ++iAux) {
-     specialSyst.push_back(special_aux[iAux]+"_up");
-     specialSyst.push_back(special_aux[iAux]+"_down");
+
+   if (!signal) {
+     vector<TString> systs_aux = GetSys();
+     for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+       systs.push_back(systs_aux[iAux]+"_up");
+       systs.push_back(systs_aux[iAux]+"_down");
+     }
+
+     vector<TString> special_aux;
+     special_aux.push_back("TES");
+     special_aux.push_back("MES");
+     special_aux.push_back("mres");
+     for (unsigned int iAux=0; iAux<special_aux.size(); ++iAux) {
+       specialSyst.push_back(special_aux[iAux]+"_up");
+       specialSyst.push_back(special_aux[iAux]+"_down");
+     }
    }
+   //end systematics
+
 
    vector<TH1F*> h[Mth.size()][systs.size()][taun.size()];
    for (unsigned int i = 0; i<histo_names.size(); ++i) {
@@ -772,7 +779,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	bool tau_match = false;
 	float dR_threshold = 0.4;
 
-	if (!data && !Signal) {
+	if (!data && !signal) {
 	  //fill gen histos to understand wth is going on
 	  for (unsigned int iGen = 0; iGen<tauhp4.size(); ++iGen) {
 	    hgen[0]->Fill(tauhp4[iGen].Pt(), mc_w_sign);
