@@ -66,7 +66,8 @@ int main(/*int argc, char** argv*/) {
   vars.push_back("ev_DRmutau");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DeltaPhimutau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DeltaPhiMETtau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
-  vars.push_back("ev_MET");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_MET);
+  //vars.push_back("ev_MET");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_MET);
+  vars.push_back("ev_MET");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_pt);
   vars.push_back("ev_Mcol");                simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints);                
   vars.push_back("ev_Mt");                  simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_Mt);                
   vars.push_back("sign");                   simpleRebin.push_back(true);      rebin.push_back(1);     rebin_vector.push_back(xpoints);                
@@ -101,8 +102,11 @@ int main(/*int argc, char** argv*/) {
     	  
     	    int jBin = 1;
     	    float bin_content = 0, bin_error=0;
-    	    for (unsigned int iBin=1; iBin < h[i][j][k][l]->GetNbinsX()+1; ++iBin) {
-    	      if (h[i][j][k][l]->GetBinCenter(iBin) < rebin_array[jBin]) {
+	    int Nbins = h[i][j][k][l]->GetNbinsX();
+    	    for (unsigned int iBin=1; iBin < Nbins+1; ++iBin) {
+	      float max_value = rebin_array[jBin];
+	      //if (jBin == array_size-1) max_value = h[i][j][k][l]->GetBinLowEdge(Nbins) + h[i][j][k][l]->GetBinWidth(Nbins);
+    	      if (h[i][j][k][l]->GetBinCenter(iBin) < max_value) {
     	        bin_content += h[i][j][k][l]->GetBinContent(iBin);
     	        bin_error += pow(h[i][j][k][l]->GetBinError(iBin), 2);
     	      }

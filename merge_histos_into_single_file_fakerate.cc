@@ -23,7 +23,7 @@ TH1F* MC_histo(TString var, TFile* file_in, TFile* file_in_d, double xs, int reb
   cout << file_in->GetName() << endl;
 
   TH1F* h_events_data = (TH1F*) file_in_d->Get("weighted_events");
-  double full_data = 9.3766734e+08;
+  double full_data = 7.86454e+08;
   double succ_data_ratio = h_events_data->Integral()/full_data;
   cout << "succesfull data ratio " << succ_data_ratio << endl;
   double lumi = 35.9 * pow(10,3) * succ_data_ratio; //luminosity in pb^-1
@@ -58,7 +58,7 @@ TH2F* MC_histo_TH2(TString var, TFile* file_in, TFile* file_in_d, double xs, int
   cout << file_in->GetName() << endl;
 
   TH1F* h_events_data = (TH1F*) file_in_d->Get("weighted_events");
-  double full_data = 9.3766734e+08;
+  double full_data = 7.86454e+08;
   double succ_data_ratio = h_events_data->Integral()/full_data;
   cout << "succesfull data ratio " << succ_data_ratio << endl;
   double lumi = 35.9 * pow(10,3) * succ_data_ratio; //luminosity in pb^-1
@@ -96,9 +96,9 @@ int main(int argc, char** argv) {
   int rebin = 2;
   //string CR = *(argv + 1);
 
-  TString folder_in = "HighMassLFVMuTau/FakeRate"; //FIXME
-  //TString folder_in = "HighMassLFVMuTau/FakeRate_EleTau";
-  TString name_out = "histos_fakerate_DY";
+  //TString folder_in = "HighMassLFVMuTau/FakeRate"; //FIXME
+  TString folder_in = "HighMassLFVMuTau/FakeRate_EleTau";
+  TString name_out = "histos_fakerate_ele_DY";
 
   TFile* file_out = new TFile("Figures/"+name_out+".root", "RECREATE");
 

@@ -67,7 +67,7 @@ Float_t meta::Loop(string type_of_data) {
 
 
 /////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//Currently set up to calculate fake rates in the mutau region
+//Currently set up to calculate fake rates in the etau region
 ////////////////////////////!\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //main analysis loop
@@ -170,9 +170,16 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       if (trig_HLT_IsoMu24_accept || trig_HLT_IsoTkMu24_accept) PassMuonTrigger = true;
       if (!PassMuonTrigger) continue;
 
+      if(!trig_Flag_goodVertices_accept) continue;
+      if(!trig_Flag_globalSuperTightHalo2016Filter_accept) continue;
+      if(!trig_Flag_HBHENoiseFilter_accept) continue;
+      if(!trig_Flag_HBHENoiseIsoFilter_accept) continue;
+      if(!trig_Flag_EcalDeadCellTriggerPrimitiveFilter_accept) continue;
+      if(!trig_Flag_BadPFMuonFilter_accept) continue;
+      //ecal bad calib filter FIXME
 
 
-      //Sort muons, taus, by increasing isolation/decreasing pt                                                                                                                   
+      //Sort muons, taus, by increasing isolation/decreasing pt
       float iso = 1.5, pt = 0.0;
       int lowest = -1;
       vector<int> orderedMu, orderedTau;
@@ -272,10 +279,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (tau_pt->at(iTau) < 30.0) continue;
 	    if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	    if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
-	    if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-	    //if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;  //FIXME
-	    //if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
+	    //if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
+	    //if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	    if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;  //FIXME
+	    if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
 
 	    TLorentzVector tau_p4;
 	    tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));

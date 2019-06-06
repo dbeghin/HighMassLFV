@@ -102,9 +102,10 @@ int main(int argc, char** argv) {
   vars.push_back("Mvis_res");  vars_out.push_back("Mvis_res");
   vars.push_back("Mtot_res");  vars_out.push_back("Mtot_res");
   vars.push_back("Mcol_res");  vars_out.push_back("Mcol_res");
+  vars.push_back("Mcol_tight");vars_out.push_back("Mcol_tight");
 
 
-  TString var_in;
+  TString var_in, var_out;
 
   file_out->cd();
   for (unsigned int i = 0; i<vars.size(); ++i) {
@@ -113,7 +114,7 @@ int main(int argc, char** argv) {
     cout << endl << endl <<var_in << endl;
     
     for (unsigned int j = 0; j<mass.size(); ++j) {
-      TH1F* h = MC_histo(var_in, files_in[j], file_in_data, xs[j], rebin);
+      TH1F* h = MC_histo(var_in, files_in[j], xs[j], rebin);
       h->SetName(mass[j]+"_"+var_out);
       h->Write();
     }          

@@ -188,7 +188,7 @@ int main(int argc, char** argv) {
   Mth.push_back("MtLow_SS");
   Mth.push_back("MtHigh");
   Mth.push_back("MtLow_TT");
-  Mth.push_back("MtHigh_TT"); //FIXME
+  Mth.push_back("MtHigh_TT");
 
   vector<TString> systs;              
   systs.push_back("nominal");
@@ -267,29 +267,9 @@ int main(int argc, char** argv) {
             h_DY->Add(h_DY_vector[iBin]);
           }
           h_DY->Write();
+	  delete h_DY;
+          for (unsigned int iBin = 0; iBin<DY_files.size(); ++iBin) delete h_DY_vector[iBin];
           
-          if (CR == "CR00") {
-            TH1F* h_faketau = (TH1F*) file_in_faketau->Get("faketau_"+var_in);
-            h_faketau->Write();
-          }
-          else {
-            
-            if (CR == "CR0") {
-              TH1F* h_WJets = (TH1F*) file_in_WJets->Get("WJets_"+var_in);
-              h_WJets->Write();
-            }
-            else {
-              //vector<TH1F*> h_WJets_vector;
-              //for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
-	      //  h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
-              //}
-              //TH1F* h_WJets = (TH1F*) h_WJets_vector[0]->Clone("WJets_"+var_out);
-              //for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
-	      //  h_WJets->Add(h_WJets_vector[iBin]);
-              //}
-              //h_WJets->Write();
-            }
-          }
       	  
           vector<TH1F*> h_TT_vector;
           for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) {
@@ -301,6 +281,8 @@ int main(int argc, char** argv) {
             h_TT->Add(h_TT_vector[iBin]);
           }
           h_TT->Write();
+	  delete h_TT;
+          for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) delete h_TT_vector[iBin];
           
             
           vector<TH1F*> h_WW_vector;
@@ -321,10 +303,16 @@ int main(int argc, char** argv) {
           h_VV->Add(h_ZZ);
           //h_VV -> SetName("VV_"+var_in);
           h_VV->Write();
+	  delete h_WW;
+	  delete h_WZ;
+	  delete h_ZZ;
+	  delete h_VV;
+          for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) delete h_WW_vector[iBin];
           
           TH1F* h_ST = MC_histo(var_in, file_in_ST, file_in_data, xs_ST, rebin);
           h_ST->SetName("ST_"+var_out);
           h_ST->Write();
+	  delete h_ST;
 	  
 	  if (CR != "CR101") {
 	    //TH1F* h_signal = MC_histo(var_in, file_in_signal, xs_signal, N_signal, rebin);
@@ -337,6 +325,7 @@ int main(int argc, char** argv) {
           h_data -> SetName("data_"+var_out);
           h_data->Rebin(rebin);
           h_data->Write();
+	  delete h_data;
 
 	  if (j>0) continue;
 	  if (CR == "CR100" || CR == "CR102") {
@@ -344,6 +333,7 @@ int main(int argc, char** argv) {
 	    cout << file_in_faketau->GetName() << endl;
 	    TH1F* h_faketaus = (TH1F*) file_in_faketau -> Get("faketau_"+var_in);
 	    h_faketaus->Write();
+	    delete h_faketaus;
 	  }
 	}
       }

@@ -78,6 +78,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    histo_names.push_back("Mvis_res");   nBins.push_back(2000);  x_min.push_back(-1);    x_max.push_back(1);
    histo_names.push_back("Mtot_res");   nBins.push_back(2000);  x_min.push_back(-1);    x_max.push_back(1);
    histo_names.push_back("Mcol_res");   nBins.push_back(2000);  x_min.push_back(-1);    x_max.push_back(1);
+   histo_names.push_back("Mcol_tight"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
 
    vector<TH1F*> h;
    for (unsigned int i = 0; i<histo_names.size(); ++i) {
@@ -242,8 +243,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
 	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
 	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-	  //if (tau_ptLeadChargedCand->at(iTau) < 5) continue;
-	  //if (fabs(tau_dz->at(iTau)) > 0.2) continue;
 	  if (fabs(tau_charge->at(iTau)) != 1) continue;
 
 	  float reliso = mu_isoTrackerBased03->at(iMu); //use instead sumofpts divided by muon ibt pt
@@ -304,12 +303,18 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  
 	  Mres = (Mcol - gen_totalp4.M())/gen_totalp4.M();
 	  h[6]->Fill(Mres, final_weight);
+
+	  if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
+	  h[7]->Fill(Mcol, final_weight);
 	}//loop over taus
       }//loop over muons
    }//loop over events
 
 
+   TH1F* h_total_events =  new TH1F("weighted_events", "weighted_events", 1, 0, 1);
+   h_total_events->Fill(0.5, nEvents);
    file_out->cd();
+   h_total_events->Write();
    for (unsigned int i = 0; i<histo_names.size(); ++i) h[i]->Write();
    file_out->Close();
 }

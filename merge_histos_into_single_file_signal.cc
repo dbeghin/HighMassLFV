@@ -12,7 +12,7 @@
 #include "TLegend.h"
 #include "THStack.h"
 #include "TStyle.h"
-
+#include "aux.h"
 
 using namespace std;
 
@@ -99,25 +99,37 @@ int main(int argc, char** argv) {
 
   TFile* file_in_data = new TFile(folder_in+"/Arranged_data/data.root", "R");
 
-  vector<TString> vars                                       , vars_out;
-  vars.push_back("nominal/ev_Mvis_realtau_nominal_MtHigh");  vars_out.push_back("Mvis");        
-  vars.push_back("nominal/ev_Mcol_realtau_nominal_MtHigh");  vars_out.push_back("Mcol");
-  vars.push_back("nominal/ev_Mtot_realtau_nominal_MtHigh");  vars_out.push_back("Mtot");
+  vector<TString> Mth;
+  //Mth.push_back("MtLow_OS");
+  //Mth.push_back("MtLow_SS");
+  Mth.push_back("MtHigh");
+  //Mth.push_back("MtLow_TT");
+  //Mth.push_back("MtHigh_TT");
 
+  vector<TString> systs;
+  systs.push_back("nominal");
+  vector<TString> systs_aux = GetSys();
+  for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    systs.push_back(systs_aux[iAux]+"_up");
+    systs.push_back(systs_aux[iAux]+"_down");
+  }
+  
 
   TString var_in, var_out;
 
   file_out->cd();
-  for (unsigned int i = 0; i<vars.size(); ++i) {
-    var_in = vars[i];
-    var_out = vars_out[i];
-    cout << endl << endl <<var_in << endl;
+  for (unsigned int i = 0; i<systs.size(); ++i) {
+    for (unsigned int l = 0; l<Mth.size(); ++l) {
+      var_in = systs[i]+"/ev_Mcol_realtau_"+systs[i]+"_"+Mth[l];
+      var_out = systs[i]+"_Mcol_"+Mth[l];
     
-    for (unsigned int j = 0; j<mass.size(); ++j) {
-      TH1F* h = MC_histo(var_in, files_in[j], file_in_data, xs[j], rebin);
-      h->SetName(mass[j]+"_"+var_out);
-      h->Write();
-    }          
+      for (unsigned int j = 0; j<mass.size(); ++j) {
+	TH1F* h = MC_histo(var_in, files_in[j], file_in_data, xs[j], rebin);
+	h->SetName(mass[j]+"_"+var_out);
+	h->Write();
+	delete h;
+      }          
+    }
   }    
   file_out->Close();
 
