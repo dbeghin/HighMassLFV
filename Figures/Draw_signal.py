@@ -69,11 +69,31 @@ trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",
 #ncat=2
 
 masspoints=[]
-masspoints.append("500")
-masspoints.append("1000")
-masspoints.append("1600")
-#masspoints.append("2000")
-masspoints.append("3000")
+masspoints.append("500")    
+masspoints.append("600")  
+masspoints.append("700")  
+masspoints.append("800")  
+masspoints.append("900")  
+masspoints.append("1000") 
+masspoints.append("1100") 
+masspoints.append("1200") 
+masspoints.append("1300") 
+masspoints.append("1400") 
+masspoints.append("1500") 
+masspoints.append("1600") 
+masspoints.append("1700") 
+masspoints.append("1800") 
+masspoints.append("1900") 
+masspoints.append("2000") 
+masspoints.append("2200") 
+masspoints.append("2400") 
+masspoints.append("2600") 
+masspoints.append("2800") 
+masspoints.append("3000") 
+masspoints.append("3500") 
+masspoints.append("4000") 
+masspoints.append("4500") 
+masspoints.append("5000")
 
 Mvis=[]
 Mtot=[]
@@ -120,7 +140,8 @@ for iVar in range(0, len(variables)):
         var[i].SetMaximum(var[i].GetMaximum()*1000)
         var[i].SetTitle("")
         var[i].GetYaxis().SetTitle("Events")
-        var[i].SetLineColor(ROOT.TColor.GetColor(colors[i]))
+        iCol = i % len(colors)
+        var[i].SetLineColor(ROOT.TColor.GetColor(colors[iCol]))
         var[i].SetLineWidth(2)
     
 

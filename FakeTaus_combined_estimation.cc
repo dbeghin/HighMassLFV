@@ -12,6 +12,7 @@
 #include "TLegend.h"
 #include "THStack.h"
 #include "TStyle.h"
+#include "aux.h"
 
 using namespace std;
 int main(int argc, char** argv) {
@@ -50,8 +51,8 @@ int main(int argc, char** argv) {
   vars.push_back("mu_phi");
   vars.push_back("mu_isolation");
   vars.push_back("ev_DRmutau");
-  vars.push_back("ev_DeltaPhimutau");
-  vars.push_back("ev_DeltaPhiMETtau");
+  //vars.push_back("ev_DeltaPhimutau");
+  //vars.push_back("ev_DeltaPhiMETtau");
   vars.push_back("ev_Mt");
   vars.push_back("ev_MET");
   vars.push_back("ev_Mcol");
@@ -65,12 +66,13 @@ int main(int argc, char** argv) {
   Mth.push_back("MtLow_TT");
   Mth.push_back("MtHigh_TT");
 
-  vector<TString> systs;            
-  systs.push_back("");              
-  systs.push_back("topreweight_up_");
-  systs.push_back("topreweight_down_");
-  systs.push_back("fakerate_up_");
-  systs.push_back("fakerate_down_");
+  vector<TString> systs;
+  systs.push_back("nominal");
+  vector<TString> systs_aux = GetSys();
+  for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    systs.push_back(systs_aux[iAux]+"_up");
+    systs.push_back(systs_aux[iAux]+"_down");
+  }
   
 
   //retrieve histograms from all control regions
@@ -80,9 +82,9 @@ int main(int argc, char** argv) {
     for (unsigned int j=0; j<vars.size(); ++j) {
       for (unsigned int k=0; k<systs.size(); ++k) {
 	for (unsigned int l=0; l<Mth.size(); ++l) {
-	  cout << names[i]+vars[j]+"_"+"realtau_"+systs[k]+Mth[l] << endl;
-	  h[i][j][k].push_back( (TH1F*) file_in->Get(names[i]+vars[j]+"_"+"realtau_"+systs[k]+Mth[l]) );
-	  h[i][j][k][l]->SetName(names[i]+vars[j]+"_"+systs[k]+Mth[l]);
+	  //cout << systs[k]+"/"+names[i]+vars[j]+"_"+"realtau_"+systs[k]+"_"+Mth[l] << endl;
+	  h[i][j][k].push_back( (TH1F*) file_in->Get(systs[k]+"/"+names[i]+vars[j]+"_"+"realtau_"+systs[k]+"_"+Mth[l]) );
+	  h[i][j][k][l]->SetName(names[i]+vars[j]+"_"+systs[k]+"_"+Mth[l]);
 	}
       }
     }
@@ -93,7 +95,7 @@ int main(int argc, char** argv) {
   for (unsigned int j=0; j<vars.size(); ++j) {
     for (unsigned int k=0; k<systs.size(); ++k) {
       for (unsigned int l=0; l<Mth.size(); ++l) {
-	TH1F* h_faketau = (TH1F*) h[0][j][k][l]->Clone("faketau_"+systs[k]+vars[j]+"_"+Mth[l]);
+	TH1F* h_faketau = (TH1F*) h[0][j][k][l]->Clone("faketau_"+systs[k]+"_"+vars[j]+"_"+Mth[l]);
 	for (unsigned int i=1; i<names.size(); ++i) h_faketau->Add(h[i][j][k][l], -1);//subtract all real tau bg
 	
 	for (unsigned int iBin = 0; iBin<h_faketau->GetNbinsX(); ++iBin) {
