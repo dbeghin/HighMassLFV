@@ -233,10 +233,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    vector<TString> histo_names;               vector<int> nBins;     vector<float> x_min,   x_max; 
    histo_names.push_back("ev_Mvis");          nBins.push_back(8000); x_min.push_back(0);    x_max.push_back(8000);
    histo_names.push_back("ev_Mtot");          nBins.push_back(8000); x_min.push_back(0);    x_max.push_back(8000);
-   histo_names.push_back("tau_pt");           nBins.push_back(2000);  x_min.push_back(0);    x_max.push_back(2000);
-   histo_names.push_back("tau_eta");          nBins.push_back(50);  x_min.push_back(-2.5); x_max.push_back(2.5);
-   histo_names.push_back("tau_phi");          nBins.push_back(64);  x_min.push_back(-3.2); x_max.push_back(3.2);
-   histo_names.push_back("mu_pt");            nBins.push_back(2000);  x_min.push_back(0);    x_max.push_back(2000);
+   histo_names.push_back("tau_pt");           nBins.push_back(2000); x_min.push_back(0);    x_max.push_back(2000);
+   histo_names.push_back("tau_eta");          nBins.push_back(50);   x_min.push_back(-2.5); x_max.push_back(2.5);
+   histo_names.push_back("tau_phi");          nBins.push_back(64);   x_min.push_back(-3.2); x_max.push_back(3.2);
+   histo_names.push_back("mu_pt");            nBins.push_back(2000); x_min.push_back(0);    x_max.push_back(2000);
    histo_names.push_back("mu_eta");           nBins.push_back(50);   x_min.push_back(-2.5); x_max.push_back(2.5);
    histo_names.push_back("mu_phi");           nBins.push_back(64);   x_min.push_back(-3.2); x_max.push_back(3.2);
    histo_names.push_back("ev_DRmutau");       nBins.push_back(100);  x_min.push_back(0);    x_max.push_back(10);
@@ -245,14 +245,22 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    histo_names.push_back("ev_Mcol");          nBins.push_back(8000); x_min.push_back(0);    x_max.push_back(8000);
    histo_names.push_back("ev_Mt");            nBins.push_back(8000); x_min.push_back(0);    x_max.push_back(8000);
    histo_names.push_back("mu_isolation");     nBins.push_back(200);  x_min.push_back(0);    x_max.push_back(0.2);
-   histo_names.push_back("weight");           nBins.push_back(1000); x_min.push_back(-5);    x_max.push_back(5);
+   histo_names.push_back("weight");           nBins.push_back(1000); x_min.push_back(-5);   x_max.push_back(5);
    histo_names.push_back("sign");             nBins.push_back(5);    x_min.push_back(0);    x_max.push_back(5);
    int OS_number = 1;
    int SS_number = 3;
+   histo_names.push_back("njet");             nBins.push_back(10);   x_min.push_back(0);    x_max.push_back(10);
+   histo_names.push_back("nbjet");            nBins.push_back(10);   x_min.push_back(0);    x_max.push_back(10);
+   //exclusively for TT region now
+   int n_TT_plots = histo_names.size();
+   histo_names.push_back("bjet_pt");          nBins.push_back(2000); x_min.push_back(0);    x_max.push_back(2000);
+   histo_names.push_back("bjet_eta");         nBins.push_back(50);   x_min.push_back(-2.5); x_max.push_back(2.5);
+   histo_names.push_back("bjet_phi");         nBins.push_back(64);   x_min.push_back(-3.2); x_max.push_back(3.2);
+
 
    vector<TString> taun;
    taun.push_back("realtau"); int j_real = taun.size()-1;
-   taun.push_back("faketau"); int j_fake = taun.size()-1;
+   //taun.push_back("faketau"); int j_fake = taun.size()-1;
 
    vector<TString> Mth;
    Mth.push_back("MtLow_OS");  int k_low_OS = Mth.size()-1;
@@ -290,6 +298,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
      for (unsigned int j = 0; j<taun.size(); ++j) {
        for (unsigned int k = 0; k<systs.size(); ++k) {
 	 for (unsigned int l = 0; l<Mth.size(); ++l) {
+	   //don't create histos for the TT regions in other regions
+	   if (l < k_low_TT && i >= n_TT_plots) continue;
 	   h[l][k][j].push_back( new TH1F(histo_names[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l], histo_names[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l], nBins[i], x_min[i], x_max[i]) ); 
 	   h[l][k][j][i]->Sumw2();
 	 }
@@ -307,15 +317,18 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    eta.push_back("barrel"); int l_barrel = eta.size()-1;
    eta.push_back("endcap"); int l_endcap = eta.size()-1;
 
-   vector<TH2D*> hh[h_names.size()][Mth.size()][systs.size()];
+   vector<TH2D*> hh[h_names.size()][k_low_SS+1][systs.size()];
 
-   for (unsigned int i = 0; i<h_names.size(); ++i) {
-     for (unsigned int j = 0; j<Mth.size(); ++j) {
-       for (unsigned int k = 0; k<systs.size(); ++k) {
-	 for (unsigned int l = 0; l<eta.size(); ++l) {
-	   TString nname = h_names[i]+"_"+systs[k]+"_"+Mth[j]+"_"+eta[l]+"_"+taun[0];
-	   hh[i][j][k].push_back( new TH2D(nname, nname, 1000, 0, 1000, 1000, 0, 10) );
-	   hh[i][j][k][l]->Sumw2();
+   if (CR_number == 100 && !signal) {
+     for (unsigned int i = 0; i<h_names.size(); ++i) {
+       for (unsigned int j = 0; j<Mth.size(); ++j) {
+	 if (j>k_low_SS) continue; 
+	 for (unsigned int k = 0; k<systs.size(); ++k) {
+	   for (unsigned int l = 0; l<eta.size(); ++l) {
+	     TString nname = h_names[i]+"_"+systs[k]+"_"+Mth[j]+"_"+eta[l]+"_"+taun[0];
+	     hh[i][j][k].push_back( new TH2D(nname, nname, 500, 0, 1000, 500, 0, 5) );
+	     hh[i][j][k][l]->Sumw2();
+	   }
 	 }
        }
      }
@@ -337,7 +350,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       nb = fChain->GetEntry(jEntry);
       nbytes += nb;
 
-      cout << "aa" << endl;
 
       float first_weight = 1;
       double final_weight = 1;
@@ -373,7 +385,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         }
         if ((l1_pdgid == -l2_pdgid) && found_1 && found_2) {
           ll_p4 = l1_p4 + l2_p4;
-          if (ll_p4.M() > 400) reject_event = true;
+          if (ll_p4.M() > 200) reject_event = true;
         }
         else {
           //cout << "??" << endl;
@@ -511,11 +523,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
 
       //Is one of the triggers fired?
-      //FIXME
       bool PassTrigger = false;
       if (data)  if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
       if (!data) if (trig_HLT_Mu50_accept || trig_HLT_TkMu50_accept) PassTrigger = true;
       if (!PassTrigger) continue;
+
 
       if(!trig_Flag_goodVertices_accept) continue;
       if(!trig_Flag_globalSuperTightHalo2016Filter_accept) continue;
@@ -523,17 +535,54 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       if(!trig_Flag_HBHENoiseIsoFilter_accept) continue;
       if(!trig_Flag_EcalDeadCellTriggerPrimitiveFilter_accept) continue;
       if(!trig_Flag_BadPFMuonFilter_accept) continue;
-      //ecal bad calib filter FIXME
+      if(!signal && !trig_Flag_ecalBadCalibReduced) continue;
+      if(data && !trig_Flag_eeBadScFilter_accept) continue;
+
+
+      //electron veto
+      bool electron = false;
+      for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
+	bool heepID = false;
+	if (signal) heepID = gsf_VIDHEEP7->at(iEle);
+	else heepID = gsf_VID_heepElectronID_HEEPV70->at(iEle);
+	if (heepID && gsf_pt->at(iEle) > 40) electron = true;
+        if (electron) break;
+      }
+      if (electron) continue;
+
+
+      //dimuon veto
+      bool dimuon = false;
+      for (unsigned int iMu = 0; iMu < mu_ibt_pt->size(); ++iMu) {
+        TLorentzVector mu1_p4, mu2_p4;
+
+	if (mu_isHighPtMuon->at(iMu) && mu_ibt_pt->at(iMu) > 15 && fabs(mu_ibt_eta->at(iMu)) < 2.4 && mu_isoTrackerBased03->at(iMu) < 0.2) {
+          mu1_p4.SetPtEtaPhiM(mu_ibt_pt->at(iMu), mu_ibt_eta->at(iMu), mu_ibt_phi->at(iMu), mu_mass);
+          for (unsigned int iMu2= 0; iMu2 < iMu; ++iMu2) {
+	    if (mu_isHighPtMuon->at(iMu2) && mu_ibt_pt->at(iMu2) > 15 && fabs(mu_ibt_eta->at(iMu2)) < 2.4 && mu_isoTrackerBased03->at(iMu2) < 0.2) {
+              mu2_p4.SetPtEtaPhiM(mu_ibt_pt->at(iMu2), mu_ibt_eta->at(iMu2), mu_ibt_phi->at(iMu2), mu_mass);
+              if (mu1_p4.DeltaR(mu2_p4) > 0.2) dimuon = true;
+            }
+            if (dimuon) break;
+          }
+        }
+        if (dimuon) break;
+      }
+      if (dimuon) continue;
 
 
       //bjet pair finding (medium WP for the bjet)                                                                                                                           
       int nbjet = 0;
       float bjetMedium2016 = 0.800;
       float bjet_weight = 1;
+      vector<TLorentzVector> bjet_p4;
       for (unsigned int iJet = 0; iJet < jet_pt->size(); ++iJet) {
-	TLorentzVector bjet_p4;
-	if (jet_CSVv2->at(iJet) > bjetMedium2016 && jet_pt->at(iJet) > 30 && fabs(jet_eta->at(iJet)) < 2.4 && jet_isJetIDLoose->at(iJet)) {
-	  bjet_p4.SetPxPyPzE(jet_px->at(iJet), jet_py->at(iJet), jet_pz->at(iJet), jet_energy->at(iJet));
+	TLorentzVector bjet_p4_temp;
+	bool looseJet = false;
+	if (signal) looseJet = jet_isJetIDLoose->at(iJet);
+	else looseJet = jet_isJetIDLoose_2016->at(iJet);
+	if (jet_CSVv2->at(iJet) > bjetMedium2016 && jet_pt->at(iJet) > 30 && fabs(jet_eta->at(iJet)) < 2.4 && looseJet) {
+	  bjet_p4_temp.SetPxPyPzE(jet_px->at(iJet), jet_py->at(iJet), jet_pz->at(iJet), jet_energy->at(iJet));
 
 	  //bjet should match neither a tau nor a muon
 	  bool btau = false;
@@ -543,12 +592,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (tau_temp_p4.Pt() < 30.0) continue;
 	    if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	    if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
-	    if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	    if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;
+	    if (tau_againstElectronLooseMVA6->at(iTau) < 0.5) continue;
 	    if (fabs(tau_charge->at(iTau)) != 1) continue;
 	    if (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
 	  
-	    if (bjet_p4.DeltaR(tau_temp_p4) < 0.5) btau = true;
+	    if (bjet_p4_temp.DeltaR(tau_temp_p4) < 0.5) btau = true;
 	    if (btau) break;
 	  }
 	  if (btau) continue;
@@ -562,68 +611,52 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (fabs(mu_ibt_eta->at(iMu)) > 2.4) continue;
 	    if (mu_isoTrackerBased03->at(iMu) > 0.1) continue;
 	  
-	    if (bjet_p4.DeltaR(mu_temp_p4) < 0.5) bmu = true;
+	    if (bjet_p4_temp.DeltaR(mu_temp_p4) < 0.5) bmu = true;
 	    if (bmu) break;
 	  }
 	  if (bmu) continue;
 	  ++nbjet;
-	  if (!data) bjet_weight *= jet_BtagSF_medium->at(iJet);
+	  bjet_p4.push_back(bjet_p4_temp);
 	}
-	if (nbjet >= 2) break;
+	//if (nbjet >= 2) break;
       }
+      if (!data) bjet_weight = BtagSF_Deepcsv_medium;
 
 
-      //classify mu-tau pairs by their collinear mass
-      map<vector<int>, float> Mcol_map;
+
+      //classify mu-tau pairs by their visible mass
+      map<vector<int>, float> Mvis_map;
       vector<vector<int>> mutau_ind_temp;
       for (unsigned int ii = 0; ii < mu_ibt_pt->size(); ++ii) {
         TLorentzVector mu_p4;
         mu_p4.SetPtEtaPhiM(mu_ibt_pt->at(ii), mu_ibt_eta->at(ii), mu_ibt_phi->at(ii), mu_mass);
         for (unsigned int jj = 0; jj < tau_pt->size(); ++jj) {
-	  float met_px = MET_T1Txy_Px;
-	  float met_py = MET_T1Txy_Py;
-	  float met_pt = MET_T1Txy_Pt;
-          TLorentzVector tau_p4, met_p4;
+          TLorentzVector tau_p4;
           tau_p4.SetPtEtaPhiE(tau_pt->at(jj), tau_eta->at(jj), tau_phi->at(jj), tau_energy->at(jj));
-          met_p4.SetPxPyPzE(met_px, met_py, 0, met_pt);
-	  
 
-          //MET recalculation because we're using the high-pt muon ID
-          TLorentzVector mu_gt_p4, mu_gt_transp4;
-          mu_gt_p4.SetPxPyPzE(0, 0, 0, 0);
-          mu_gt_transp4.SetPxPyPzE(0, 0, 0, 0);
-
-          float min_dR = 0.2;
-          for (unsigned int kk=0; kk<mu_gt_pt->size(); ++kk) {
-            if (!mu_isPFMuon->at(kk)) continue;
-            mu_gt_p4.SetPtEtaPhiM(mu_gt_pt->at(kk), mu_gt_eta->at(kk), mu_gt_phi->at(kk), mu_mass);
-            if ( (abs(mu_gt_p4.Pt()) >= 998.999 && abs(mu_gt_p4.Pt()) <= 999.001) )continue;
-            if ( (abs(mu_p4.Pt()) >= 998.999 && abs(mu_p4.Pt()) <= 999.001) )continue;
-            if (mu_gt_p4.DeltaR(mu_p4) > min_dR) continue;
-            min_dR = mu_gt_p4.DeltaR(mu_p4);
-            mu_gt_transp4.SetPtEtaPhiM(mu_gt_pt->at(kk), 0, mu_gt_phi->at(kk), mu_mass);
-          }
-          met_p4 = met_p4 + mu_gt_transp4 - mu_p4;
-
-          float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
+          float Mvis = (tau_p4+mu_p4).M();
           vector<int> index;
           index.push_back(ii); //mu index
           index.push_back(jj); //tau index
-          Mcol_map[index] = Mcol;
+
+          if (Mvis != Mvis) Mvis = 0;
+          if (Mvis < 0) Mvis = 0;
+          Mvis_map[index] = Mvis;
           mutau_ind_temp.push_back(index);
         }
       }
+
 
       vector<vector<int>> rest, mutau_ind;
       mutau_ind.clear();
       while (mutau_ind_temp.size()>0) {
         rest.clear();
-        float max_mcol = -1;
+        float max_mvis = -1;
         vector<int> highest_ind;
         highest_ind.clear();
         for (unsigned int iInd = 0; iInd < mutau_ind_temp.size(); ++iInd) {
-	  //cout << Mcol_map[mutau_ind_temp[iInd]] << " " << max_mcol << endl;
-          if (Mcol_map[mutau_ind_temp[iInd]] > max_mcol) {
+          if (Mvis_map[mutau_ind_temp[iInd]] > max_mvis) {
+            max_mvis = Mvis_map[mutau_ind_temp[iInd]];
             if (highest_ind.size() > 0) rest.push_back(highest_ind);
             highest_ind = mutau_ind_temp[iInd];
           }
@@ -634,6 +667,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         mutau_ind.push_back(highest_ind);
         mutau_ind_temp = rest;
       }
+
+
 
 
       bool filled_histos[Mth.size()][systs.size()];
@@ -666,8 +701,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	if (tau_p4.Pt() < 27.0) continue;
 	if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
-	if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;
+	if (tau_againstElectronLooseMVA6->at(iTau) < 0.5) continue;
 	if (fabs(tau_charge->at(iTau)) != 1) continue;
 
 	//control regions : sign selection, muon isolation and tau ID
@@ -816,7 +851,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    jTauN=j_real;
 	  }
 	  else {
-	    jTauN=j_fake;
+	    //jTauN=j_fake;
+	    continue;
 	  }
 	  if (CR_number >= 2) tau_match = false;
 	}
@@ -827,7 +863,10 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
         TLorentzVector jet_p4(0.,0.,0.,0.);
         for (unsigned int ijet = 0; ijet < jet_pt->size(); ijet++){
           if(!(fabs(jet_eta->at(ijet)) < 2.3)) continue;
-          if(!(jet_isJetIDLoose->at(ijet))) continue;
+	  bool looseJet = false;
+	  if (signal) looseJet = jet_isJetIDLoose->at(ijet);
+	  else looseJet = jet_isJetIDLoose_2016->at(ijet);
+          if(!looseJet) continue;
           TLorentzVector jet_p4_tmp;
           jet_p4_tmp.SetPxPyPzE(jet_px->at(ijet), jet_py->at(ijet), jet_pz->at(ijet), jet_energy->at(ijet));
           if(!(tau_p4.DeltaR(jet_p4_tmp) < dR_threshold)) continue;
@@ -917,30 +956,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	}
 
 
-	//electron veto
-	bool electron = false;
-	for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
-	  if (gsf_isHeepV7->at(iEle) && gsf_pt->at(iEle) > 40) electron = true;
-	  if (electron) break;
-	}
-	if (electron) continue;
-
-	//mu-to-tau veto
-	bool extra_muon = false;
-	for (unsigned int jMu = 0; jMu < mu_ibt_pt->size(); ++jMu) {
-	  if (mu_ibt_pt->at(jMu) < 30) continue;
-	  if (!mu_isHighPtMuon->at(jMu)) continue;
-	  if (fabs(mu_ibt_eta->at(jMu)) > 2.4) continue;
-	  if (mu_isoTrackerBased03->at(jMu) > 0.1) continue;
-	  TLorentzVector extra_mu_p4;
-	  extra_mu_p4.SetPtEtaPhiM(mu_ibt_pt->at(jMu), mu_ibt_eta->at(jMu), mu_ibt_phi->at(jMu), mu_mass);
-	  if (tau_p4.DeltaR(extra_mu_p4) > 0.2) continue;
-	  extra_muon = true;
-	  break;
-	}
-	if (extra_muon) continue;
-
-
 
 	cout << endl << "PU: " << mc_trueNumInteractions << endl;
 
@@ -1006,16 +1021,19 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  float Mcol = GetCollinearMass(tau_p4, mu_p4, met_p4);
 
 
-	  bool stopFilling = false;
 	  int l_value = lMth;
+	  if (CR_number == 100) {
+	    if ( (l_value < k_low_SS + 1) && !signal) {
+	      hh[iRatio][l_value][k_syst][l_eta]->Fill(tau_p4.Pt(), ratio, final_weight);
+	    }
+	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+	  }
+	  
+	  bool stopFilling = false;
 	  int n_fuel = 0;
 	  while (!stopFilling && n_fuel<2) {
 	    ++n_fuel;
 
-	    if (CR_number == 100) {
-	      hh[iRatio][l_value][k_syst][l_eta]->Fill(tau_p4.Pt(), ratio, final_weight);
-	      if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
-	    }
 
 	    //only fill histos once for each region and systematic
 	    if (filled_histos[l_value][k_syst]) continue;
@@ -1038,18 +1056,28 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    h[l_value][k_syst][jTauN][13]->Fill(reliso, final_weight);
 	    h[l_value][k_syst][jTauN][14]->Fill(final_weight, 1);
 	    h[l_value][k_syst][jTauN][15]->Fill(sign_number, final_weight);
-	    if (l_value == k_high_TT || l_value == k_low_TT) stopFilling = true;
+	    h[l_value][k_syst][jTauN][16]->Fill(jet_n, final_weight);
+	    h[l_value][k_syst][jTauN][17]->Fill(nbjet, final_weight);
+	    //special TT plots
+	    if (l_value == k_high_TT || l_value == k_low_TT) {
+	      stopFilling = true;
+	      for (unsigned int iBJet = 0; iBJet < bjet_p4.size(); ++iBJet) {
+		h[l_value][k_syst][jTauN][18]->Fill(bjet_p4[iBJet].Pt(), final_weight);
+		h[l_value][k_syst][jTauN][19]->Fill(bjet_p4[iBJet].Eta(), final_weight);
+		h[l_value][k_syst][jTauN][20]->Fill(bjet_p4[iBJet].Phi(), final_weight);
+	      }
+	    }
 	    if (l_value == lMth) {
 	      if (isHighTTCR) {
-		l_value = k_high_TT;
-		final_weight *= bjet_weight;
+	    	l_value = k_high_TT;
+	    	final_weight *= bjet_weight;
 	      }
 	      else if (isLowTTCR) {
-		l_value = k_low_TT;
-		final_weight *= bjet_weight;
+	    	l_value = k_low_TT;
+	    	final_weight *= bjet_weight;
 	      } 
 	      else {
-		stopFilling = true;
+	    	stopFilling = true;
 	      }
 	    }
 	  }
@@ -1067,8 +1095,8 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    for (unsigned int k = 0; k<systs.size(); ++k) {
      d_sys.push_back( file_out->mkdir( systs[k] ) );
      d_sys[k]->cd();
-     for (unsigned int i = 0; i<histo_names.size(); ++i) for (unsigned int j = 0; j<taun.size(); ++j) for (unsigned int l = 0; l<Mth.size(); ++l) h[l][k][j][i]->Write();
-     for (unsigned int i = 0; i<h_names.size(); ++i) for (unsigned int j = 0; j<Mth.size(); ++j) for (unsigned int l = 0; l<eta.size(); ++l) hh[i][j][k][l]->Write();
+     for (unsigned int i = 0; i<histo_names.size(); ++i) for (unsigned int j = 0; j<taun.size(); ++j) for (unsigned int l = 0; l<Mth.size(); ++l) if (!(l < k_low_TT && i >= n_TT_plots)) h[l][k][j][i]->Write();
+     if (CR_number == 100 && !signal) for (unsigned int i = 0; i<h_names.size(); ++i) for (unsigned int j = 0; j<k_low_SS+1; ++j) for (unsigned int l = 0; l<eta.size(); ++l) hh[i][j][k][l]->Write();
      d_sys[k]->Close();
    }
    cout << "end" << endl;

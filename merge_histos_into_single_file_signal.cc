@@ -94,17 +94,35 @@ int main(int argc, char** argv) {
 
   vector<TFile*> files_in;
   for (unsigned int i=0; i<mass.size(); ++i) {
-    files_in.push_back( new TFile(folder_in+"/Arranged_ZPrime/ZPrime_"+mass[i]+".root", "R") );
+    files_in.push_back( new TFile(folder_in+"/Arranged_signal/ZPrime_"+mass[i]+".root", "R") );
   }
 
   TFile* file_in_data = new TFile(folder_in+"/Arranged_data/data.root", "R");
 
+
+  vector<TString> vars                     , vars_out;
+  vars.push_back("ev_Mvis_realtau_");        vars_out.push_back("ev_Mvis_");
+  vars.push_back("ev_Mcol_realtau_");        vars_out.push_back("ev_Mcol_");
+  vars.push_back("ev_Mtot_realtau_");        vars_out.push_back("ev_Mtot_");
+  vars.push_back("tau_pt_realtau_");         vars_out.push_back("tau_pt_");
+  vars.push_back("tau_eta_realtau_");        vars_out.push_back("tau_eta_");
+  vars.push_back("tau_phi_realtau_");        vars_out.push_back("tau_phi_");
+  vars.push_back("mu_pt_realtau_");          vars_out.push_back("mu_pt_");
+  vars.push_back("mu_eta_realtau_");         vars_out.push_back("mu_eta_");
+  vars.push_back("mu_phi_realtau_");         vars_out.push_back("mu_phi_");
+  vars.push_back("ev_DRmutau_realtau_");     vars_out.push_back("ev_DRmutau_");
+  vars.push_back("ev_Mt_realtau_");          vars_out.push_back("ev_Mt_");
+  vars.push_back("ev_MET_realtau_");         vars_out.push_back("ev_MET_");
+  vars.push_back("mu_isolation_realtau_");   vars_out.push_back("mu_isolation_");
+  vars.push_back("sign_realtau_");           vars_out.push_back("sign_");
+
+
   vector<TString> Mth;
-  //Mth.push_back("MtLow_OS");
-  //Mth.push_back("MtLow_SS");
+  Mth.push_back("MtLow_OS");
+  Mth.push_back("MtLow_SS");
   Mth.push_back("MtHigh");
-  //Mth.push_back("MtLow_TT");
-  //Mth.push_back("MtHigh_TT");
+  Mth.push_back("MtLow_TT");
+  Mth.push_back("MtHigh_TT");
 
   vector<TString> systs;
   systs.push_back("nominal");
@@ -119,17 +137,22 @@ int main(int argc, char** argv) {
 
   file_out->cd();
   for (unsigned int i = 0; i<systs.size(); ++i) {
-    for (unsigned int l = 0; l<Mth.size(); ++l) {
-      var_in = systs[i]+"/ev_Mcol_realtau_"+systs[i]+"_"+Mth[l];
-      var_out = systs[i]+"_Mcol_"+Mth[l];
+    TDirectory* dir = file_out->mkdir( systs[i] );
+    dir->cd();
+    for (unsigned int k = 0; k<vars.size(); ++k) {
+      for (unsigned int l = 0; l<Mth.size(); ++l) {
+	var_in = systs[i]+"/"+vars[k]+systs[i]+"_"+Mth[l];
+	var_out = vars_out[k]+Mth[l];
     
-      for (unsigned int j = 0; j<mass.size(); ++j) {
-	TH1F* h = MC_histo(var_in, files_in[j], file_in_data, xs[j], rebin);
-	h->SetName(mass[j]+"_"+var_out);
-	h->Write();
-	delete h;
-      }          
+	for (unsigned int j = 0; j<mass.size(); ++j) {
+	  TH1F* h = MC_histo(var_in, files_in[j], file_in_data, xs[j], rebin);
+	  h->SetName("ZPrime_"+mass[j]+"_"+var_out);
+	  h->Write();
+	  delete h;
+	}          
+      }
     }
+    dir->Close();
   }    
   file_out->Close();
 

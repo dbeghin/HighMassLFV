@@ -1,5 +1,5 @@
 #define IIHEAnalysis_cxx
-#include "IIHEAnalysis_2016.h"
+#include "IIHEAnalysis_2016_sig.h"
 #include "meta.h"
 
 using namespace std;
@@ -74,11 +74,18 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    histo_names.push_back("Mgen");       nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
    histo_names.push_back("Mvis");       nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
    histo_names.push_back("Mtot");       nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
-   histo_names.push_back("Mcol");       nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_nodisc");       nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
    histo_names.push_back("Mvis_res");   nBins.push_back(2000);  x_min.push_back(-1);    x_max.push_back(1);
    histo_names.push_back("Mtot_res");   nBins.push_back(2000);  x_min.push_back(-1);    x_max.push_back(1);
    histo_names.push_back("Mcol_res");   nBins.push_back(2000);  x_min.push_back(-1);    x_max.push_back(1);
-   histo_names.push_back("Mcol_tight"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_elevloose"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_eleloose"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_elemedium"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_eletight"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_muloose"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_mutight"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_final"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
+   histo_names.push_back("Mcol_tightest"); nBins.push_back(8000);  x_min.push_back(0);     x_max.push_back(8000);
 
    vector<TH1F*> h;
    for (unsigned int i = 0; i<histo_names.size(); ++i) {
@@ -107,20 +114,102 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 
       //start loop over all simulated particules
       int moth_ind = -1, tau_ind = -1;
-      TLorentzVector gen_mup4, gen_taup4, gen_totalp4, p4;
+      TLorentzVector gen_mup4, gen_taup4, gen_totalp4, p4, pp4;
 
       for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
 	moth_ind = mc_mother_index->at(iMC).at(0);
 	if (abs(mc_pdgId->at(iMC)) == 15) {
 	  p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
-	  if (mc_pt->at(iMC) > 20) {	
-	    if (p4.Pt() < 20) continue;
-	    if (p4.Pt() > 10000) continue;
-	    gen_taup4 = p4;
-	    tau_ind = iMC;
-	  }
+	  if (p4.Pt() > 10000) continue;
+	  gen_taup4 = p4;
+	  tau_ind = iMC;
 	}
       }
+
+
+      vector<TLorentzVector> tauhp4;
+      for (unsigned int iMC = 0; iMC < mc_tau_had_pt->size(); ++iMC) {
+	//cout << mc_tau_had_pt->at(iMC) << " " << mc_tau_had_eta->at(iMC) << " " << mc_tau_had_phi->at(iMC) << " " << mc_tau_had_energy->at(iMC) << endl;
+	p4.SetPtEtaPhiE(mc_tau_had_pt->at(iMC), mc_tau_had_eta->at(iMC), mc_tau_had_phi->at(iMC), mc_tau_had_energy->at(iMC));
+	float DRthr = 0.4;
+	bool hadtau = true;
+	for (unsigned int iMC2 = 0; iMC2 < mc_tau_pt->size(); ++iMC2) {
+	  pp4.SetPtEtaPhiE(mc_tau_pt->at(iMC2), mc_tau_eta->at(iMC2), mc_tau_phi->at(iMC2), mc_tau_energy->at(iMC2));
+	  if ((p4.DeltaR(pp4) < DRthr) && (mc_tau_decay->at(iMC2) == 0 || mc_tau_decay->at(iMC2) == 1)) hadtau = false;
+	}
+	if (!hadtau) continue;
+	tauhp4.push_back( p4 );
+      }
+
+
+      vector<TLorentzVector> tauh2p4;
+      tauh2p4.clear();
+      vector<TLorentzVector> taup4, tauvisp4, anyleptonp4, genmup4, genelep4;
+      taup4.clear();
+      tauvisp4.clear();
+      anyleptonp4.clear();
+      genmup4.clear();
+      genelep4.clear();
+      vector<int> vec_tau_ind, tau_dm;
+      vec_tau_ind.clear(), tau_dm.clear();
+      //start loop over all simulated particules
+      moth_ind = -1;
+      TLorentzVector mup4, nutaup4, totalp4, totalvisp4, totalvismetp4;
+      bool foundmu = false, foundtau = false;
+      vector<bool> tauh;
+      int n_nus = 0;
+      for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
+        if (abs(mc_pdgId->at(iMC)) == 15) {
+          p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
+	  if (p4.Pt() > 10000) continue;
+	  foundtau = true;
+	  taup4.push_back(p4);
+	  tauvisp4.push_back(p4);
+	  vec_tau_ind.push_back(iMC);
+	  tauh.push_back(true);
+	  tau_dm.push_back(2);
+        }
+        if (abs(mc_pdgId->at(iMC)) == 11 || abs(mc_pdgId->at(iMC)) == 13) {
+          if (mc_pt->at(iMC) < 10) continue;
+          p4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
+          if (p4.Pt() < 10) continue;
+          if (p4.Pt() > 10000) continue;
+          anyleptonp4.push_back(p4);
+          if (abs(mc_pdgId->at(iMC)) == 13) genmup4.push_back(p4);
+          if (abs(mc_pdgId->at(iMC)) == 11) genelep4.push_back(p4);
+        }
+      }
+      //find out about the tau daughters
+      for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
+        moth_ind = mc_mother_index->at(iMC).at(0);
+        if (moth_ind < 0) continue;
+        if (abs(mc_pdgId->at(moth_ind)) == 15) {
+          for (unsigned int iTau = 0; iTau<vec_tau_ind.size(); ++iTau) {
+            if (moth_ind == vec_tau_ind[iTau]) {
+	      if (abs(mc_pdgId->at(iMC)) == 16) {
+		nutaup4.SetPxPyPzE(mc_px->at(iMC), mc_py->at(iMC), mc_pz->at(iMC), mc_energy->at(iMC));
+		tauvisp4[iTau] = taup4[iTau] - nutaup4;
+		++n_nus;
+	      }
+	      else if (abs(mc_pdgId->at(iMC)) == 11) {
+		//not a hadron
+		tauh[iTau] = false;
+		tau_dm[iTau] = 0;
+	      }
+	      else if (abs(mc_pdgId->at(iMC)) == 13) {
+		//not a hadron
+		tauh[iTau] = false;
+		tau_dm[iTau] = 1;
+	      }
+	    }
+          }
+        }
+      }
+      for (unsigned int iTau = 0; iTau<vec_tau_ind.size(); ++iTau) {
+        if (tauh[iTau]) tauh2p4.push_back(tauvisp4[iTau]), anyleptonp4.push_back(tauvisp4[iTau]);
+      }
+      
+
 
       for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) {
 	moth_ind = mc_mother_index->at(iMC).at(0);
@@ -132,11 +221,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  if (moth_ind == tau_ind) continue;
 	  gen_mup4 = p4;
 	}
-	if (print_count < 20) {
-	  ++print_count;
-	  cout << endl;
-	  for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << endl;
-	}
+      }
+      if (print_count < 20) {
+	++print_count;
+	cout << endl;
+	for (unsigned int iMC = 0; iMC < mc_pt->size(); ++iMC) cout << iMC << "  " << mc_pdgId->at(iMC) << "  " << mc_mother_index->at(iMC).at(0) << "  " << mc_pt->at(iMC) << "  " << mc_eta->at(iMC) << "  " << mc_phi->at(iMC) << endl;
       }
       gen_totalp4 = gen_taup4 + gen_mup4;
       h[0]->Fill(gen_totalp4.M(), final_weight);
@@ -241,16 +330,48 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  if (tau_p4.Pt() < 30.0) continue;
 	  if (fabs(tau_eta->at(iTau)) > 2.3) continue;
 	  if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
-	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
 	  if (fabs(tau_charge->at(iTau)) != 1) continue;
 
 	  float reliso = mu_isoTrackerBased03->at(iMu); //use instead sumofpts divided by muon ibt pt
 
-	  
-
 	  if (reliso > 0.1) continue;
 	  if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) continue;
+
+	  bool tau_match = false;
+	  for (unsigned int iGen=0; iGen<tauhp4.size(); ++iGen) {
+	    if (tau_p4.DeltaR(tauhp4[iGen]) < 0.4) {
+	      tau_match = true;
+	      break;
+	    }
+	  }
+	  if (tauh2p4.size() == 0) continue;
+	  if (!tau_match) continue;
+
+
+	  //electron veto
+	  bool electron = false;
+	  for (unsigned int iEle = 0; iEle < gsf_pt->size(); ++iEle) {
+	    if (gsf_isHeepV7->at(iEle) && gsf_pt->at(iEle) > 40) electron = true;
+	    if (electron) break;
+	  }
+	  if (electron) continue;
+
+	  
+	  //mu-to-tau veto
+	  bool extra_muon = false;
+	  for (unsigned int jMu = 0; jMu < mu_ibt_pt->size(); ++jMu) {
+	    if (mu_ibt_pt->at(jMu) < 30) continue;
+	    if (!mu_isHighPtMuon->at(jMu)) continue;
+	    if (fabs(mu_ibt_eta->at(jMu)) > 2.4) continue;
+	    if (mu_isoTrackerBased03->at(jMu) > 0.1) continue;
+	    TLorentzVector extra_mu_p4;
+	    extra_mu_p4.SetPtEtaPhiM(mu_ibt_pt->at(jMu), mu_ibt_eta->at(jMu), mu_ibt_phi->at(jMu), mu_mass);
+	    if (tau_p4.DeltaR(extra_mu_p4) > 0.2) continue;
+	    extra_muon = true;
+	    break;
+	  }
+	  if (extra_muon) continue;
+
 
 	  //MET recalculation because we're using the high-pt muon ID
 	  TLorentzVector mu_gt_p4, mu_gt_transp4;
@@ -304,8 +425,26 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  Mres = (Mcol - gen_totalp4.M())/gen_totalp4.M();
 	  h[6]->Fill(Mres, final_weight);
 
+	  if (tau_againstElectronVLooseMVA6->at(iTau) > 0.5) {
+	    h[7]->Fill(Mcol, final_weight);
+	  }
+	  if (tau_againstElectronLooseMVA6->at(iTau) > 0.5) {
+	    h[8]->Fill(Mcol, final_weight);
+	  }
+	  if (tau_againstElectronMediumMVA6->at(iTau) > 0.5) {
+	    h[9]->Fill(Mcol, final_weight);
+	  }
+	  if (tau_againstElectronTightMVA6->at(iTau) > 0.5) {
+	    h[10]->Fill(Mcol, final_weight);
+	  }
+	  if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;
+	  h[11]->Fill(Mcol, final_weight);
+	  if (tau_againstMuonTight3->at(iTau) < 0.5) continue;
+	  h[12]->Fill(Mcol, final_weight);
+	  if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
+	  h[13]->Fill(Mcol, final_weight);
 	  if (tau_againstElectronTightMVA6->at(iTau) < 0.5) continue;
-	  h[7]->Fill(Mcol, final_weight);
+	  h[14]->Fill(Mcol, final_weight);
 	}//loop over taus
       }//loop over muons
    }//loop over events

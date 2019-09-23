@@ -19,6 +19,7 @@ using namespace std;
 int main(/*int argc, char** argv*/) {
   TFile* file_out = new TFile("Figures/histos_highmassmutau.root", "RECREATE");
   TFile* file_in  = new TFile("Figures/histos_highmassmutau_CR100.root", "R");
+  TFile* file_in_sig  = new TFile("Figures/histos_signal.root", "R");
 
   vector<TString> names;
   names.push_back("data_");//0
@@ -27,7 +28,14 @@ int main(/*int argc, char** argv*/) {
   names.push_back("TT_");
   names.push_back("ST_");
   names.push_back("VV_");
-  //names.push_back("Signal_");//FIXME
+
+
+  vector<TString> sig_names;
+  sig_names.push_back("ZPrime_1000_");
+  sig_names.push_back("ZPrime_2000_");
+  sig_names.push_back("ZPrime_3000_");
+  sig_names.push_back("ZPrime_4000_");
+
 
   vector<TString> systs;
   systs.push_back("nominal");
@@ -39,12 +47,12 @@ int main(/*int argc, char** argv*/) {
 
 
   //rebin vectors
-  vector<float> xpoints {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 550, 600, 650, 700, 800, 900, 1000/*, 1500, 2000, 4000*/};
+  vector<float> xpoints {/*0, 10, 20, 30, 40, */50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 600, 800, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 6000, 8000};
   cout << xpoints.size() << endl;
 
-  vector<float> xpoints_MET {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 500/*, 700, 1000*/};
+  vector<float> xpoints_MET {/*0, */10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 500, 1000};
 
-  vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 200, 300, 500, 1000};
+  vector<float> xpoints_pt {/*0, 10, 20, */30, 50, 60, 70, 80, 100, 150, 200, 300, 500, 1000, 2000};
   //vector<float> xpoints_pt {0, 10, 20, 30, 40, 50, 60, 70, 80, 100, 150, 300, 1000};
 
   //vector<float> xpoints_Mt {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120}; //for Mt low FIXME
@@ -64,10 +72,9 @@ int main(/*int argc, char** argv*/) {
   vars.push_back("mu_phi");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("mu_isolation");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
   vars.push_back("ev_DRmutau");		    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
-  vars.push_back("ev_DeltaPhimutau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
-  vars.push_back("ev_DeltaPhiMETtau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
-  //vars.push_back("ev_MET");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_MET);
-  vars.push_back("ev_MET");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_pt);
+  //vars.push_back("ev_DeltaPhimutau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
+  //vars.push_back("ev_DeltaPhiMETtau");	    simpleRebin.push_back(true);      rebin.push_back(2);     rebin_vector.push_back(xpoints);
+  vars.push_back("ev_MET");		    simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_MET);
   vars.push_back("ev_Mcol");                simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints);                
   vars.push_back("ev_Mt");                  simpleRebin.push_back(false);     rebin.push_back(1);     rebin_vector.push_back(xpoints_Mt);                
   vars.push_back("sign");                   simpleRebin.push_back(true);      rebin.push_back(1);     rebin_vector.push_back(xpoints);                
@@ -104,9 +111,11 @@ int main(/*int argc, char** argv*/) {
     	    float bin_content = 0, bin_error=0;
 	    int Nbins = h[i][j][k][l]->GetNbinsX();
     	    for (unsigned int iBin=1; iBin < Nbins+1; ++iBin) {
+	      float min_value = rebin_array[jBin-1];
 	      float max_value = rebin_array[jBin];
 	      //if (jBin == array_size-1) max_value = h[i][j][k][l]->GetBinLowEdge(Nbins) + h[i][j][k][l]->GetBinWidth(Nbins);
     	      if (h[i][j][k][l]->GetBinCenter(iBin) < max_value) {
+		if (h[i][j][k][l]->GetBinCenter(iBin) < min_value) continue;
     	        bin_content += h[i][j][k][l]->GetBinContent(iBin);
     	        bin_error += pow(h[i][j][k][l]->GetBinError(iBin), 2);
     	      }
@@ -132,6 +141,54 @@ int main(/*int argc, char** argv*/) {
   }
 
 
+  vector<TH1F*> h_sig[sig_names.size()][vars.size()];
+  vector<TH1F*> h_sig_rebinned[sig_names.size()][vars.size()];
+  for (unsigned int k=0; k<vars.size(); ++k) {
+    for (unsigned int l=0; l<Mth.size(); ++l) {
+      for (unsigned int j=0; j<sig_names.size(); ++j) {
+        h_sig[j][k].push_back( (TH1F*) file_in_sig->Get("nominal/"+sig_names[j]+vars[k]+Mth[l]) );
+        //cout << sig_names[j]+"_"+vars[k]+Mth[l] << endl;                             
+        h_sig[j][k][l]->SetName(sig_names[j]+vars[k]+Mth[l]+"_old");
+
+        if (simpleRebin[k]) {
+          h_sig_rebinned[j][k].push_back( (TH1F*) h_sig[j][k][l]->Clone(sig_names[j]+vars[k]+Mth[l]) );
+          h_sig_rebinned[j][k][l]->Rebin(rebin[k]);
+        }
+        else {
+          int array_size = rebin_vector[k].size();
+          float rebin_array[array_size];
+          for (unsigned int ii=0; ii<array_size; ++ii) rebin_array[ii] = rebin_vector[k][ii];
+          h_sig_rebinned[j][k].push_back( new TH1F(sig_names[j]+vars[k]+Mth[l], sig_names[j]+vars[k]+Mth[l], array_size-1, rebin_array) );
+
+          int jBin = 1;
+          float bin_content = 0, bin_error=0;
+          for (unsigned int iBin=1; iBin < h_sig[j][k][l]->GetNbinsX()+1; ++iBin) {
+            if (h_sig[j][k][l]->GetBinCenter(iBin) < rebin_array[jBin]) {
+              if (h_sig[j][k][l]->GetBinCenter(iBin) < rebin_array[jBin-1]) continue;
+              bin_content += h_sig[j][k][l]->GetBinContent(iBin);
+              bin_error += pow(h_sig[j][k][l]->GetBinError(iBin), 2);
+            }
+            else {
+              bin_content = bin_content/(rebin_array[jBin]-rebin_array[jBin-1]);
+              bin_error = sqrt(bin_error)/(rebin_array[jBin]-rebin_array[jBin-1]);
+              h_sig_rebinned[j][k][l]->SetBinContent(jBin, bin_content);
+              h_sig_rebinned[j][k][l]->SetBinError(jBin, bin_error);
+              bin_content = h_sig[j][k][l]->GetBinContent(iBin);
+              bin_error = pow(h_sig[j][k][l]->GetBinError(iBin), 2);
+
+              ++jBin;
+            }
+          }
+          bin_content = bin_content/(rebin_array[jBin]-rebin_array[jBin-1]);
+          bin_error = sqrt(bin_error)/(rebin_array[jBin]-rebin_array[jBin-1]);
+          h_sig_rebinned[j][k][l]->SetBinContent(jBin, bin_content);
+          h_sig_rebinned[j][k][l]->SetBinError(jBin, bin_error);
+        }
+      }
+    }
+  }
+
+
   //Write the rebinned histos in the output file
   file_out->cd();
   for (unsigned int i=0; i<systs.size(); ++i) {
@@ -146,6 +203,16 @@ int main(/*int argc, char** argv*/) {
     }
     dir->Close();
   }
+  TDirectory* dir = file_out->mkdir( "signal" );
+  dir->cd();
+  for (unsigned int j=0; j<sig_names.size(); ++j) {
+    for (unsigned int k=0; k<vars.size(); ++k) {
+      for (unsigned int l=0; l<Mth.size(); ++l) {
+	h_sig_rebinned[j][k][l]->Write();
+      }
+    }
+  }
+  dir->Close();
   file_out->Close();
 
 

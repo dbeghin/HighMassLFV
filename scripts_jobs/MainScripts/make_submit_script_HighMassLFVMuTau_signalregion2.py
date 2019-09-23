@@ -23,7 +23,7 @@ if __name__ == "__main__":
         outFile = open("../Jobs_to_submit/"+name_out , 'w')
         command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
         command1 = command1 + "mkdir /user/dbeghin/Work/MuTauHighMass/"+folder+"/Out_"+myname[jj] + "\n"
-        command1 = command1 + "cd /user/dbeghin/CMSSW_8_0_26_patch1/src " + "\n" #go to the top of your CMSSW release
+        command1 = command1 + "cd /user/dbeghin/2nd/2019May17/CMSSW_10_2_13/src " + "\n" #go to the top of your CMSSW release
         command1 = command1 + "eval `scram runtime -sh` " + "\n"   #load the cms environment
         command1 = command1 + "export X509_USER_PROXY=/user/dbeghin/x509up_u$(id -u dbeghin)" + "\n"
         command1 = command1 + "export scratchdir=$TMPDIR " + "\n"
@@ -33,7 +33,7 @@ if __name__ == "__main__":
         #command1 = command1 + "export workdir=/user/dbeghin/Work/MuTauHighMass/ " + "\n"  #Set your working directory, where the code is located
         #command1 = command1 + "cd $workdir"
         outFile.write(command1)
-        command3 = "qsub -q localgrid@cream02 -o " + "../out_err/"+myname[jj] +".stdout -e " +"../out_err/"+myname[jj] +".stderr -l walltime=07:00:00    " + "../Jobs_to_submit/"+name_out + "\n"  #Command to submit one job to the localgrid
+        command3 = "qsub -q localgrid@cream02 -o " + "../out_err/"+myname[jj] +".stdout -e " +"../out_err/"+myname[jj] +".stderr -l walltime=12:00:00    " + "../Jobs_to_submit/"+name_out + "\n"  #Command to submit one job to the localgrid
         submit_File.write(command3)
         ligne=0
 
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 outFile = open("../Jobs_to_submit/"+scr_name+".sh" , 'w')
                 command1 = "mkdir /user/dbeghin/Work/MuTauHighMass/"+folder+"/Out_"+myname[jj] + "\n"
                 command1 = command1 + "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
-                command1 = command1 + "cd /user/dbeghin/CMSSW_8_0_26_patch1/src " + "\n"
+                command1 = command1 + "cd /user/dbeghin/2nd/2019May17/CMSSW_10_2_13/src " + "\n"
                 command1 = command1 + "eval `scram runtime -sh` " + "\n"
                 command1 = command1 + "export X509_USER_PROXY=/user/dbeghin/x509up_u$(id -u dbeghin)" + "\n"
                 command1 = command1 + "export scratchdir=$TMPDIR " + "\n"
@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 command1 = command1 + "mkdir Reweighting" + "\n"
                 command1 = command1 + "cp /user/dbeghin/Work/MuTauHighMass/Reweighting/*.root Reweighting/" + "\n"
                 outFile.write(command1)
-                command3 = "qsub -q localgrid@cream02 -o "+ "../out_err/"+scr_name +".stdout -e " +"../out_err/"+scr_name +".stderr -l walltime=07:00:00    " + "../Jobs_to_submit/"+scr_name+".sh" + "\n"
+                command3 = "qsub -q localgrid@cream02 -o "+ "../out_err/"+scr_name +".stdout -e " +"../out_err/"+scr_name +".stderr -l walltime=12:00:00    " + "../Jobs_to_submit/"+scr_name+".sh" + "\n"
                 submit_File.write(command3)
             #Below, the command to execute your code, use the correct syntax for your own code, with all arguments (file in, file out, etc.) in the proper order
             #Note that i[0:-1] is just the name of the root file in /pnfs

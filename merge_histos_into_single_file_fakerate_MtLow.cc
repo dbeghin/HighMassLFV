@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
 
   vector<TFile*> DY_files;
   TFile* file_in_DY_lowmass = new TFile(folder_in+"/Arranged_DY/DY_inclusive.root", "R");            DY_files.push_back(file_in_DY_lowmass);
+  TFile* file_in_DY_200to400 = new TFile(folder_in+"/Arranged_DY/DY_200to400.root", "R");            DY_files.push_back(file_in_DY_200to400);
   TFile* file_in_DY_400to500 = new TFile(folder_in+"/Arranged_DY/DY_400to500.root", "R");            DY_files.push_back(file_in_DY_400to500);
   TFile* file_in_DY_500to700 = new TFile(folder_in+"/Arranged_DY/DY_500to700.root", "R");	     DY_files.push_back(file_in_DY_500to700);
   TFile* file_in_DY_700to800 = new TFile(folder_in+"/Arranged_DY/DY_700to800.root", "R");	     DY_files.push_back(file_in_DY_700to800);
@@ -76,21 +77,23 @@ int main(int argc, char** argv) {
   TFile* file_in_DY_2000to3000 = new TFile(folder_in+"/Arranged_DY/DY_2000to3000.root", "R");        DY_files.push_back(file_in_DY_2000to3000);
 
   vector<TFile*> TT_files;
-  TFile* file_in_TT_lowmll = new TFile(folder_in+"/Arranged_TT/TT_inclusive.root", "R");             TT_files.push_back(file_in_TT_lowmll);
+  TFile* file_in_TT_lowmll = new TFile(folder_in+"/Arranged_TT/TT_2l2nu.root", "R");             TT_files.push_back(file_in_TT_lowmll);
   TFile* file_in_TT_500to800 = new TFile(folder_in+"/Arranged_TT/TT_500to800.root", "R");	     TT_files.push_back(file_in_TT_500to800);
   TFile* file_in_TT_800to1200 = new TFile(folder_in+"/Arranged_TT/TT_800to1200.root", "R");	     TT_files.push_back(file_in_TT_800to1200);
   TFile* file_in_TT_1200to1800 = new TFile(folder_in+"/Arranged_TT/TT_1200to1800.root", "R");	     TT_files.push_back(file_in_TT_1200to1800);
   TFile* file_in_TT_1800toInf = new TFile(folder_in+"/Arranged_TT/TT_1800toInf.root", "R");          TT_files.push_back(file_in_TT_1800toInf);
 
-  vector<TFile*> WW_files;
-  TFile* file_in_WW_lowmll = new TFile(folder_in+"/Arranged_WW/WW_inclusive.root", "R");             WW_files.push_back(file_in_WW_lowmll);
-  TFile* file_in_WW_200to600 = new TFile(folder_in+"/Arranged_WW/WW_200to600.root", "R");	     WW_files.push_back(file_in_WW_200to600);
-  TFile* file_in_WW_600to1200 = new TFile(folder_in+"/Arranged_WW/WW_600to1200.root", "R");	     WW_files.push_back(file_in_WW_600to1200);
-  TFile* file_in_WW_1200to2500 = new TFile(folder_in+"/Arranged_WW/WW_1200to2500.root", "R");	     WW_files.push_back(file_in_WW_1200to2500);
-  TFile* file_in_WW_2500toInf = new TFile(folder_in+"/Arranged_WW/WW_2500toInf.root", "R");          WW_files.push_back(file_in_WW_2500toInf);
-
-  TFile* file_in_WZ = new TFile(folder_in+"/Arranged_WZ/WZ.root", "R");
-  TFile* file_in_ZZ = new TFile(folder_in+"/Arranged_ZZ/ZZ.root", "R");
+  vector<TFile*> VV_files;
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_inclusive.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_200to600.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_600to1200.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_1200to2500.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_2500toInf.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WZ/WZ_2l2q.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WZ/WZ_3lnu.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_ZZ/ZZ_2l2nu.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_ZZ/ZZ_2l2q.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_ZZ/ZZ_4l.root", "R") );
 
   TFile* file_in_ST = new TFile(folder_in+"/Arranged_ST/ST.root", "R");
 
@@ -123,33 +126,46 @@ int main(int argc, char** argv) {
 
 
   //cross-sections
+  float kNNLO = 1.048;
+
   vector<double> xs_DY;
-  double xs_DY_lowmass = 6225.42;          xs_DY.push_back(xs_DY_lowmass);   
-  double xs_DY_400to500 = 0.4064;	   xs_DY.push_back(xs_DY_400to500);  
-  double xs_DY_500to700 = 0.241;	   xs_DY.push_back(xs_DY_500to700);  
-  double xs_DY_700to800 = 0.03606;	   xs_DY.push_back(xs_DY_700to800);  
-  double xs_DY_800to1000 = 0.03032;	   xs_DY.push_back(xs_DY_800to1000); 
-  double xs_DY_1000to1500 = 0.01924;	   xs_DY.push_back(xs_DY_1000to1500);
-  double xs_DY_1500to2000 = 0.002181;	   xs_DY.push_back(xs_DY_1500to2000);
-  double xs_DY_2000to3000 = 0.0005129;     xs_DY.push_back(xs_DY_2000to3000);
+  double xs_DY_lowmass   = 6225.4;           xs_DY.push_back(xs_DY_lowmass);
+  double xs_DY_200to400  = kNNLO*7.77;       xs_DY.push_back(xs_DY_200to400);
+  double xs_DY_400to500  = kNNLO*0.4065;     xs_DY.push_back(xs_DY_400to500);
+  double xs_DY_500to700  = kNNLO*0.2334;     xs_DY.push_back(xs_DY_500to700);
+  double xs_DY_700to800  = kNNLO*0.03614;    xs_DY.push_back(xs_DY_700to800);
+  double xs_DY_800to1000 = kNNLO*0.03047;    xs_DY.push_back(xs_DY_800to1000);
+  double xs_DY_1000to1500= kNNLO*0.01636;    xs_DY.push_back(xs_DY_1000to1500);
+  double xs_DY_1500to2000= kNNLO*0.00218;    xs_DY.push_back(xs_DY_1500to2000);
+  double xs_DY_2000to3000= kNNLO*0.0005156;  xs_DY.push_back(xs_DY_2000to3000);
+  double xs_DY_3000toInf = kNNLO*0.0005156;  xs_DY.push_back(xs_DY_3000toInf);
+
 
   vector<double> xs_TT;
-  double xs_TT_lowmll = 85.5/*831.76*/;      xs_TT.push_back(xs_TT_lowmll);   
-  double xs_TT_500to800 = 0.319;             xs_TT.push_back(xs_TT_500to800); 
-  double xs_TT_800to1200 = 3.196e-2;	     xs_TT.push_back(xs_TT_800to1200); 
-  double xs_TT_1200to1800 = 2.987e-3;	     xs_TT.push_back(xs_TT_1200to1800); 
-  double xs_TT_1800toInf = 1.711e-4;         xs_TT.push_back(xs_TT_1800toInf); 
+  //xs_TT.push_back(831.76*0.438); //semilep
+  //xs_TT.push_back(831.76*0.457); //had    
+  xs_TT.push_back(831.76*0.105); //2l2nu  
+  double xs_TT_500to800 = 0.326;             xs_TT.push_back(xs_TT_500to800);
+  double xs_TT_800to1200 = 3.26e-2;         xs_TT.push_back(xs_TT_800to1200);
+  double xs_TT_1200to1800 = 3.05e-3;        xs_TT.push_back(xs_TT_1200to1800);
+  double xs_TT_1800toInf = 1.74e-4;         xs_TT.push_back(xs_TT_1800toInf);
 
-  vector<double> xs_WW;
-  double xs_WW_lowm = /*63.21*/12.178;       xs_WW.push_back(xs_WW_lowm);
-  double xs_WW_200to600 = 1.39;              xs_WW.push_back(xs_WW_200to600); 
-  double xs_WW_600to1200 = 5.7e-2;	     xs_WW.push_back(xs_WW_600to1200); 
-  double xs_WW_1200to2500 = 3.6e-3;	     xs_WW.push_back(xs_WW_1200to2500); 
-  double xs_WW_2500toInf = 5.4e-5;           xs_WW.push_back(xs_WW_2500toInf); 
 
-  double xs_ST = 38.09;
-  double xs_WZ = 22.82;
-  double xs_ZZ = 10.32;
+  vector<double> xs_VV;
+  double xs_WW_lowm = 12.178;                xs_VV.push_back(xs_WW_lowm);
+  double xs_WW_200to600 = 1.39;              xs_VV.push_back(xs_WW_200to600);
+  double xs_WW_600to1200 = 5.7e-2;           xs_VV.push_back(xs_WW_600to1200);
+  double xs_WW_1200to2500 = 3.6e-3;          xs_VV.push_back(xs_WW_1200to2500);
+  double xs_WW_2500toInf = 5.4e-5;           xs_VV.push_back(xs_WW_2500toInf);
+  double xs_WZ_2l2q = 5.595;                 xs_VV.push_back(xs_WZ_2l2q);
+  double xs_WZ_3lnu = 5.052;                 xs_VV.push_back(xs_WZ_3lnu);
+  double xs_ZZ_2l2nu = 0.564;                xs_VV.push_back(xs_ZZ_2l2nu);
+  double xs_ZZ_2l2q = 3.22;                  xs_VV.push_back(xs_ZZ_2l2q);
+  double xs_ZZ_4l = 1.212;                   xs_VV.push_back(xs_ZZ_4l);
+
+  double xs_ST = 38.94;
+  double xs_WZ = 23.4;
+  double xs_ZZ = 10.16;
   double xs_signal = 20;
 
   TString var_in, var_out;
@@ -201,27 +217,19 @@ int main(int argc, char** argv) {
 	    h_TT->Write();
 	    delete h_TT;
             
-	    vector<TH2D*> h_WW_vector;
-	    for (unsigned int iBin = 0; iBin<WW_files.size(); ++iBin) {
-	      h_WW_vector.push_back( MC_histo_TH2(systs[j]+"/"+var_in, WW_files[iBin], file_in_data, xs_WW[iBin], rebin) ); 
+	    vector<TH2D*> h_VV_vector;
+	    for (unsigned int iBin = 0; iBin<VV_files.size(); ++iBin) {
+	      h_VV_vector.push_back( MC_histo_TH2(systs[j]+"/"+var_in, VV_files[iBin], file_in_data, xs_VV[iBin], rebin) ); 
 	    }
-	    TH2D* h_WW = (TH2D*) h_WW_vector[0]->Clone("WW_"+var_out);
-	    for (unsigned int iBin = 1; iBin<h_WW_vector.size(); ++iBin) {
-	      h_WW->Add(h_WW_vector[iBin]);
-	      delete h_WW_vector[iBin];
+	    TH2D* h_VV = (TH2D*) h_VV_vector[0]->Clone("VV_"+var_out);
+	    for (unsigned int iBin = 1; iBin<h_VV_vector.size(); ++iBin) {
+	      h_VV->Add(h_VV_vector[iBin]);
+	      delete h_VV_vector[iBin];
 	    }
-	    delete h_WW_vector[0];
-            
-	    TH2D* h_WZ = MC_histo_TH2(systs[j]+"/"+var_in, file_in_WZ, file_in_data, xs_WZ, rebin);
-	    TH2D* h_ZZ = MC_histo_TH2(systs[j]+"/"+var_in, file_in_ZZ, file_in_data, xs_ZZ, rebin);
-	    TH2D* h_VV = (TH2D*) h_WW->Clone("VV_"+var_out);
-	    h_VV->Add(h_WZ);
-	    h_VV->Add(h_ZZ);
+	    delete h_VV_vector[0];
 	    h_VV->Write();
 	    delete h_VV;
-	    delete h_WZ;
-	    delete h_ZZ;
-	    delete h_WW;
+
             
 	    TH2D* h_ST = MC_histo_TH2(systs[j]+"/"+var_in, file_in_ST, file_in_data, xs_ST, rebin);
 	    h_ST->SetName("ST_"+var_out);

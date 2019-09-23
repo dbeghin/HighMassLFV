@@ -51,14 +51,12 @@ int main(/*int argc, char** argv*/) {
   //vector<float> xpoints_all {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300, 1000};
   vector<vector<float>> xpoints;                                                                        vector<TString> sector_name;
   vector<float> xpoints_left {0, 30, 40, 50, 70, 100, 150};  xpoints.push_back(xpoints_left);   sector_name.push_back("taupt_0_150");
-  vector<float> xpoints_right {150, 1000};                           xpoints.push_back(xpoints_right);  sector_name.push_back("taupt_150_1000\
-");
+  vector<float> xpoints_right {150, 1000};                   xpoints.push_back(xpoints_right);  sector_name.push_back("taupt_150_1000");
 
   vector<vector<float>> ypoints;
-  vector<float> ypoints_left {0, 0.5, 0.6, 0.7, 0.75, 1., 3.};  ypoints.push_back(ypoints_left);
-  vector<float> ypoints_right {0, 0.6, 0.75, 1., 3};                 ypoints.push_back(ypoints_right);
+  vector<float> ypoints_left {0, 0.5, 0.6, 0.65, 0.7, 0.75, 1., 3.};  ypoints.push_back(ypoints_left);
+  vector<float> ypoints_right {0, 0.7, 1., 3};                 ypoints.push_back(ypoints_right);
 
-  cout << "0" << endl;
   vector<TH2F*> h[names.size()][vars.size()][systs.size()];
   vector<TH2F*> h_MC[vars.size()][systs.size()];
   vector<TH2F*> h_data[vars.size()][systs.size()];
@@ -87,7 +85,6 @@ int main(/*int argc, char** argv*/) {
       }
     }
   }
-  cout << "a" << endl;
 
 
   //data

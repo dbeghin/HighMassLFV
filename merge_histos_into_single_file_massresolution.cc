@@ -94,16 +94,22 @@ int main(int argc, char** argv) {
 
   TFile* file_in_data = new TFile(folder_in+"/Arranged_data/data.root", "R");
 
-  vector<TString> vars  ,      vars_out;
-  vars.push_back("Mgen");      vars_out.push_back("Mgen");
-  vars.push_back("Mvis");      vars_out.push_back("Mvis");
-  vars.push_back("Mtot");      vars_out.push_back("Mtot");
-  vars.push_back("Mcol");      vars_out.push_back("Mcol");
-  vars.push_back("Mvis_res");  vars_out.push_back("Mvis_res");
-  vars.push_back("Mtot_res");  vars_out.push_back("Mtot_res");
-  vars.push_back("Mcol_res");  vars_out.push_back("Mcol_res");
-  vars.push_back("Mcol_tight");vars_out.push_back("Mcol_tight");
-
+  vector<TString> vars  ,               vars_out;
+  vars.push_back("Mgen");               vars_out.push_back("Mgen");         
+  vars.push_back("Mvis");         	vars_out.push_back("Mvis");         
+  vars.push_back("Mtot");         	vars_out.push_back("Mtot");         
+  vars.push_back("Mcol_nodisc");  	vars_out.push_back("Mcol_nodisc");  
+  vars.push_back("Mvis_res");     	vars_out.push_back("Mvis_res");     
+  vars.push_back("Mtot_res");     	vars_out.push_back("Mtot_res");     
+  vars.push_back("Mcol_res");     	vars_out.push_back("Mcol_res");     
+  vars.push_back("Mcol_elevloose");	vars_out.push_back("Mcol_elevloose");
+  vars.push_back("Mcol_eleloose");	vars_out.push_back("Mcol_eleloose");
+  vars.push_back("Mcol_elemedium");	vars_out.push_back("Mcol_elemedium");
+  vars.push_back("Mcol_eletight"); 	vars_out.push_back("Mcol_eletight");
+  vars.push_back("Mcol_muloose"); 	vars_out.push_back("Mcol_muloose"); 
+  vars.push_back("Mcol_mutight"); 	vars_out.push_back("Mcol_mutight"); 
+  vars.push_back("Mcol_final");	  	vars_out.push_back("Mcol_final");	  
+  vars.push_back("Mcol_tightest");	vars_out.push_back("Mcol_tightest");
 
   TString var_in, var_out;
 
