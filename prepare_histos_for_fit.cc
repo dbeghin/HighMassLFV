@@ -5,6 +5,7 @@
 #include "TString.h"
 #include <iostream>
 #include <vector>
+#include "aux.h"
 
 using namespace std;
 
@@ -28,12 +29,14 @@ int main(int argc, char** argv) {
 
 
   vector<TString> in_sys,                out_sys;
-  in_sys.push_back("");                  out_sys.push_back("");
-  in_sys.push_back("fakerate_up_");      out_sys.push_back("fakerate_up_");
-  in_sys.push_back("fakerate_down_");    out_sys.push_back("fakerate_down_");
-  in_sys.push_back("topreweight_up_");   out_sys.push_back("topreweight_up_");
-  in_sys.push_back("topreweight_down_"); out_sys.push_back("topreweight_down_");
-
+  in_sys.push_back("nominal");
+  vector<TString> systs_aux = GetSys();
+  for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    in_sys.push_back(systs_aux[iAux]+"_up");
+    in_sys.push_back(systs_aux[iAux]+"_down");
+  }
+  
+  out_sys = in_sys;
 
   vector<TString> mass;  
   mass.push_back("500"); 
@@ -72,8 +75,8 @@ int main(int argc, char** argv) {
   signal_dir->cd(); 
   for (unsigned int j=0; j<in_names.size(); ++j) {
     for (unsigned int k=0; k<in_sys.size(); ++k) {
-      TString name_in = in_names[j]+in_sys[k]+"ev_Mcol_MtHigh";
-      TString name_out = out_names[j]+out_sys[k];
+      TString name_in = in_sys[k]+"/"+in_names[j]+in_sys[k]+"_ev_Mcol_MtHigh";
+      TString name_out = out_names[j]+"_"+out_sys[k];
       
       TH1F* h = (TH1F*) file_in_mutau->Get(name_in);
       if (h == 0 && k>0) break; 
@@ -87,16 +90,20 @@ int main(int argc, char** argv) {
       h->SetName(name_out);
       h->SetTitle(name_out);
       h->Write();
+      delete h;
     }
   }
 
   for (unsigned int j=0; j<mass.size(); ++j) {
-    TString name_in = mass[j]+"_ev_Mcol_realtau_MtHigh";
-    TString name_out = "Zprime_"+mass[j];
-    TH1F* h = (TH1F*) file_in_signal->Get(name_in);
-    h->SetName(name_out);
-    h->SetTitle(name_out);
-    h->Write();
+    for (unsigned int k=0; k<in_sys.size(); ++k) {
+      TString name_in = mass[j]+"_"+in_sys[k]+"_Mcol_MtHigh";
+      TString name_out = "Zprime_"+mass[j]+"_"+out_sys[k];
+      TH1F* h = (TH1F*) file_in_signal->Get(name_in);
+      h->SetName(name_out);
+      h->SetTitle(name_out);
+      h->Write();
+      delete h;
+    }
   }
   signal_dir->Close();
   file_out->Close();

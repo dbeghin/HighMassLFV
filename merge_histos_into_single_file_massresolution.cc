@@ -12,20 +12,16 @@
 #include "TLegend.h"
 #include "THStack.h"
 #include "TStyle.h"
-#include "aux.h"
+
 
 using namespace std;
 
 
-TH1F* MC_histo(TString var, TFile* file_in, TFile* file_in_d, double xs, int rebin) {
+TH1F* MC_histo(TString var, TFile* file_in, double xs, int rebin) {
 
   cout << file_in->GetName() << endl;
 
-  TH1F* h_events_data = (TH1F*) file_in_d->Get("weighted_events");
-  double full_data = 7.86454e+08;
-  double succ_data_ratio = h_events_data->Integral()/full_data;
-  cout << "succesfull data ratio " << succ_data_ratio << endl;
-  double lumi = 35.9 * pow(10,3) * succ_data_ratio; //luminosity in pb^-1                                                                                                                                                           
+  double lumi = 35.9 * pow(10,3); //luminosity in pb^-1                                                                                                                                                           
 
   TH1F* h_events = (TH1F*) file_in->Get("weighted_events");
   double Nevents = h_events->Integral();
@@ -55,9 +51,8 @@ int main(int argc, char** argv) {
   int rebin = 1;
   //string CR = *(argv + 1);
 
-  TString folder_in = "HighMassLFVMuTau/SignalRegion_CR100";
-  //TString folder_in = "HighMassLFVMuTau/MassResolution";
-  TString name_out = "histos_signal";
+  TString folder_in = "HighMassLFVMuTau/MassResolution";
+  TString name_out = "histos_massresolution";
 
   TFile* file_out = new TFile("Figures/"+name_out+".root", "RECREATE");
 
@@ -94,65 +89,41 @@ int main(int argc, char** argv) {
 
   vector<TFile*> files_in;
   for (unsigned int i=0; i<mass.size(); ++i) {
-    files_in.push_back( new TFile(folder_in+"/Arranged_signal/ZPrime_"+mass[i]+".root", "R") );
+    files_in.push_back( new TFile(folder_in+"/Arranged_ZPrime/ZPrime_"+mass[i]+".root", "R") );
   }
 
   TFile* file_in_data = new TFile(folder_in+"/Arranged_data/data.root", "R");
 
-
-  vector<TString> vars                     , vars_out;
-  vars.push_back("ev_Mvis_realtau_");        vars_out.push_back("ev_Mvis_");
-  vars.push_back("ev_Mcol_realtau_");        vars_out.push_back("ev_Mcol_");
-  vars.push_back("ev_Mtot_realtau_");        vars_out.push_back("ev_Mtot_");
-  vars.push_back("tau_pt_realtau_");         vars_out.push_back("tau_pt_");
-  vars.push_back("tau_eta_realtau_");        vars_out.push_back("tau_eta_");
-  vars.push_back("tau_phi_realtau_");        vars_out.push_back("tau_phi_");
-  vars.push_back("mu_pt_realtau_");          vars_out.push_back("mu_pt_");
-  vars.push_back("mu_eta_realtau_");         vars_out.push_back("mu_eta_");
-  vars.push_back("mu_phi_realtau_");         vars_out.push_back("mu_phi_");
-  vars.push_back("ev_DRmutau_realtau_");     vars_out.push_back("ev_DRmutau_");
-  vars.push_back("ev_Mt_realtau_");          vars_out.push_back("ev_Mt_");
-  vars.push_back("ev_MET_realtau_");         vars_out.push_back("ev_MET_");
-  vars.push_back("mu_isolation_realtau_");   vars_out.push_back("mu_isolation_");
-  vars.push_back("sign_realtau_");           vars_out.push_back("sign_");
-
-
-  vector<TString> Mth;
-  Mth.push_back("MtLow_OS");
-  Mth.push_back("MtLow_SS");
-  Mth.push_back("MtHigh");
-  Mth.push_back("MtLow_TT");
-  Mth.push_back("MtHigh_TT");
-
-  vector<TString> systs;
-  systs.push_back("nominal");
-  vector<TString> systs_aux = GetSys();
-  for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
-    systs.push_back(systs_aux[iAux]+"_up");
-    systs.push_back(systs_aux[iAux]+"_down");
-  }
-  
+  vector<TString> vars  ,               vars_out;
+  vars.push_back("Mgen");               vars_out.push_back("Mgen");         
+  vars.push_back("Mvis");         	vars_out.push_back("Mvis");         
+  vars.push_back("Mtot");         	vars_out.push_back("Mtot");         
+  vars.push_back("Mcol_nodisc");  	vars_out.push_back("Mcol_nodisc");  
+  vars.push_back("Mvis_res");     	vars_out.push_back("Mvis_res");     
+  vars.push_back("Mtot_res");     	vars_out.push_back("Mtot_res");     
+  vars.push_back("Mcol_res");     	vars_out.push_back("Mcol_res");     
+  vars.push_back("Mcol_elevloose");	vars_out.push_back("Mcol_elevloose");
+  vars.push_back("Mcol_eleloose");	vars_out.push_back("Mcol_eleloose");
+  vars.push_back("Mcol_elemedium");	vars_out.push_back("Mcol_elemedium");
+  vars.push_back("Mcol_eletight"); 	vars_out.push_back("Mcol_eletight");
+  vars.push_back("Mcol_muloose"); 	vars_out.push_back("Mcol_muloose"); 
+  vars.push_back("Mcol_mutight"); 	vars_out.push_back("Mcol_mutight"); 
+  vars.push_back("Mcol_final");	  	vars_out.push_back("Mcol_final");	  
+  vars.push_back("Mcol_tightest");	vars_out.push_back("Mcol_tightest");
 
   TString var_in, var_out;
 
   file_out->cd();
-  for (unsigned int i = 0; i<systs.size(); ++i) {
-    TDirectory* dir = file_out->mkdir( systs[i] );
-    dir->cd();
-    for (unsigned int k = 0; k<vars.size(); ++k) {
-      for (unsigned int l = 0; l<Mth.size(); ++l) {
-	var_in = systs[i]+"/"+vars[k]+systs[i]+"_"+Mth[l];
-	var_out = vars_out[k]+Mth[l];
+  for (unsigned int i = 0; i<vars.size(); ++i) {
+    var_in = vars[i];
+    var_out = vars_out[i];
+    cout << endl << endl <<var_in << endl;
     
-	for (unsigned int j = 0; j<mass.size(); ++j) {
-	  TH1F* h = MC_histo(var_in, files_in[j], file_in_data, xs[j], rebin);
-	  h->SetName("ZPrime_"+mass[j]+"_"+var_out);
-	  h->Write();
-	  delete h;
-	}          
-      }
-    }
-    dir->Close();
+    for (unsigned int j = 0; j<mass.size(); ++j) {
+      TH1F* h = MC_histo(var_in, files_in[j], xs[j], rebin);
+      h->SetName(mass[j]+"_"+var_out);
+      h->Write();
+    }          
   }    
   file_out->Close();
 

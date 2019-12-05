@@ -12,6 +12,8 @@
 #include "TLegend.h"
 #include "THStack.h"
 #include "TStyle.h"
+#include "aux.h"
+#include "TDirectory.h"
 
 
 using namespace std;
@@ -133,21 +135,24 @@ int main(int argc, char** argv) {
   TFile* file_in_WJets_600toInf = new TFile(folder_in+"/Arranged_WJets/WJets_600toInf.root", "R");   WJets_files.push_back(file_in_WJets_600toInf);
 
   vector<TFile*> TT_files;
-  TFile* file_in_TT_lowmll = new TFile(folder_in+"/Arranged_TT/TT_inclusive.root", "R");             TT_files.push_back(file_in_TT_lowmll);
+  TFile* file_in_TT_lowmll = new TFile(folder_in+"/Arranged_TT/TT_2l2nu.root", "R");             TT_files.push_back(file_in_TT_lowmll);
   TFile* file_in_TT_500to800 = new TFile(folder_in+"/Arranged_TT/TT_500to800.root", "R");	     TT_files.push_back(file_in_TT_500to800);
   TFile* file_in_TT_800to1200 = new TFile(folder_in+"/Arranged_TT/TT_800to1200.root", "R");	     TT_files.push_back(file_in_TT_800to1200);
   TFile* file_in_TT_1200to1800 = new TFile(folder_in+"/Arranged_TT/TT_1200to1800.root", "R");	     TT_files.push_back(file_in_TT_1200to1800);
   TFile* file_in_TT_1800toInf = new TFile(folder_in+"/Arranged_TT/TT_1800toInf.root", "R");          TT_files.push_back(file_in_TT_1800toInf);
 
-  vector<TFile*> WW_files;
-  TFile* file_in_WW_lowmll = new TFile(folder_in+"/Arranged_WW/WW_inclusive.root", "R");             WW_files.push_back(file_in_WW_lowmll);
-  TFile* file_in_WW_200to600 = new TFile(folder_in+"/Arranged_WW/WW_200to600.root", "R");	     WW_files.push_back(file_in_WW_200to600);
-  TFile* file_in_WW_600to1200 = new TFile(folder_in+"/Arranged_WW/WW_600to1200.root", "R");	     WW_files.push_back(file_in_WW_600to1200);
-  TFile* file_in_WW_1200to2500 = new TFile(folder_in+"/Arranged_WW/WW_1200to2500.root", "R");	     WW_files.push_back(file_in_WW_1200to2500);
-  TFile* file_in_WW_2500toInf = new TFile(folder_in+"/Arranged_WW/WW_2500toInf.root", "R");          WW_files.push_back(file_in_WW_2500toInf);
+  vector<TFile*> VV_files;
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_inclusive.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_200to600.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_600to1200.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_1200to2500.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WW/WW_2500toInf.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WZ/WZ_2l2q.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_WZ/WZ_3lnu.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_ZZ/ZZ_2l2nu.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_ZZ/ZZ_2l2q.root", "R") );
+  VV_files.push_back( new TFile(folder_in+"/Arranged_ZZ/ZZ_4l.root", "R") );
 
-  TFile* file_in_WZ = new TFile(folder_in+"/Arranged_WZ/WZ.root", "R");
-  TFile* file_in_ZZ = new TFile(folder_in+"/Arranged_ZZ/ZZ.root", "R");
 
   TFile* file_in_ST = new TFile(folder_in+"/Arranged_ST/ST.root", "R");
 
@@ -166,8 +171,8 @@ int main(int argc, char** argv) {
   vars.push_back("mu_eta");           
   vars.push_back("mu_phi");           
   vars.push_back("ev_DRmutau");       
-  vars.push_back("ev_DeltaPhimutau"); 
-  vars.push_back("ev_DeltaPhiMETtau");
+  //vars.push_back("ev_DeltaPhimutau"); 
+  //vars.push_back("ev_DeltaPhiMETtau");
   vars.push_back("ev_Mt");        
   vars.push_back("ev_MET"); 
   vars.push_back("ev_Mcol"); 
@@ -179,77 +184,80 @@ int main(int argc, char** argv) {
 
   vector<TString> taun;
   taun.push_back("realtau");
-  if (CR!="CR100") taun.push_back("faketau");
 
   vector<TString> Mth;
   Mth.push_back("MtLow_OS");
   Mth.push_back("MtLow_SS");
   Mth.push_back("MtHigh");
   Mth.push_back("MtLow_TT");
-  Mth.push_back("MtHigh_TT"); //FIXME
+  Mth.push_back("MtHigh_TT");
 
   vector<TString> systs;              
-  systs.push_back("");
-  systs.push_back("topreweight_up_");
-  systs.push_back("topreweight_down_");
-  if (CR == "CR101" || CR == "CR103") {
-    systs.push_back("fakerate_up_");  
-    systs.push_back("fakerate_down_");
+  systs.push_back("nominal");
+  vector<TString> systs_aux = GetSys();
+  for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    systs.push_back(systs_aux[iAux]+"_up");
+    systs.push_back(systs_aux[iAux]+"_down");
   }
 
   //cross-sections
-  vector<double> xs_DY;
-  double xs_DY_lowmass = 6225.42;          xs_DY.push_back(xs_DY_lowmass);   
-  //double xs_DY_lowmass = 5765.4;           xs_DY.push_back(xs_DY_lowmass);   
-  double xs_DY_400to500 = 0.4064;	   xs_DY.push_back(xs_DY_400to500);  
-  double xs_DY_500to700 = 0.241;	   xs_DY.push_back(xs_DY_500to700);  
-  double xs_DY_700to800 = 0.03606;	   xs_DY.push_back(xs_DY_700to800);  
-  double xs_DY_800to1000 = 0.03032;	   xs_DY.push_back(xs_DY_800to1000); 
-  double xs_DY_1000to1500 = 0.01924;	   xs_DY.push_back(xs_DY_1000to1500);
-  double xs_DY_1500to2000 = 0.002181;	   xs_DY.push_back(xs_DY_1500to2000);
-  double xs_DY_2000to3000 = 0.0005129;     xs_DY.push_back(xs_DY_2000to3000);
+  float kNNLO = 1.048;
 
-  vector<double> xs_WJets;
-  double xs_WJets_lowpt = 61526.7;         xs_WJets.push_back(xs_WJets_lowpt);	 
-  double xs_WJets_100to250 = 627.1;        xs_WJets.push_back(xs_WJets_100to250);
-  double xs_WJets_250to400 = 21.8;	   xs_WJets.push_back(xs_WJets_250to400);
-  double xs_WJets_400to600 = 2.635;	   xs_WJets.push_back(xs_WJets_400to600);
-  double xs_WJets_600toInf = 0.4102;       xs_WJets.push_back(xs_WJets_600toInf);
+  vector<double> xs_DY;
+  double xs_DY_lowmass   = 6225.4;           xs_DY.push_back(xs_DY_lowmass);
+  double xs_DY_400to500  = kNNLO*0.4065;     xs_DY.push_back(xs_DY_400to500);
+  double xs_DY_500to700  = kNNLO*0.2334;     xs_DY.push_back(xs_DY_500to700);
+  double xs_DY_700to800  = kNNLO*0.03614;    xs_DY.push_back(xs_DY_700to800);
+  double xs_DY_800to1000 = kNNLO*0.03047;    xs_DY.push_back(xs_DY_800to1000);
+  double xs_DY_1000to1500= kNNLO*0.01636;    xs_DY.push_back(xs_DY_1000to1500);
+  double xs_DY_1500to2000= kNNLO*0.00218;    xs_DY.push_back(xs_DY_1500to2000);
+  double xs_DY_2000to3000= kNNLO*0.0005156;  xs_DY.push_back(xs_DY_2000to3000);
+  //double xs_DY_3000toInf = kNNLO*0.0005156;  xs_DY.push_back(xs_DY_3000toInf);
+
 
   vector<double> xs_TT;
-  double xs_TT_lowmll = 87.31;               xs_TT.push_back(xs_TT_lowmll);   
-  double xs_TT_500to800 = 0.326;             xs_TT.push_back(xs_TT_500to800); 
-  double xs_TT_800to1200 = 3.26e-2;	     xs_TT.push_back(xs_TT_800to1200); 
-  double xs_TT_1200to1800 = 3.05e-3;	     xs_TT.push_back(xs_TT_1200to1800); 
-  double xs_TT_1800toInf = 1.74e-4;          xs_TT.push_back(xs_TT_1800toInf); 
+  //xs_TT.push_back(831.76*0.438); //semilep
+  //xs_TT.push_back(831.76*0.457); //had 
+  xs_TT.push_back(831.76*0.105); //2l2nu
+  double xs_TT_500to800 = 0.326;             xs_TT.push_back(xs_TT_500to800);
+  double xs_TT_800to1200 = 3.26e-2;         xs_TT.push_back(xs_TT_800to1200);
+  double xs_TT_1200to1800 = 3.05e-3;        xs_TT.push_back(xs_TT_1200to1800);
+  double xs_TT_1800toInf = 1.74e-4;         xs_TT.push_back(xs_TT_1800toInf);
 
-  vector<double> xs_WW;
-  double xs_WW_lowm = /*63.21*/12.178;       xs_WW.push_back(xs_WW_lowm);
-  double xs_WW_200to600 = 1.39;              xs_WW.push_back(xs_WW_200to600); 
-  double xs_WW_600to1200 = 5.7e-2;	     xs_WW.push_back(xs_WW_600to1200); 
-  double xs_WW_1200to2500 = 3.6e-3;	     xs_WW.push_back(xs_WW_1200to2500); 
-  double xs_WW_2500toInf = 5.4e-5;           xs_WW.push_back(xs_WW_2500toInf); 
+  vector<double> xs_VV;
+  double xs_WW_lowm = 12.178;                xs_VV.push_back(xs_WW_lowm);
+  double xs_WW_200to600 = 1.39;              xs_VV.push_back(xs_WW_200to600);
+  double xs_WW_600to1200 = 5.7e-2;           xs_VV.push_back(xs_WW_600to1200);
+  double xs_WW_1200to2500 = 3.6e-3;          xs_VV.push_back(xs_WW_1200to2500);
+  double xs_WW_2500toInf = 5.4e-5;           xs_VV.push_back(xs_WW_2500toInf);
+  double xs_WZ_2l2q = 5.595;                 xs_VV.push_back(xs_WZ_2l2q);
+  double xs_WZ_3lnu = 5.052;                 xs_VV.push_back(xs_WZ_3lnu);
+  double xs_ZZ_2l2nu = 0.564;                xs_VV.push_back(xs_ZZ_2l2nu);
+  double xs_ZZ_2l2q = 3.22;                  xs_VV.push_back(xs_ZZ_2l2q);
+  double xs_ZZ_4l = 1.212;                   xs_VV.push_back(xs_ZZ_4l);
 
-  double xs_ST = 38.09;
-  double xs_WZ = 22.82;
-  double xs_ZZ = 10.32;
+  double xs_ST = 38.94;
+  double xs_WZ = 23.4;
+  double xs_ZZ = 10.16;
   double xs_signal = 20;
 
   TString var_in, var_out;
 
   file_out->cd();
   //options = is it the DY Sig?, variable name, which file to get the histo from, process cross-section
-  for (unsigned int i = 0; i<vars.size(); ++i) {
-    for (unsigned int j = 0; j<taun.size(); ++j) {
-      for (unsigned int k = 0; k<systs.size(); ++k) {
+  for (unsigned int k = 0; k<systs.size(); ++k) {
+    TDirectory* dir = file_out->mkdir( systs[k] );
+    dir->cd();
+    for (unsigned int i = 0; i<vars.size(); ++i) {
+      for (unsigned int j = 0; j<taun.size(); ++j) {
 	for (unsigned int l = 0; l<Mth.size(); ++l) {
-
-          var_in = vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
-	  if (CR == "CR100") {
-	    var_out = systs[k]+vars[i]+"_"+Mth[l];
+          var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l];
+          //var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
+	  if (CR == "CR100" || CR == "CR102") {
+	    var_out = systs[k]+"_"+vars[i]+"_"+Mth[l];
 	  }
 	  else {
-	    var_out = var_in;
+	    var_out = vars[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l];
 	  }
           
           cout << endl << endl <<var_in << endl;
@@ -264,29 +272,9 @@ int main(int argc, char** argv) {
             h_DY->Add(h_DY_vector[iBin]);
           }
           h_DY->Write();
+	  delete h_DY;
+          for (unsigned int iBin = 0; iBin<DY_files.size(); ++iBin) delete h_DY_vector[iBin];
           
-          if (CR == "CR00") {
-            TH1F* h_faketau = (TH1F*) file_in_faketau->Get("faketau_"+var_in);
-            h_faketau->Write();
-          }
-          else {
-            
-            if (CR == "CR0") {
-              TH1F* h_WJets = (TH1F*) file_in_WJets->Get("WJets_"+var_in);
-              h_WJets->Write();
-            }
-            else {
-              //vector<TH1F*> h_WJets_vector;
-              //for (unsigned int iBin = 0; iBin<WJets_files.size(); ++iBin) {
-	      //  h_WJets_vector.push_back( MC_histo(var_in, WJets_files[iBin], xs_WJets[iBin], N_WJets[iBin], rebin) ); 
-              //}
-              //TH1F* h_WJets = (TH1F*) h_WJets_vector[0]->Clone("WJets_"+var_out);
-              //for (unsigned int iBin = 1; iBin<WJets_files.size(); ++iBin) {
-	      //  h_WJets->Add(h_WJets_vector[iBin]);
-              //}
-              //h_WJets->Write();
-            }
-          }
       	  
           vector<TH1F*> h_TT_vector;
           for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) {
@@ -298,30 +286,27 @@ int main(int argc, char** argv) {
             h_TT->Add(h_TT_vector[iBin]);
           }
           h_TT->Write();
+	  delete h_TT;
+          for (unsigned int iBin = 0; iBin<TT_files.size(); ++iBin) delete h_TT_vector[iBin];
           
             
-          vector<TH1F*> h_WW_vector;
-          for (unsigned int iBin = 0; iBin<WW_files.size(); ++iBin) {
+          vector<TH1F*> h_VV_vector;
+          for (unsigned int iBin = 0; iBin<VV_files.size(); ++iBin) {
 	    //if (iBin > 0) break;
-            h_WW_vector.push_back( MC_histo(var_in, WW_files[iBin], file_in_data, xs_WW[iBin], rebin) ); 
+            h_VV_vector.push_back( MC_histo(var_in, VV_files[iBin], file_in_data, xs_VV[iBin], rebin) ); 
           }
-          TH1F* h_WW = (TH1F*) h_WW_vector[0]->Clone("WW_"+var_out);
-          for (unsigned int iBin = 1; iBin<h_WW_vector.size(); ++iBin) {
-            h_WW->Add(h_WW_vector[iBin]);
+          TH1F* h_VV = (TH1F*) h_VV_vector[0]->Clone("VV_"+var_out);
+          for (unsigned int iBin = 1; iBin<h_VV_vector.size(); ++iBin) {
+            h_VV->Add(h_VV_vector[iBin]);
           }
-          
-            
-          TH1F* h_WZ = MC_histo(var_in, file_in_WZ, file_in_data, xs_WZ, rebin);
-          TH1F* h_ZZ = MC_histo(var_in, file_in_ZZ, file_in_data, xs_ZZ, rebin);
-          TH1F* h_VV = (TH1F*) h_WW->Clone("VV_"+var_out);
-          h_VV->Add(h_WZ);
-          h_VV->Add(h_ZZ);
-          //h_VV -> SetName("VV_"+var_in);
           h_VV->Write();
+	  delete h_VV;
+          for (unsigned int iBin = 0; iBin<VV_files.size(); ++iBin) delete h_VV_vector[iBin];
           
           TH1F* h_ST = MC_histo(var_in, file_in_ST, file_in_data, xs_ST, rebin);
           h_ST->SetName("ST_"+var_out);
           h_ST->Write();
+	  delete h_ST;
 	  
 	  if (CR != "CR101") {
 	    //TH1F* h_signal = MC_histo(var_in, file_in_signal, xs_signal, N_signal, rebin);
@@ -334,30 +319,34 @@ int main(int argc, char** argv) {
           h_data -> SetName("data_"+var_out);
           h_data->Rebin(rebin);
           h_data->Write();
+	  delete h_data;
+
+	  if (j>0) continue;
+	  if (CR == "CR100" || CR == "CR102") {
+	    var_in = systs[k]+"_"+vars[i]+"_"+Mth[l];
+	    cout << file_in_faketau->GetName() << endl;
+	    TH1F* h_faketaus = (TH1F*) file_in_faketau -> Get("faketau_"+var_in);
+	    h_faketaus->Write();
+	    delete h_faketaus;
+	  }
 	}
       }
     }
-    if ((CR == "CR100") || (CR == "CR102")) {
-      for (unsigned int k = 0; k<Mth.size(); ++k) {
-	cout << file_in_faketau->GetName() << endl;
-	TH1F* h_faketaus = (TH1F*) file_in_faketau -> Get("faketau_"+vars[i]+"_"+Mth[k]);
-	h_faketaus->Write();
-
-	TH1F* h_faketaus_high = (TH1F*) file_in_faketau -> Get("faketau_fakerate_up_"+vars[i]+"_"+Mth[k]);
-	h_faketaus_high->Write();
-
-	TH1F* h_faketaus_low = (TH1F*) file_in_faketau -> Get("faketau_fakerate_down_"+vars[i]+"_"+Mth[k]);
-	h_faketaus_low->Write();
-
-	TH1F* h_faketaus_TT_high = (TH1F*) file_in_faketau -> Get("faketau_topreweight_up_"+vars[i]+"_"+Mth[k]);
-	h_faketaus_TT_high->Write();
-
-	TH1F* h_faketaus_TT_low = (TH1F*) file_in_faketau -> Get("faketau_topreweight_down_"+vars[i]+"_"+Mth[k]);
-	h_faketaus_TT_low->Write();
-      }
-    }
+    dir->Close();
   }
+  cout << "almost" << endl;
   file_out->Close();
+  cout << "end" << endl;
+  //for (unsigned int iFile=0; iFile<DY_files.size(); ++iFile) DY_files[iFile]->Close();
+  ////for (unsigned int iFile=0; iFile<WJets_files.size(); ++iFile) WJets_files[iFile]->Close();
+  //for (unsigned int iFile=0; iFile<TT_files.size(); ++iFile) TT_files[iFile]->Close();
+  //for (unsigned int iFile=0; iFile<VV_files.size(); ++iFile) VV_files[iFile]->Close();
+  //file_in_faketau->Close();
+  //
+  //file_in_ST->Close();
+  //
+  //file_in_data->Close();
+  cout << "done" << endl;
 
 
   return 0;

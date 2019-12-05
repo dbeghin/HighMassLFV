@@ -9,9 +9,9 @@ from datasets import * #imports dataset paths: pnfn[], myname[] and myoption[] a
 if __name__ == "__main__":
     location=os.getcwd();
     #name of your *compiled* code (omit the .exe extension)
-    code_name = "FakeRate_mumu"
-    region = "CR0"
-    folder = "HighMassLFVMuTau/FakeRate"
+    code_name = "SignalMassResolution"
+    region = "CR100"
+    folder = "HighMassLFVMuTau/MassResolution"
 
     for jj in range(0, len(pnfn)):    
         #Main file, which you'll use to submit the jobs
@@ -33,7 +33,7 @@ if __name__ == "__main__":
         #command1 = command1 + "export workdir=/user/dbeghin/Work/MuTauHighMass/ " + "\n"  #Set your working directory, where the code is located
         #command1 = command1 + "cd $workdir"
         outFile.write(command1)
-        command3 = "qsub -q localgrid@cream02 -o " + "../out_err/"+myname[jj] +".stdout -e " +"../out_err/"+myname[jj] +".stderr -l walltime=10:00:00    " + "../Jobs_to_submit/"+name_out + "\n"  #Command to submit one job to the localgrid
+        command3 = "qsub -q localgrid@cream02 -o " + "../out_err/"+myname[jj] +".stdout -e " +"../out_err/"+myname[jj] +".stderr -l walltime=07:00:00    " + "../Jobs_to_submit/"+name_out + "\n"  #Command to submit one job to the localgrid
         submit_File.write(command3)
         ligne=0
 
@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 command1 = command1 + "mkdir Reweighting" + "\n"
                 command1 = command1 + "cp /user/dbeghin/Work/MuTauHighMass/Reweighting/*.root Reweighting/" + "\n"
                 outFile.write(command1)
-                command3 = "qsub -q localgrid@cream02 -o "+ "../out_err/"+scr_name +".stdout -e " +"../out_err/"+scr_name +".stderr -l walltime=10:00:00    " + "../Jobs_to_submit/"+scr_name+".sh" + "\n"
+                command3 = "qsub -q localgrid@cream02 -o "+ "../out_err/"+scr_name +".stdout -e " +"../out_err/"+scr_name +".stderr -l walltime=07:00:00    " + "../Jobs_to_submit/"+scr_name+".sh" + "\n"
                 submit_File.write(command3)
             #Below, the command to execute your code, use the correct syntax for your own code, with all arguments (file in, file out, etc.) in the proper order
             #Note that i[0:-1] is just the name of the root file in /pnfs
