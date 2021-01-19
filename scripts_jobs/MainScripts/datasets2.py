@@ -1,7 +1,0 @@
-/pnfs/iihe/cms/store/user/amkalsi/Signal/ETauRPV/Moriond2018_New_2016_redone/RPVresonantToMuTau_M-1000_LLE_LQD-001_TuneCUETP8M1_13TeV-calchep-pythia8/crab_RPVresonantToMuTau_M-1000_LLE_LQD-001/180430_201342/0000:
-/pnfs/iihe/cms/store/user/amkalsi/Signal/ETauRPV/Moriond2018_New_2016_redone/RPVresonantToMuTau_M-1200_LLE_LQD-001_TuneCUETP8M1_13TeV-calchep-pythia8/crab_RPVresonantToMuTau_M-1200_LLE_LQD-001/180430_201509/0000:
-/pnfs/iihe/cms/store/user/amkalsi/Signal/ETauRPV/Moriond2018_New_2016_redone/RPVresonantToMuTau_M-1400_LLE_LQD-001_TuneCUETP8M1_13TeV-calchep-pythia8/crab_RPVresonantToMuTau_M-1400_LLE_LQD-001/180430_201646/0000:
-/pnfs/iihe/cms/store/user/amkalsi/Signal/ETauRPV/Moriond2018_New_2016_redone/RPVresonantToMuTau_M-1600_LLE_LQD-001_TuneCUETP8M1_13TeV-calchep-pythia8/crab_RPVresonantToMuTau_M-1600_LLE_LQD-001/180430_201816/0000:
-/pnfs/iihe/cms/store/user/amkalsi/Signal/ETauRPV/Moriond2018_New_2016_redone/RPVresonantToMuTau_M-1800_LLE_LQD-001_TuneCUETP8M1_13TeV-calchep-pythia8/crab_RPVresonantToMuTau_M-1800_LLE_LQD-001/180430_202004/0000:
-/pnfs/iihe/cms/store/user/amkalsi/Signal/ETauRPV/Moriond2018_New_2016_redone/RPVresonantToMuTau_M-2000_LLE_LQD-001_TuneCUETP8M1_13TeV-calchep-pythia8/crab_RPVresonantToMuTau_M-2000_LLE_LQD-001/180430_202148/0000:
-/pnfs/iihe/cms/store/user/amkalsi/Signal/ETauRPV/Moriond2018_New_2016_redone/RPVresonantToMuTau_M-200_LLE_LQD-001_TuneCUETP8M1_13TeV-calchep-pythia8/crab_RPVresonantToMuTau_M-200_LLE_LQD-001/180430_202325/0000:
