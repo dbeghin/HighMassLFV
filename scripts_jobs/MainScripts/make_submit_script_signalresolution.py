@@ -9,7 +9,7 @@ from datasets import * #imports dataset paths: pnfn[], myname[] and myoption[] a
 if __name__ == "__main__":
     location=os.getcwd();
     #name of your *compiled* code (omit the .exe extension)
-    code_name = "SignalMassResolution"
+    code_name = "SignalMassResolution_DeepTau"
     region = "CR100"
     folder = "HighMassLFVMuTau/MassResolution"
 
@@ -23,7 +23,7 @@ if __name__ == "__main__":
         outFile = open("../Jobs_to_submit/"+name_out , 'w')
         command1 = "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
         command1 = command1 + "mkdir /user/dbeghin/Work/MuTauHighMass/"+folder+"/Out_"+myname[jj] + "\n"
-        command1 = command1 + "cd /user/dbeghin/CMSSW_8_0_26_patch1/src " + "\n" #go to the top of your CMSSW release
+        command1 = command1 + "cd /user/dbeghin/2nd/2019May17/CMSSW_10_2_18/src " + "\n" #go to the top of your CMSSW release
         command1 = command1 + "eval `scram runtime -sh` " + "\n"   #load the cms environment
         command1 = command1 + "export X509_USER_PROXY=/user/dbeghin/x509up_u$(id -u dbeghin)" + "\n"
         command1 = command1 + "export scratchdir=$TMPDIR " + "\n"
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 outFile = open("../Jobs_to_submit/"+scr_name+".sh" , 'w')
                 command1 = "mkdir /user/dbeghin/Work/MuTauHighMass/"+folder+"/Out_"+myname[jj] + "\n"
                 command1 = command1 + "source $VO_CMS_SW_DIR/cmsset_default.sh " + "\n"
-                command1 = command1 + "cd /user/dbeghin/CMSSW_8_0_26_patch1/src " + "\n"
+                command1 = command1 + "cd /user/dbeghin/2nd/2019May17/CMSSW_10_2_18/src " + "\n"
                 command1 = command1 + "eval `scram runtime -sh` " + "\n"
                 command1 = command1 + "export X509_USER_PROXY=/user/dbeghin/x509up_u$(id -u dbeghin)" + "\n"
                 command1 = command1 + "export scratchdir=$TMPDIR " + "\n"

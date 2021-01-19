@@ -28,14 +28,15 @@ int main(/*int argc, char** argv*/) {
   names.push_back("VV_");
 
   vector<TString> vars;
-  vars.push_back("taupt_ratio_pass");
-  vars.push_back("taupt_ratio_fail");
+  vars.push_back("taupt_ratio_DeepTauPass");
+  vars.push_back("taupt_ratio_DeepTauFail");
 
   vector<TString> systs;
   systs.push_back("nominal");
   
   vector<TString> systs_aux = GetSys();
   for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    if (systs_aux[iAux] == "topPt") continue;
     systs.push_back(systs_aux[iAux]+"_up");
     systs.push_back(systs_aux[iAux]+"_down");
   }
@@ -48,14 +49,19 @@ int main(/*int argc, char** argv*/) {
   taun.push_back("realtau");  int n_real = taun.size()-1;
 
 
-  //vector<float> xpoints_all {0, 30, 40, 50, 60, 70, 80, 100, 120, 150, 300, 1000};
-  vector<vector<float>> xpoints;                                                                        vector<TString> sector_name;
-  vector<float> xpoints_left {0, 30, 40, 50, 70, 100, 150};  xpoints.push_back(xpoints_left);   sector_name.push_back("taupt_0_150");
-  vector<float> xpoints_right {150, 1000};                   xpoints.push_back(xpoints_right);  sector_name.push_back("taupt_150_1000");
-
+  vector<vector<float>> xpoints;                                                   vector<TString> sector_name;
+  vector<float> xpoints_left {0, 50, 80, 150};  xpoints.push_back(xpoints_left);   sector_name.push_back("taupt_0_150");
+  vector<float> xpoints_right {150, 1000};      xpoints.push_back(xpoints_right);  sector_name.push_back("taupt_150_1000");
+  
   vector<vector<float>> ypoints;
   vector<float> ypoints_left {0, 0.5, 0.6, 0.65, 0.7, 0.75, 1., 3.};  ypoints.push_back(ypoints_left);
-  vector<float> ypoints_right {0, 0.7, 1., 3};                 ypoints.push_back(ypoints_right);
+  vector<float> ypoints_right {0, 0.7, 1., 3};                        ypoints.push_back(ypoints_right);
+
+  //vector<vector<float>> xpoints;                                                                        vector<TString> sector_name;
+  //vector<float> xpointss {0, 50, 1000};  xpoints.push_back(xpointss);   sector_name.push_back("taupt_50_1000");
+  //
+  //vector<vector<float>> ypoints;
+  //vector<float> ypointss {0, 0.5, 0.6, 0.65, 0.7, 0.75, 0.8, 1., 3.};  ypoints.push_back(ypointss);
 
   vector<TH2F*> h[names.size()][vars.size()][systs.size()];
   vector<TH2F*> h_MC[vars.size()][systs.size()];
@@ -117,6 +123,7 @@ int main(/*int argc, char** argv*/) {
 	  //even->pass, odd->fail
 	  if (k%2 == 0) {
 	    TString name_in = "FakeRate_"+vars[k]+"_data_"+systs[l]+"_"+eta[m]+"_"+sector_name[sector];
+	    cout << name_in << endl;
 	    hpass_data[half_k][l][sector].push_back( new TH2F(name_in, name_in, array_size_x-1, rebin_array_x, array_size_y-1, rebin_array_y) );
 	  }
 	  else {
@@ -126,16 +133,17 @@ int main(/*int argc, char** argv*/) {
           
 	  int jBinX = 1, jBinY = 1, binStartX = 1, binStartY = 1;
 	  while (jBinX <= array_size_x) { 
+	    cout << jBinX << endl;
 	    unsigned int iBinX=binStartX;
 	    unsigned int iBinY=binStartY;
 	    float bin_content = 0, bin_error=0;
-	    while (h_data[k][l][m]->GetXaxis()->GetBinCenter(iBinX) < rebin_array_x[jBinX]) {
+	    while (h_data[k][0][m]->GetXaxis()->GetBinCenter(iBinX) < rebin_array_x[jBinX]) {
 	      iBinY=binStartY;
-	      if (h_data[k][l][m]->GetXaxis()->GetBinCenter(iBinX) > rebin_array_x[jBinX-1]) {
-		while (h_data[k][l][m]->GetYaxis()->GetBinCenter(iBinY) < rebin_array_y[jBinY]) {
-		  if (h_data[k][l][m]->GetYaxis()->GetBinCenter(iBinY) > rebin_array_y[jBinY-1]) {
-		    bin_content = bin_content + h_data[k][l][m]->GetBinContent(iBinX, iBinY) - h_MC[k][l][m]->GetBinContent(iBinX, iBinY);
-		    bin_error = bin_error + pow(h_data[k][l][m]->GetBinError(iBinX, iBinY), 2) + pow(h_MC[k][l][m]->GetBinError(iBinX, iBinY), 2);
+	      if (h_data[k][0][m]->GetXaxis()->GetBinCenter(iBinX) > rebin_array_x[jBinX-1]) {
+		while (h_data[k][0][m]->GetYaxis()->GetBinCenter(iBinY) < rebin_array_y[jBinY]) {
+		  if (h_data[k][0][m]->GetYaxis()->GetBinCenter(iBinY) > rebin_array_y[jBinY-1]) {
+		    bin_content = bin_content + h_data[k][0][m]->GetBinContent(iBinX, iBinY) - h_MC[k][l][m]->GetBinContent(iBinX, iBinY);
+		    bin_error = bin_error + pow(h_data[k][0][m]->GetBinError(iBinX, iBinY), 2) + pow(h_MC[k][l][m]->GetBinError(iBinX, iBinY), 2);
 		  }
 		  ++iBinY;
 		}
