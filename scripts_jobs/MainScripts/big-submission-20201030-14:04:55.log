@@ -1,0 +1,1195 @@
+[1;32m[INFO] [0;m[30/10 14:05] There are 0 jobs on the cluster and 594 left to run,  sending 594 jobs:
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_1000.stdout -e ../out_err/test0QBH_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_1000.sh
+44172353.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_1000.stdout -e ../out_err/test1QBH_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_1000.sh
+44172354.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_1000.stdout -e ../out_err/test2QBH_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_1000.sh
+44172355.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_10000.stdout -e ../out_err/test0QBH_10000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_10000.sh
+44172356.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_10000.stdout -e ../out_err/test1QBH_10000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_10000.sh
+44172357.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_10000.stdout -e ../out_err/test2QBH_10000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_10000.sh
+44172358.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_1200.stdout -e ../out_err/test0QBH_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_1200.sh
+44172359.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_1200.stdout -e ../out_err/test1QBH_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_1200.sh
+44172360.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_1200.stdout -e ../out_err/test2QBH_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_1200.sh
+44172361.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_1400.stdout -e ../out_err/test0QBH_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_1400.sh
+44172362.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_1400.stdout -e ../out_err/test1QBH_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_1400.sh
+44172363.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_1400.stdout -e ../out_err/test2QBH_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_1400.sh
+44172364.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3QBH_1400.stdout -e ../out_err/test3QBH_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3QBH_1400.sh
+44172365.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4QBH_1400.stdout -e ../out_err/test4QBH_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4QBH_1400.sh
+44172366.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_1600.stdout -e ../out_err/test0QBH_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_1600.sh
+44172367.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_1600.stdout -e ../out_err/test1QBH_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_1600.sh
+44172368.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_1600.stdout -e ../out_err/test2QBH_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_1600.sh
+44172369.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_1800.stdout -e ../out_err/test0QBH_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_1800.sh
+44172370.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_1800.stdout -e ../out_err/test1QBH_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_1800.sh
+44172371.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_1800.stdout -e ../out_err/test2QBH_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_1800.sh
+44172372.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_200.stdout -e ../out_err/test0QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_200.sh
+44172373.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_200.stdout -e ../out_err/test1QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_200.sh
+44172374.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_200.stdout -e ../out_err/test2QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_200.sh
+44172375.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3QBH_200.stdout -e ../out_err/test3QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3QBH_200.sh
+44172376.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4QBH_200.stdout -e ../out_err/test4QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4QBH_200.sh
+44172377.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5QBH_200.stdout -e ../out_err/test5QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5QBH_200.sh
+44172378.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6QBH_200.stdout -e ../out_err/test6QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6QBH_200.sh
+44172379.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7QBH_200.stdout -e ../out_err/test7QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7QBH_200.sh
+44172380.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8QBH_200.stdout -e ../out_err/test8QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8QBH_200.sh
+44172381.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9QBH_200.stdout -e ../out_err/test9QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9QBH_200.sh
+44172382.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10QBH_200.stdout -e ../out_err/test10QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10QBH_200.sh
+44172383.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11QBH_200.stdout -e ../out_err/test11QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11QBH_200.sh
+44172384.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12QBH_200.stdout -e ../out_err/test12QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12QBH_200.sh
+44172385.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13QBH_200.stdout -e ../out_err/test13QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13QBH_200.sh
+44172386.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14QBH_200.stdout -e ../out_err/test14QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14QBH_200.sh
+44172387.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15QBH_200.stdout -e ../out_err/test15QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15QBH_200.sh
+44172388.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16QBH_200.stdout -e ../out_err/test16QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16QBH_200.sh
+44172389.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17QBH_200.stdout -e ../out_err/test17QBH_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17QBH_200.sh
+44172390.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_2000.stdout -e ../out_err/test0QBH_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_2000.sh
+44172391.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_2000.stdout -e ../out_err/test1QBH_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_2000.sh
+44172392.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_2000.stdout -e ../out_err/test2QBH_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_2000.sh
+44172393.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_2500.stdout -e ../out_err/test0QBH_2500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_2500.sh
+44172394.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_2500.stdout -e ../out_err/test1QBH_2500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_2500.sh
+44172395.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_2500.stdout -e ../out_err/test2QBH_2500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_2500.sh
+44172396.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_3000.stdout -e ../out_err/test0QBH_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_3000.sh
+44172397.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_3000.stdout -e ../out_err/test1QBH_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_3000.sh
+44172398.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_3000.stdout -e ../out_err/test2QBH_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_3000.sh
+44172399.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_3500.stdout -e ../out_err/test0QBH_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_3500.sh
+44172400.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_3500.stdout -e ../out_err/test1QBH_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_3500.sh
+44172401.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_3500.stdout -e ../out_err/test2QBH_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_3500.sh
+44172402.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3QBH_3500.stdout -e ../out_err/test3QBH_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3QBH_3500.sh
+44172403.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4QBH_3500.stdout -e ../out_err/test4QBH_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4QBH_3500.sh
+44172404.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5QBH_3500.stdout -e ../out_err/test5QBH_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5QBH_3500.sh
+44172405.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6QBH_3500.stdout -e ../out_err/test6QBH_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6QBH_3500.sh
+44172406.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7QBH_3500.stdout -e ../out_err/test7QBH_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7QBH_3500.sh
+44172407.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_400.stdout -e ../out_err/test0QBH_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_400.sh
+44172408.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_400.stdout -e ../out_err/test1QBH_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_400.sh
+44172409.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_400.stdout -e ../out_err/test2QBH_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_400.sh
+44172410.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3QBH_400.stdout -e ../out_err/test3QBH_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3QBH_400.sh
+44172411.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4QBH_400.stdout -e ../out_err/test4QBH_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4QBH_400.sh
+44172412.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5QBH_400.stdout -e ../out_err/test5QBH_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5QBH_400.sh
+44172413.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6QBH_400.stdout -e ../out_err/test6QBH_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6QBH_400.sh
+44172414.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7QBH_400.stdout -e ../out_err/test7QBH_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7QBH_400.sh
+44172415.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_4000.stdout -e ../out_err/test0QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_4000.sh
+44172416.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_4000.stdout -e ../out_err/test1QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_4000.sh
+44172417.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_4000.stdout -e ../out_err/test2QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_4000.sh
+44172418.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3QBH_4000.stdout -e ../out_err/test3QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3QBH_4000.sh
+44172419.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4QBH_4000.stdout -e ../out_err/test4QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4QBH_4000.sh
+44172420.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5QBH_4000.stdout -e ../out_err/test5QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5QBH_4000.sh
+44172421.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6QBH_4000.stdout -e ../out_err/test6QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6QBH_4000.sh
+44172422.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7QBH_4000.stdout -e ../out_err/test7QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7QBH_4000.sh
+44172423.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8QBH_4000.stdout -e ../out_err/test8QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8QBH_4000.sh
+44172424.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9QBH_4000.stdout -e ../out_err/test9QBH_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9QBH_4000.sh
+44172425.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_4500.stdout -e ../out_err/test0QBH_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_4500.sh
+44172426.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_4500.stdout -e ../out_err/test1QBH_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_4500.sh
+44172427.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_4500.stdout -e ../out_err/test2QBH_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_4500.sh
+44172428.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_5000.stdout -e ../out_err/test0QBH_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_5000.sh
+44172429.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_5000.stdout -e ../out_err/test1QBH_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_5000.sh
+44172430.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_5000.stdout -e ../out_err/test2QBH_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_5000.sh
+44172431.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_5500.stdout -e ../out_err/test0QBH_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_5500.sh
+44172432.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_5500.stdout -e ../out_err/test1QBH_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_5500.sh
+44172433.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_5500.stdout -e ../out_err/test2QBH_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_5500.sh
+44172434.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_600.stdout -e ../out_err/test0QBH_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_600.sh
+44172435.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_600.stdout -e ../out_err/test1QBH_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_600.sh
+44172436.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_600.stdout -e ../out_err/test2QBH_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_600.sh
+44172437.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_6000.stdout -e ../out_err/test0QBH_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_6000.sh
+44172438.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_6000.stdout -e ../out_err/test1QBH_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_6000.sh
+44172439.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_6000.stdout -e ../out_err/test2QBH_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_6000.sh
+44172440.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_7000.stdout -e ../out_err/test0QBH_7000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_7000.sh
+44172441.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_7000.stdout -e ../out_err/test1QBH_7000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_7000.sh
+44172442.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_7000.stdout -e ../out_err/test2QBH_7000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_7000.sh
+44172443.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_800.stdout -e ../out_err/test0QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_800.sh
+44172444.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_800.stdout -e ../out_err/test1QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_800.sh
+44172445.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_800.stdout -e ../out_err/test2QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_800.sh
+44172446.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3QBH_800.stdout -e ../out_err/test3QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3QBH_800.sh
+44172447.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4QBH_800.stdout -e ../out_err/test4QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4QBH_800.sh
+44172448.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5QBH_800.stdout -e ../out_err/test5QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5QBH_800.sh
+44172449.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6QBH_800.stdout -e ../out_err/test6QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6QBH_800.sh
+44172450.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7QBH_800.stdout -e ../out_err/test7QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7QBH_800.sh
+44172451.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8QBH_800.stdout -e ../out_err/test8QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8QBH_800.sh
+44172452.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9QBH_800.stdout -e ../out_err/test9QBH_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9QBH_800.sh
+44172453.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_8000.stdout -e ../out_err/test0QBH_8000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_8000.sh
+44172454.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_8000.stdout -e ../out_err/test1QBH_8000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_8000.sh
+44172455.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_8000.stdout -e ../out_err/test2QBH_8000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_8000.sh
+44172456.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0QBH_9000.stdout -e ../out_err/test0QBH_9000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0QBH_9000.sh
+44172457.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1QBH_9000.stdout -e ../out_err/test1QBH_9000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1QBH_9000.sh
+44172458.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2QBH_9000.stdout -e ../out_err/test2QBH_9000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2QBH_9000.sh
+44172459.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1000.stdout -e ../out_err/test0RPV_l001_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1000.sh
+44172460.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1200.stdout -e ../out_err/test0RPV_l001_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1200.sh
+44172461.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1400.stdout -e ../out_err/test0RPV_l001_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1400.sh
+44172462.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1600.stdout -e ../out_err/test0RPV_l001_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1600.sh
+44172463.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1800.stdout -e ../out_err/test0RPV_l001_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1800.sh
+44172464.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_200.stdout -e ../out_err/test0RPV_l001_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_200.sh
+44172465.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_2000.stdout -e ../out_err/test0RPV_l001_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_2000.sh
+44172466.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_2500.stdout -e ../out_err/test0RPV_l001_2500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_2500.sh
+44172467.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_300.stdout -e ../out_err/test0RPV_l001_300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_300.sh
+44172468.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_3000.stdout -e ../out_err/test0RPV_l001_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_3000.sh
+44172469.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_3500.stdout -e ../out_err/test0RPV_l001_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_3500.sh
+44172470.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_400.stdout -e ../out_err/test0RPV_l001_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_400.sh
+44172471.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_4000.stdout -e ../out_err/test0RPV_l001_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_4000.sh
+44172472.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_4500.stdout -e ../out_err/test0RPV_l001_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_4500.sh
+44172473.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_500.stdout -e ../out_err/test0RPV_l001_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_500.sh
+44172474.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_5000.stdout -e ../out_err/test0RPV_l001_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_5000.sh
+44172475.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_5500.stdout -e ../out_err/test0RPV_l001_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_5500.sh
+44172476.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_600.stdout -e ../out_err/test0RPV_l001_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_600.sh
+44172477.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_6500.stdout -e ../out_err/test0RPV_l001_6500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_6500.sh
+44172478.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_700.stdout -e ../out_err/test0RPV_l001_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_700.sh
+44172479.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_800.stdout -e ../out_err/test0RPV_l001_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_800.sh
+44172480.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_900.stdout -e ../out_err/test0RPV_l001_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_900.sh
+44172481.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l01_3000.stdout -e ../out_err/test0RPV_l01_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l01_3000.sh
+44172482.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l01_3500.stdout -e ../out_err/test0RPV_l01_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l01_3500.sh
+44172483.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l01_4000.stdout -e ../out_err/test0RPV_l01_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l01_4000.sh
+44172484.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_4000.stdout -e ../out_err/test0RPV_l02_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_4000.sh
+44172485.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_4500.stdout -e ../out_err/test0RPV_l02_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_4500.sh
+44172486.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_5000.stdout -e ../out_err/test0RPV_l02_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_5000.sh
+44172487.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_5500.stdout -e ../out_err/test0RPV_l02_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_5500.sh
+44172488.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_6000.stdout -e ../out_err/test0RPV_l02_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_6000.sh
+44172489.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_6500.stdout -e ../out_err/test0RPV_l02_6500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_6500.sh
+44172490.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l05_4000.stdout -e ../out_err/test0RPV_l05_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l05_4000.sh
+44172491.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l05_5500.stdout -e ../out_err/test0RPV_l05_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l05_5500.sh
+44172492.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l05_6000.stdout -e ../out_err/test0RPV_l05_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l05_6000.sh
+44172493.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l05_6500.stdout -e ../out_err/test0RPV_l05_6500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l05_6500.sh
+44172494.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1000.stdout -e ../out_err/test0ZPrime_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1000.sh
+44172495.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1000.stdout -e ../out_err/test1ZPrime_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1000.sh
+44172496.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1000.stdout -e ../out_err/test2ZPrime_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1000.sh
+44172497.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1000.stdout -e ../out_err/test3ZPrime_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1000.sh
+44172498.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1000.stdout -e ../out_err/test4ZPrime_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1000.sh
+44172499.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1000.stdout -e ../out_err/test5ZPrime_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1000.sh
+44172500.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1000.stdout -e ../out_err/test6ZPrime_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1000.sh
+44172501.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1000.stdout -e ../out_err/test7ZPrime_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1000.sh
+44172502.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1100.stdout -e ../out_err/test0ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1100.sh
+44172503.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1100.stdout -e ../out_err/test1ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1100.sh
+44172504.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1100.stdout -e ../out_err/test2ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1100.sh
+44172505.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1100.stdout -e ../out_err/test3ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1100.sh
+44172506.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1100.stdout -e ../out_err/test4ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1100.sh
+44172507.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1100.stdout -e ../out_err/test5ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1100.sh
+44172508.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1100.stdout -e ../out_err/test6ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1100.sh
+44172509.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1100.stdout -e ../out_err/test7ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1100.sh
+44172510.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_1100.stdout -e ../out_err/test8ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_1100.sh
+44172511.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_1100.stdout -e ../out_err/test9ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_1100.sh
+44172512.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_1100.stdout -e ../out_err/test10ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_1100.sh
+44172513.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_1100.stdout -e ../out_err/test11ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_1100.sh
+44172514.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_1100.stdout -e ../out_err/test12ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_1100.sh
+44172515.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_1100.stdout -e ../out_err/test13ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_1100.sh
+44172516.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_1100.stdout -e ../out_err/test14ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_1100.sh
+44172517.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_1100.stdout -e ../out_err/test15ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_1100.sh
+44172518.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_1100.stdout -e ../out_err/test16ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_1100.sh
+44172519.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_1100.stdout -e ../out_err/test17ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_1100.sh
+44172520.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_1100.stdout -e ../out_err/test18ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_1100.sh
+44172521.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_1100.stdout -e ../out_err/test19ZPrime_1100.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_1100.sh
+44172522.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1200.stdout -e ../out_err/test0ZPrime_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1200.sh
+44172523.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1200.stdout -e ../out_err/test1ZPrime_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1200.sh
+44172524.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1200.stdout -e ../out_err/test2ZPrime_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1200.sh
+44172525.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1200.stdout -e ../out_err/test3ZPrime_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1200.sh
+44172526.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1200.stdout -e ../out_err/test4ZPrime_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1200.sh
+44172527.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1200.stdout -e ../out_err/test5ZPrime_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1200.sh
+44172528.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1200.stdout -e ../out_err/test6ZPrime_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1200.sh
+44172529.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1200.stdout -e ../out_err/test7ZPrime_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1200.sh
+44172530.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1300.stdout -e ../out_err/test0ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1300.sh
+44172531.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1300.stdout -e ../out_err/test1ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1300.sh
+44172532.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1300.stdout -e ../out_err/test2ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1300.sh
+44172533.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1300.stdout -e ../out_err/test3ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1300.sh
+44172534.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1300.stdout -e ../out_err/test4ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1300.sh
+44172535.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1300.stdout -e ../out_err/test5ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1300.sh
+44172536.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1300.stdout -e ../out_err/test6ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1300.sh
+44172537.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1300.stdout -e ../out_err/test7ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1300.sh
+44172538.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_1300.stdout -e ../out_err/test8ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_1300.sh
+44172539.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_1300.stdout -e ../out_err/test9ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_1300.sh
+44172540.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_1300.stdout -e ../out_err/test10ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_1300.sh
+44172541.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_1300.stdout -e ../out_err/test11ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_1300.sh
+44172542.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_1300.stdout -e ../out_err/test12ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_1300.sh
+44172543.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_1300.stdout -e ../out_err/test13ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_1300.sh
+44172544.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_1300.stdout -e ../out_err/test14ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_1300.sh
+44172545.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_1300.stdout -e ../out_err/test15ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_1300.sh
+44172546.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_1300.stdout -e ../out_err/test16ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_1300.sh
+44172547.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_1300.stdout -e ../out_err/test17ZPrime_1300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_1300.sh
+44172548.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1400.stdout -e ../out_err/test0ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1400.sh
+44172549.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1400.stdout -e ../out_err/test1ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1400.sh
+44172550.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1400.stdout -e ../out_err/test2ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1400.sh
+44172551.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1400.stdout -e ../out_err/test3ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1400.sh
+44172552.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1400.stdout -e ../out_err/test4ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1400.sh
+44172553.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1400.stdout -e ../out_err/test5ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1400.sh
+44172554.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1400.stdout -e ../out_err/test6ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1400.sh
+44172555.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1400.stdout -e ../out_err/test7ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1400.sh
+44172556.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_1400.stdout -e ../out_err/test8ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_1400.sh
+44172557.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_1400.stdout -e ../out_err/test9ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_1400.sh
+44172558.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_1400.stdout -e ../out_err/test10ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_1400.sh
+44172559.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_1400.stdout -e ../out_err/test11ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_1400.sh
+44172560.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_1400.stdout -e ../out_err/test12ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_1400.sh
+44172561.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_1400.stdout -e ../out_err/test13ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_1400.sh
+44172562.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_1400.stdout -e ../out_err/test14ZPrime_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_1400.sh
+44172563.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1500.stdout -e ../out_err/test0ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1500.sh
+44172564.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1500.stdout -e ../out_err/test1ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1500.sh
+44172565.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1500.stdout -e ../out_err/test2ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1500.sh
+44172566.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1500.stdout -e ../out_err/test3ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1500.sh
+44172567.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1500.stdout -e ../out_err/test4ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1500.sh
+44172568.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1500.stdout -e ../out_err/test5ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1500.sh
+44172569.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1500.stdout -e ../out_err/test6ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1500.sh
+44172570.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1500.stdout -e ../out_err/test7ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1500.sh
+44172571.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_1500.stdout -e ../out_err/test8ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_1500.sh
+44172572.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_1500.stdout -e ../out_err/test9ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_1500.sh
+44172573.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_1500.stdout -e ../out_err/test10ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_1500.sh
+44172574.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_1500.stdout -e ../out_err/test11ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_1500.sh
+44172575.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_1500.stdout -e ../out_err/test12ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_1500.sh
+44172576.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_1500.stdout -e ../out_err/test13ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_1500.sh
+44172577.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_1500.stdout -e ../out_err/test14ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_1500.sh
+44172578.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_1500.stdout -e ../out_err/test15ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_1500.sh
+44172579.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_1500.stdout -e ../out_err/test16ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_1500.sh
+44172580.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_1500.stdout -e ../out_err/test17ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_1500.sh
+44172581.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_1500.stdout -e ../out_err/test18ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_1500.sh
+44172582.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_1500.stdout -e ../out_err/test19ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_1500.sh
+44172583.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test20ZPrime_1500.stdout -e ../out_err/test20ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test20ZPrime_1500.sh
+44172584.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test21ZPrime_1500.stdout -e ../out_err/test21ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test21ZPrime_1500.sh
+44172585.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test22ZPrime_1500.stdout -e ../out_err/test22ZPrime_1500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test22ZPrime_1500.sh
+44172586.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1600.stdout -e ../out_err/test0ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1600.sh
+44172587.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1600.stdout -e ../out_err/test1ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1600.sh
+44172588.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1600.stdout -e ../out_err/test2ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1600.sh
+44172589.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1600.stdout -e ../out_err/test3ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1600.sh
+44172590.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1600.stdout -e ../out_err/test4ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1600.sh
+44172591.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1600.stdout -e ../out_err/test5ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1600.sh
+44172592.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1600.stdout -e ../out_err/test6ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1600.sh
+44172593.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1600.stdout -e ../out_err/test7ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1600.sh
+44172595.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_1600.stdout -e ../out_err/test8ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_1600.sh
+44172596.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_1600.stdout -e ../out_err/test9ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_1600.sh
+44172597.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_1600.stdout -e ../out_err/test10ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_1600.sh
+44172598.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_1600.stdout -e ../out_err/test11ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_1600.sh
+44172599.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_1600.stdout -e ../out_err/test12ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_1600.sh
+44172600.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_1600.stdout -e ../out_err/test13ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_1600.sh
+44172601.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_1600.stdout -e ../out_err/test14ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_1600.sh
+44172602.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_1600.stdout -e ../out_err/test15ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_1600.sh
+44172603.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_1600.stdout -e ../out_err/test16ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_1600.sh
+44172604.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_1600.stdout -e ../out_err/test17ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_1600.sh
+44172605.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_1600.stdout -e ../out_err/test18ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_1600.sh
+44172606.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_1600.stdout -e ../out_err/test19ZPrime_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_1600.sh
+44172607.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1700.stdout -e ../out_err/test0ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1700.sh
+44172608.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1700.stdout -e ../out_err/test1ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1700.sh
+44172609.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1700.stdout -e ../out_err/test2ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1700.sh
+44172610.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1700.stdout -e ../out_err/test3ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1700.sh
+44172611.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1700.stdout -e ../out_err/test4ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1700.sh
+44172612.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1700.stdout -e ../out_err/test5ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1700.sh
+44172613.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1700.stdout -e ../out_err/test6ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1700.sh
+44172614.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1700.stdout -e ../out_err/test7ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1700.sh
+44172615.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_1700.stdout -e ../out_err/test8ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_1700.sh
+44172616.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_1700.stdout -e ../out_err/test9ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_1700.sh
+44172617.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_1700.stdout -e ../out_err/test10ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_1700.sh
+44172618.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_1700.stdout -e ../out_err/test11ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_1700.sh
+44172619.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_1700.stdout -e ../out_err/test12ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_1700.sh
+44172620.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_1700.stdout -e ../out_err/test13ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_1700.sh
+44172621.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_1700.stdout -e ../out_err/test14ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_1700.sh
+44172622.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_1700.stdout -e ../out_err/test15ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_1700.sh
+44172623.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_1700.stdout -e ../out_err/test16ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_1700.sh
+44172624.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_1700.stdout -e ../out_err/test17ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_1700.sh
+44172625.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_1700.stdout -e ../out_err/test18ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_1700.sh
+44172626.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_1700.stdout -e ../out_err/test19ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_1700.sh
+44172627.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test20ZPrime_1700.stdout -e ../out_err/test20ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test20ZPrime_1700.sh
+44172628.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test21ZPrime_1700.stdout -e ../out_err/test21ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test21ZPrime_1700.sh
+44172629.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test22ZPrime_1700.stdout -e ../out_err/test22ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test22ZPrime_1700.sh
+44172630.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test23ZPrime_1700.stdout -e ../out_err/test23ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test23ZPrime_1700.sh
+44172631.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test24ZPrime_1700.stdout -e ../out_err/test24ZPrime_1700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test24ZPrime_1700.sh
+44172632.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1800.stdout -e ../out_err/test0ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1800.sh
+44172633.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1800.stdout -e ../out_err/test1ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1800.sh
+44172634.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1800.stdout -e ../out_err/test2ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1800.sh
+44172635.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1800.stdout -e ../out_err/test3ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1800.sh
+44172636.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1800.stdout -e ../out_err/test4ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1800.sh
+44172637.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1800.stdout -e ../out_err/test5ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1800.sh
+44172638.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1800.stdout -e ../out_err/test6ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1800.sh
+44172639.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1800.stdout -e ../out_err/test7ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1800.sh
+44172640.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_1800.stdout -e ../out_err/test8ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_1800.sh
+44172641.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_1800.stdout -e ../out_err/test9ZPrime_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_1800.sh
+44172642.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_1900.stdout -e ../out_err/test0ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_1900.sh
+44172643.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_1900.stdout -e ../out_err/test1ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_1900.sh
+44172644.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_1900.stdout -e ../out_err/test2ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_1900.sh
+44172645.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_1900.stdout -e ../out_err/test3ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_1900.sh
+44172646.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_1900.stdout -e ../out_err/test4ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_1900.sh
+44172647.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_1900.stdout -e ../out_err/test5ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_1900.sh
+44172648.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_1900.stdout -e ../out_err/test6ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_1900.sh
+44172649.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_1900.stdout -e ../out_err/test7ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_1900.sh
+44172650.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_1900.stdout -e ../out_err/test8ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_1900.sh
+44172651.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_1900.stdout -e ../out_err/test9ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_1900.sh
+44172652.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_1900.stdout -e ../out_err/test10ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_1900.sh
+44172653.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_1900.stdout -e ../out_err/test11ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_1900.sh
+44172654.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_1900.stdout -e ../out_err/test12ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_1900.sh
+44172655.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_1900.stdout -e ../out_err/test13ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_1900.sh
+44172656.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_1900.stdout -e ../out_err/test14ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_1900.sh
+44172657.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_1900.stdout -e ../out_err/test15ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_1900.sh
+44172658.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_1900.stdout -e ../out_err/test16ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_1900.sh
+44172659.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_1900.stdout -e ../out_err/test17ZPrime_1900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_1900.sh
+44172660.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_2000.stdout -e ../out_err/test0ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_2000.sh
+44172661.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_2000.stdout -e ../out_err/test1ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_2000.sh
+44172662.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_2000.stdout -e ../out_err/test2ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_2000.sh
+44172663.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_2000.stdout -e ../out_err/test3ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_2000.sh
+44172664.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_2000.stdout -e ../out_err/test4ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_2000.sh
+44172665.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_2000.stdout -e ../out_err/test5ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_2000.sh
+44172666.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_2000.stdout -e ../out_err/test6ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_2000.sh
+44172667.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_2000.stdout -e ../out_err/test7ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_2000.sh
+44172668.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_2000.stdout -e ../out_err/test8ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_2000.sh
+44172669.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_2000.stdout -e ../out_err/test9ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_2000.sh
+44172670.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_2000.stdout -e ../out_err/test10ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_2000.sh
+44172671.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_2000.stdout -e ../out_err/test11ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_2000.sh
+44172672.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_2000.stdout -e ../out_err/test12ZPrime_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_2000.sh
+44172673.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_2200.stdout -e ../out_err/test0ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_2200.sh
+44172674.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_2200.stdout -e ../out_err/test1ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_2200.sh
+44172675.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_2200.stdout -e ../out_err/test2ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_2200.sh
+44172676.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_2200.stdout -e ../out_err/test3ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_2200.sh
+44172677.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_2200.stdout -e ../out_err/test4ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_2200.sh
+44172678.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_2200.stdout -e ../out_err/test5ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_2200.sh
+44172679.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_2200.stdout -e ../out_err/test6ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_2200.sh
+44172680.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_2200.stdout -e ../out_err/test7ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_2200.sh
+44172681.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_2200.stdout -e ../out_err/test8ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_2200.sh
+44172682.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_2200.stdout -e ../out_err/test9ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_2200.sh
+44172683.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_2200.stdout -e ../out_err/test10ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_2200.sh
+44172684.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_2200.stdout -e ../out_err/test11ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_2200.sh
+44172685.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_2200.stdout -e ../out_err/test12ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_2200.sh
+44172686.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_2200.stdout -e ../out_err/test13ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_2200.sh
+44172687.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_2200.stdout -e ../out_err/test14ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_2200.sh
+44172688.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_2200.stdout -e ../out_err/test15ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_2200.sh
+44172689.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_2200.stdout -e ../out_err/test16ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_2200.sh
+44172690.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_2200.stdout -e ../out_err/test17ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_2200.sh
+44172691.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_2200.stdout -e ../out_err/test18ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_2200.sh
+44172692.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_2200.stdout -e ../out_err/test19ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_2200.sh
+44172693.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test20ZPrime_2200.stdout -e ../out_err/test20ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test20ZPrime_2200.sh
+44172694.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test21ZPrime_2200.stdout -e ../out_err/test21ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test21ZPrime_2200.sh
+44172695.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test22ZPrime_2200.stdout -e ../out_err/test22ZPrime_2200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test22ZPrime_2200.sh
+44172696.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_2400.stdout -e ../out_err/test0ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_2400.sh
+44172697.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_2400.stdout -e ../out_err/test1ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_2400.sh
+44172698.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_2400.stdout -e ../out_err/test2ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_2400.sh
+44172699.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_2400.stdout -e ../out_err/test3ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_2400.sh
+44172700.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_2400.stdout -e ../out_err/test4ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_2400.sh
+44172701.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_2400.stdout -e ../out_err/test5ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_2400.sh
+44172702.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_2400.stdout -e ../out_err/test6ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_2400.sh
+44172703.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_2400.stdout -e ../out_err/test7ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_2400.sh
+44172704.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_2400.stdout -e ../out_err/test8ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_2400.sh
+44172705.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_2400.stdout -e ../out_err/test9ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_2400.sh
+44172706.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_2400.stdout -e ../out_err/test10ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_2400.sh
+44172707.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_2400.stdout -e ../out_err/test11ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_2400.sh
+44172708.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_2400.stdout -e ../out_err/test12ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_2400.sh
+44172709.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_2400.stdout -e ../out_err/test13ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_2400.sh
+44172710.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_2400.stdout -e ../out_err/test14ZPrime_2400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_2400.sh
+44172711.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_2600.stdout -e ../out_err/test0ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_2600.sh
+44172712.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_2600.stdout -e ../out_err/test1ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_2600.sh
+44172713.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_2600.stdout -e ../out_err/test2ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_2600.sh
+44172714.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_2600.stdout -e ../out_err/test3ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_2600.sh
+44172715.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_2600.stdout -e ../out_err/test4ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_2600.sh
+44172716.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_2600.stdout -e ../out_err/test5ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_2600.sh
+44172717.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_2600.stdout -e ../out_err/test6ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_2600.sh
+44172718.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_2600.stdout -e ../out_err/test7ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_2600.sh
+44172719.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_2600.stdout -e ../out_err/test8ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_2600.sh
+44172720.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_2600.stdout -e ../out_err/test9ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_2600.sh
+44172721.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_2600.stdout -e ../out_err/test10ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_2600.sh
+44172722.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_2600.stdout -e ../out_err/test11ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_2600.sh
+44172723.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_2600.stdout -e ../out_err/test12ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_2600.sh
+44172724.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_2600.stdout -e ../out_err/test13ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_2600.sh
+44172725.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_2600.stdout -e ../out_err/test14ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_2600.sh
+44172726.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_2600.stdout -e ../out_err/test15ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_2600.sh
+44172727.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_2600.stdout -e ../out_err/test16ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_2600.sh
+44172728.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_2600.stdout -e ../out_err/test17ZPrime_2600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_2600.sh
+44172729.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_2800.stdout -e ../out_err/test0ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_2800.sh
+44172730.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_2800.stdout -e ../out_err/test1ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_2800.sh
+44172731.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_2800.stdout -e ../out_err/test2ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_2800.sh
+44172732.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_2800.stdout -e ../out_err/test3ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_2800.sh
+44172733.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_2800.stdout -e ../out_err/test4ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_2800.sh
+44172734.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_2800.stdout -e ../out_err/test5ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_2800.sh
+44172735.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_2800.stdout -e ../out_err/test6ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_2800.sh
+44172736.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_2800.stdout -e ../out_err/test7ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_2800.sh
+44172737.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_2800.stdout -e ../out_err/test8ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_2800.sh
+44172738.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_2800.stdout -e ../out_err/test9ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_2800.sh
+44172739.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_2800.stdout -e ../out_err/test10ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_2800.sh
+44172740.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_2800.stdout -e ../out_err/test11ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_2800.sh
+44172741.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_2800.stdout -e ../out_err/test12ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_2800.sh
+44172742.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_2800.stdout -e ../out_err/test13ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_2800.sh
+44172743.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_2800.stdout -e ../out_err/test14ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_2800.sh
+44172744.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_2800.stdout -e ../out_err/test15ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_2800.sh
+44172745.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_2800.stdout -e ../out_err/test16ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_2800.sh
+44172746.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_2800.stdout -e ../out_err/test17ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_2800.sh
+44172747.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_2800.stdout -e ../out_err/test18ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_2800.sh
+44172748.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_2800.stdout -e ../out_err/test19ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_2800.sh
+44172749.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test20ZPrime_2800.stdout -e ../out_err/test20ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test20ZPrime_2800.sh
+44172750.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test21ZPrime_2800.stdout -e ../out_err/test21ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test21ZPrime_2800.sh
+44172751.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test22ZPrime_2800.stdout -e ../out_err/test22ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test22ZPrime_2800.sh
+44172752.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test23ZPrime_2800.stdout -e ../out_err/test23ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test23ZPrime_2800.sh
+44172753.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test24ZPrime_2800.stdout -e ../out_err/test24ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test24ZPrime_2800.sh
+44172754.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test25ZPrime_2800.stdout -e ../out_err/test25ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test25ZPrime_2800.sh
+44172755.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test26ZPrime_2800.stdout -e ../out_err/test26ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test26ZPrime_2800.sh
+44172756.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test27ZPrime_2800.stdout -e ../out_err/test27ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test27ZPrime_2800.sh
+44172757.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test28ZPrime_2800.stdout -e ../out_err/test28ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test28ZPrime_2800.sh
+44172758.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test29ZPrime_2800.stdout -e ../out_err/test29ZPrime_2800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test29ZPrime_2800.sh
+44172759.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_3000.stdout -e ../out_err/test0ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_3000.sh
+44172760.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_3000.stdout -e ../out_err/test1ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_3000.sh
+44172761.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_3000.stdout -e ../out_err/test2ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_3000.sh
+44172762.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_3000.stdout -e ../out_err/test3ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_3000.sh
+44172763.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_3000.stdout -e ../out_err/test4ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_3000.sh
+44172764.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_3000.stdout -e ../out_err/test5ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_3000.sh
+44172765.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_3000.stdout -e ../out_err/test6ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_3000.sh
+44172766.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_3000.stdout -e ../out_err/test7ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_3000.sh
+44172767.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_3000.stdout -e ../out_err/test8ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_3000.sh
+44172768.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_3000.stdout -e ../out_err/test9ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_3000.sh
+44172769.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_3000.stdout -e ../out_err/test10ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_3000.sh
+44172770.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_3000.stdout -e ../out_err/test11ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_3000.sh
+44172771.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_3000.stdout -e ../out_err/test12ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_3000.sh
+44172772.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_3000.stdout -e ../out_err/test13ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_3000.sh
+44172773.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_3000.stdout -e ../out_err/test14ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_3000.sh
+44172774.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_3000.stdout -e ../out_err/test15ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_3000.sh
+44172775.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_3000.stdout -e ../out_err/test16ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_3000.sh
+44172776.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_3000.stdout -e ../out_err/test17ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_3000.sh
+44172777.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_3000.stdout -e ../out_err/test18ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_3000.sh
+44172778.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_3000.stdout -e ../out_err/test19ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_3000.sh
+44172779.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test20ZPrime_3000.stdout -e ../out_err/test20ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test20ZPrime_3000.sh
+44172780.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test21ZPrime_3000.stdout -e ../out_err/test21ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test21ZPrime_3000.sh
+44172781.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test22ZPrime_3000.stdout -e ../out_err/test22ZPrime_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test22ZPrime_3000.sh
+44172782.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_3500.stdout -e ../out_err/test0ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_3500.sh
+44172783.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_3500.stdout -e ../out_err/test1ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_3500.sh
+44172784.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_3500.stdout -e ../out_err/test2ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_3500.sh
+44172785.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_3500.stdout -e ../out_err/test3ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_3500.sh
+44172786.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_3500.stdout -e ../out_err/test4ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_3500.sh
+44172787.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_3500.stdout -e ../out_err/test5ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_3500.sh
+44172788.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_3500.stdout -e ../out_err/test6ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_3500.sh
+44172789.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_3500.stdout -e ../out_err/test7ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_3500.sh
+44172790.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_3500.stdout -e ../out_err/test8ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_3500.sh
+44172791.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_3500.stdout -e ../out_err/test9ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_3500.sh
+44172792.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_3500.stdout -e ../out_err/test10ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_3500.sh
+44172793.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_3500.stdout -e ../out_err/test11ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_3500.sh
+44172795.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_3500.stdout -e ../out_err/test12ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_3500.sh
+44172796.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_3500.stdout -e ../out_err/test13ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_3500.sh
+44172797.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_3500.stdout -e ../out_err/test14ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_3500.sh
+44172798.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_3500.stdout -e ../out_err/test15ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_3500.sh
+44172799.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_3500.stdout -e ../out_err/test16ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_3500.sh
+44172800.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_3500.stdout -e ../out_err/test17ZPrime_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_3500.sh
+44172801.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_4000.stdout -e ../out_err/test0ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_4000.sh
+44172802.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_4000.stdout -e ../out_err/test1ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_4000.sh
+44172803.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_4000.stdout -e ../out_err/test2ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_4000.sh
+44172804.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_4000.stdout -e ../out_err/test3ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_4000.sh
+44172805.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_4000.stdout -e ../out_err/test4ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_4000.sh
+44172806.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_4000.stdout -e ../out_err/test5ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_4000.sh
+44172807.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_4000.stdout -e ../out_err/test6ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_4000.sh
+44172808.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_4000.stdout -e ../out_err/test7ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_4000.sh
+44172809.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_4000.stdout -e ../out_err/test8ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_4000.sh
+44172810.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_4000.stdout -e ../out_err/test9ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_4000.sh
+44172811.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_4000.stdout -e ../out_err/test10ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_4000.sh
+44172812.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_4000.stdout -e ../out_err/test11ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_4000.sh
+44172813.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_4000.stdout -e ../out_err/test12ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_4000.sh
+44172814.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_4000.stdout -e ../out_err/test13ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_4000.sh
+44172815.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_4000.stdout -e ../out_err/test14ZPrime_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_4000.sh
+44172816.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_4500.stdout -e ../out_err/test0ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_4500.sh
+44172817.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_4500.stdout -e ../out_err/test1ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_4500.sh
+44172818.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_4500.stdout -e ../out_err/test2ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_4500.sh
+44172819.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_4500.stdout -e ../out_err/test3ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_4500.sh
+44172820.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_4500.stdout -e ../out_err/test4ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_4500.sh
+44172821.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_4500.stdout -e ../out_err/test5ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_4500.sh
+44172822.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_4500.stdout -e ../out_err/test6ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_4500.sh
+44172823.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_4500.stdout -e ../out_err/test7ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_4500.sh
+44172824.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_4500.stdout -e ../out_err/test8ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_4500.sh
+44172825.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_4500.stdout -e ../out_err/test9ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_4500.sh
+44172826.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_4500.stdout -e ../out_err/test10ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_4500.sh
+44172827.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_4500.stdout -e ../out_err/test11ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_4500.sh
+44172828.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_4500.stdout -e ../out_err/test12ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_4500.sh
+44172829.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_4500.stdout -e ../out_err/test13ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_4500.sh
+44172830.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_4500.stdout -e ../out_err/test14ZPrime_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_4500.sh
+44172831.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_500.stdout -e ../out_err/test0ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_500.sh
+44172832.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_500.stdout -e ../out_err/test1ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_500.sh
+44172833.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_500.stdout -e ../out_err/test2ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_500.sh
+44172834.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_500.stdout -e ../out_err/test3ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_500.sh
+44172835.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_500.stdout -e ../out_err/test4ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_500.sh
+44172836.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_500.stdout -e ../out_err/test5ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_500.sh
+44172837.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_500.stdout -e ../out_err/test6ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_500.sh
+44172838.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_500.stdout -e ../out_err/test7ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_500.sh
+44172839.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_500.stdout -e ../out_err/test8ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_500.sh
+44172840.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_500.stdout -e ../out_err/test9ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_500.sh
+44172841.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_500.stdout -e ../out_err/test10ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_500.sh
+44172842.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_500.stdout -e ../out_err/test11ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_500.sh
+44172843.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_500.stdout -e ../out_err/test12ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_500.sh
+44172844.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_500.stdout -e ../out_err/test13ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_500.sh
+44172845.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_500.stdout -e ../out_err/test14ZPrime_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_500.sh
+44172846.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_5000.stdout -e ../out_err/test0ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_5000.sh
+44172847.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_5000.stdout -e ../out_err/test1ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_5000.sh
+44172848.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_5000.stdout -e ../out_err/test2ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_5000.sh
+44172849.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_5000.stdout -e ../out_err/test3ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_5000.sh
+44172850.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_5000.stdout -e ../out_err/test4ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_5000.sh
+44172851.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_5000.stdout -e ../out_err/test5ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_5000.sh
+44172852.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_5000.stdout -e ../out_err/test6ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_5000.sh
+44172853.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_5000.stdout -e ../out_err/test7ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_5000.sh
+44172854.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_5000.stdout -e ../out_err/test8ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_5000.sh
+44172855.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_5000.stdout -e ../out_err/test9ZPrime_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_5000.sh
+44172856.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_5500.stdout -e ../out_err/test0ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_5500.sh
+44172857.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_5500.stdout -e ../out_err/test1ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_5500.sh
+44172858.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_5500.stdout -e ../out_err/test2ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_5500.sh
+44172859.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_5500.stdout -e ../out_err/test3ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_5500.sh
+44172860.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_5500.stdout -e ../out_err/test4ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_5500.sh
+44172861.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_5500.stdout -e ../out_err/test5ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_5500.sh
+44172862.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_5500.stdout -e ../out_err/test6ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_5500.sh
+44172863.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_5500.stdout -e ../out_err/test7ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_5500.sh
+44172864.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_5500.stdout -e ../out_err/test8ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_5500.sh
+44172865.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_5500.stdout -e ../out_err/test9ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_5500.sh
+44172866.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_5500.stdout -e ../out_err/test10ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_5500.sh
+44172867.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_5500.stdout -e ../out_err/test11ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_5500.sh
+44172868.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_5500.stdout -e ../out_err/test12ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_5500.sh
+44172869.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_5500.stdout -e ../out_err/test13ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_5500.sh
+44172870.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_5500.stdout -e ../out_err/test14ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_5500.sh
+44172871.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_5500.stdout -e ../out_err/test15ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_5500.sh
+44172872.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_5500.stdout -e ../out_err/test16ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_5500.sh
+44172873.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_5500.stdout -e ../out_err/test17ZPrime_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_5500.sh
+44172874.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_600.stdout -e ../out_err/test0ZPrime_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_600.sh
+44172875.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_600.stdout -e ../out_err/test1ZPrime_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_600.sh
+44172876.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_600.stdout -e ../out_err/test2ZPrime_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_600.sh
+44172877.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_600.stdout -e ../out_err/test3ZPrime_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_600.sh
+44172878.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_600.stdout -e ../out_err/test4ZPrime_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_600.sh
+44172879.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_6000.stdout -e ../out_err/test0ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_6000.sh
+44172880.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_6000.stdout -e ../out_err/test1ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_6000.sh
+44172881.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_6000.stdout -e ../out_err/test2ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_6000.sh
+44172882.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_6000.stdout -e ../out_err/test3ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_6000.sh
+qsub: Invalid credential
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_6000.stdout -e ../out_err/test4ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_6000.sh
+44172883.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_6000.stdout -e ../out_err/test5ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_6000.sh
+44172884.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_6000.stdout -e ../out_err/test6ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_6000.sh
+44172885.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_6000.stdout -e ../out_err/test7ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_6000.sh
+44172886.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_6000.stdout -e ../out_err/test8ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_6000.sh
+44172887.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_6000.stdout -e ../out_err/test9ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_6000.sh
+44172888.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_6000.stdout -e ../out_err/test10ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_6000.sh
+44172889.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_6000.stdout -e ../out_err/test11ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_6000.sh
+44172890.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_6000.stdout -e ../out_err/test12ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_6000.sh
+44172891.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_6000.stdout -e ../out_err/test13ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_6000.sh
+44172892.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_6000.stdout -e ../out_err/test14ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_6000.sh
+44172893.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_6000.stdout -e ../out_err/test15ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_6000.sh
+44172894.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_6000.stdout -e ../out_err/test16ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_6000.sh
+44172895.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_6000.stdout -e ../out_err/test17ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_6000.sh
+44172896.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_6000.stdout -e ../out_err/test18ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_6000.sh
+44172897.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_6000.stdout -e ../out_err/test19ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_6000.sh
+44172898.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_700.stdout -e ../out_err/test0ZPrime_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_700.sh
+44172899.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_700.stdout -e ../out_err/test1ZPrime_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_700.sh
+44172900.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_700.stdout -e ../out_err/test2ZPrime_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_700.sh
+44172901.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_700.stdout -e ../out_err/test3ZPrime_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_700.sh
+44172902.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_700.stdout -e ../out_err/test4ZPrime_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_700.sh
+44172903.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_700.stdout -e ../out_err/test5ZPrime_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_700.sh
+44172904.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_700.stdout -e ../out_err/test6ZPrime_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_700.sh
+44172905.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_700.stdout -e ../out_err/test7ZPrime_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_700.sh
+44172906.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_800.stdout -e ../out_err/test0ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_800.sh
+44172907.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_800.stdout -e ../out_err/test1ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_800.sh
+44172908.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_800.stdout -e ../out_err/test2ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_800.sh
+44172909.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_800.stdout -e ../out_err/test3ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_800.sh
+44172910.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_800.stdout -e ../out_err/test4ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_800.sh
+44172911.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_800.stdout -e ../out_err/test5ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_800.sh
+44172912.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_800.stdout -e ../out_err/test6ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_800.sh
+44172913.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_800.stdout -e ../out_err/test7ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_800.sh
+44172914.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_800.stdout -e ../out_err/test8ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_800.sh
+44172915.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_800.stdout -e ../out_err/test9ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_800.sh
+44172916.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_800.stdout -e ../out_err/test10ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_800.sh
+44172917.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_800.stdout -e ../out_err/test11ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_800.sh
+44172918.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_800.stdout -e ../out_err/test12ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_800.sh
+44172919.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_800.stdout -e ../out_err/test13ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_800.sh
+44172920.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_800.stdout -e ../out_err/test14ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_800.sh
+44172921.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_800.stdout -e ../out_err/test15ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_800.sh
+44172922.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_800.stdout -e ../out_err/test16ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_800.sh
+44172923.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_800.stdout -e ../out_err/test17ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_800.sh
+44172924.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test18ZPrime_800.stdout -e ../out_err/test18ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test18ZPrime_800.sh
+44172925.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test19ZPrime_800.stdout -e ../out_err/test19ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test19ZPrime_800.sh
+44172926.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test20ZPrime_800.stdout -e ../out_err/test20ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test20ZPrime_800.sh
+44172927.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test21ZPrime_800.stdout -e ../out_err/test21ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test21ZPrime_800.sh
+44172928.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test22ZPrime_800.stdout -e ../out_err/test22ZPrime_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test22ZPrime_800.sh
+44172929.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0ZPrime_900.stdout -e ../out_err/test0ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0ZPrime_900.sh
+44172930.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test1ZPrime_900.stdout -e ../out_err/test1ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test1ZPrime_900.sh
+44172931.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test2ZPrime_900.stdout -e ../out_err/test2ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test2ZPrime_900.sh
+44172932.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_900.stdout -e ../out_err/test3ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_900.sh
+44172933.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test4ZPrime_900.stdout -e ../out_err/test4ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test4ZPrime_900.sh
+44172934.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test5ZPrime_900.stdout -e ../out_err/test5ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test5ZPrime_900.sh
+44172935.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test6ZPrime_900.stdout -e ../out_err/test6ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test6ZPrime_900.sh
+44172936.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test7ZPrime_900.stdout -e ../out_err/test7ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test7ZPrime_900.sh
+44172937.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test8ZPrime_900.stdout -e ../out_err/test8ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test8ZPrime_900.sh
+44172938.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test9ZPrime_900.stdout -e ../out_err/test9ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test9ZPrime_900.sh
+44172939.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test10ZPrime_900.stdout -e ../out_err/test10ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test10ZPrime_900.sh
+44172940.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test11ZPrime_900.stdout -e ../out_err/test11ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test11ZPrime_900.sh
+44172941.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test12ZPrime_900.stdout -e ../out_err/test12ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test12ZPrime_900.sh
+44172942.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test13ZPrime_900.stdout -e ../out_err/test13ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test13ZPrime_900.sh
+44172943.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test14ZPrime_900.stdout -e ../out_err/test14ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test14ZPrime_900.sh
+44172944.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test15ZPrime_900.stdout -e ../out_err/test15ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test15ZPrime_900.sh
+44172945.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test16ZPrime_900.stdout -e ../out_err/test16ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test16ZPrime_900.sh
+44172946.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test17ZPrime_900.stdout -e ../out_err/test17ZPrime_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test17ZPrime_900.sh
+44172947.cream02.iihe.ac.be
+[1;33m[WARN] [0;m[30/10 14:11] Sleeping for 60, then retrying errors ...
+[1;32m[INFO] [0;m[30/10 14:12] There are 402 jobs on the cluster and 1 left to run,  sending 1 jobs:
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test3ZPrime_6000.stdout -e ../out_err/test3ZPrime_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test3ZPrime_6000.sh
+44172949.cream02.iihe.ac.be
+[1;32m[INFO] [0;m[30/10 14:12] No errors to retry.
+[1;32m[INFO] [0;m[30/10 14:12] There's no more jobs to run, exiting !

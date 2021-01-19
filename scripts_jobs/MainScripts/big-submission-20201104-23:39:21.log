@@ -1,0 +1,73 @@
+[1;32m[INFO] [0;m[04/11 23:39] There are 0 jobs on the cluster and 35 left to run,  sending 35 jobs:
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1000.stdout -e ../out_err/test0RPV_l001_1000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1000.sh
+44194824.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1200.stdout -e ../out_err/test0RPV_l001_1200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1200.sh
+44194825.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1400.stdout -e ../out_err/test0RPV_l001_1400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1400.sh
+44194826.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1600.stdout -e ../out_err/test0RPV_l001_1600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1600.sh
+44194827.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_1800.stdout -e ../out_err/test0RPV_l001_1800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_1800.sh
+44194828.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_200.stdout -e ../out_err/test0RPV_l001_200.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_200.sh
+44194829.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_2000.stdout -e ../out_err/test0RPV_l001_2000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_2000.sh
+44194830.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_2500.stdout -e ../out_err/test0RPV_l001_2500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_2500.sh
+44194831.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_300.stdout -e ../out_err/test0RPV_l001_300.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_300.sh
+44194832.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_3000.stdout -e ../out_err/test0RPV_l001_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_3000.sh
+44194833.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_3500.stdout -e ../out_err/test0RPV_l001_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_3500.sh
+44194834.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_400.stdout -e ../out_err/test0RPV_l001_400.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_400.sh
+44194835.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_4000.stdout -e ../out_err/test0RPV_l001_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_4000.sh
+44194836.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_4500.stdout -e ../out_err/test0RPV_l001_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_4500.sh
+44194837.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_500.stdout -e ../out_err/test0RPV_l001_500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_500.sh
+44194838.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_5000.stdout -e ../out_err/test0RPV_l001_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_5000.sh
+44194839.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_5500.stdout -e ../out_err/test0RPV_l001_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_5500.sh
+44194840.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_600.stdout -e ../out_err/test0RPV_l001_600.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_600.sh
+44194841.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_6500.stdout -e ../out_err/test0RPV_l001_6500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_6500.sh
+44194842.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_700.stdout -e ../out_err/test0RPV_l001_700.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_700.sh
+44194843.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_800.stdout -e ../out_err/test0RPV_l001_800.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_800.sh
+44194844.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l001_900.stdout -e ../out_err/test0RPV_l001_900.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l001_900.sh
+44194845.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l01_3000.stdout -e ../out_err/test0RPV_l01_3000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l01_3000.sh
+44194846.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l01_3500.stdout -e ../out_err/test0RPV_l01_3500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l01_3500.sh
+44194847.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l01_4000.stdout -e ../out_err/test0RPV_l01_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l01_4000.sh
+44194848.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_4000.stdout -e ../out_err/test0RPV_l02_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_4000.sh
+44194849.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_4500.stdout -e ../out_err/test0RPV_l02_4500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_4500.sh
+44194850.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_5000.stdout -e ../out_err/test0RPV_l02_5000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_5000.sh
+44194851.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_5500.stdout -e ../out_err/test0RPV_l02_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_5500.sh
+44194852.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_6000.stdout -e ../out_err/test0RPV_l02_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_6000.sh
+44194853.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l02_6500.stdout -e ../out_err/test0RPV_l02_6500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l02_6500.sh
+44194854.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l05_4000.stdout -e ../out_err/test0RPV_l05_4000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l05_4000.sh
+44194855.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l05_5500.stdout -e ../out_err/test0RPV_l05_5500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l05_5500.sh
+44194856.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l05_6000.stdout -e ../out_err/test0RPV_l05_6000.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l05_6000.sh
+44194857.cream02.iihe.ac.be
+[1;34mCommand:[0;m qsub -q localgrid@cream02 -o ../out_err/test0RPV_l05_6500.stdout -e ../out_err/test0RPV_l05_6500.stderr -l walltime=13:00:00    ../Jobs_to_submit/test0RPV_l05_6500.sh
+44194858.cream02.iihe.ac.be
+[1;32m[INFO] [0;m[04/11 23:39] No errors to retry.
+[1;32m[INFO] [0;m[04/11 23:39] There's no more jobs to run, exiting !

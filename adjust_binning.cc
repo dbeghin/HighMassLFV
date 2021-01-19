@@ -32,8 +32,8 @@ int main(/*int argc, char** argv*/) {
 
 
   vector<TString> sig_names;
-  sig_names.push_back("RPV_l001_1000_");
-  sig_names.push_back("RPV_l001_4000_");
+  //sig_names.push_back("RPV_l001_1000_");
+  //sig_names.push_back("RPV_l001_4000_");
   //sig_names.push_back("ZPrime_1000_");
   //sig_names.push_back("ZPrime_2000_");
   //sig_names.push_back("ZPrime_3000_");
@@ -44,13 +44,15 @@ int main(/*int argc, char** argv*/) {
   systs.push_back("nominal");
   vector<TString> systs_aux = GetSys();
   for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    if (systs_aux[iAux] == "topPt") continue;
     systs.push_back(systs_aux[iAux]+"_up");
     systs.push_back(systs_aux[iAux]+"_down");
   }
 
 
   //rebin vectors
-  vector<float> xpoints {/*0, 10, 20, 30, 40, */50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 600, 800, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 6000, 8000};
+  //vector<float> xpoints {/*0, 10, 20, 30, 40, */50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 600, 800, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 6000, 8000};
+  vector<float> xpoints {50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 725.0, 800.0, 900.0, 1000.0, 1100.0, 1200.0, 1300.0, 1400.0, 1550.0, 1700.0, 1850.0, 2000.0, 2200.0, 2400.0, 2700.0, 3000.0, 3300.0, 3600.0, 4000.0, 4400.0, 4800.0, 5300.0, 5800.0, 6400.0, 7000.0, 8000.0};
   cout << xpoints.size() << endl;
 
   vector<float> xpoints_MET {/*0, */10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 300, 500, 1000, 2000};
