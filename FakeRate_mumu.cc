@@ -1,11 +1,6 @@
 #define IIHEAnalysis_cxx
-#include "IIHEAnalysis_2016.h"
+#include "SF_and_systematics.cc"
 #include "meta.h"
-//#include <TH1.h>
-#include <TLorentzVector.h>
-//#include <TCanvas.h>
-#include "TString.h"
-#include <iostream>
 
 using namespace std;
 
@@ -113,24 +108,31 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    htau_names.push_back("taupt_ratio_pass");      nBins_tau.push_back(1000); x_min_tau.push_back(0);    x_max_tau.push_back(1000);
    htau_names.push_back("taupt_ratio_fail");      nBins_tau.push_back(1000); x_min_tau.push_back(0);    x_max_tau.push_back(10);
 
+   vector<TString> flavor;
+   flavor.push_back("quark"); int d_quark = flavor.size()-1;
+   flavor.push_back("gluon"); int d_gluon = flavor.size()-1;
+
    vector<TString> dms;
    dms.push_back("DM0");
    dms.push_back("DM1");
    dms.push_back("DM10");
+   dms.push_back("DM11");
 
    vector<TString> eta;
    eta.push_back("barrel");
    eta.push_back("endcap");
 
 
-   vector<TH2D*> hh[htau_names.size()][dms.size()];
+   vector<TH2D*> hh[htau_names.size()][dms.size()][flavor.size()];
 
    for (unsigned int i = 0; i<htau_names.size(); ++i) {
      for (unsigned int k = 0; k<dms.size(); ++k) {
-       for (unsigned int l = 0; l<eta.size(); ++l) {
-	 TString nname = htau_names[i]+"_"+dms[k]+"_"+eta[l];
-	 hh[i][k].push_back( new TH2D(nname, nname, 1000, 0, 1000, 1000, 0, 10) );
-	 hh[i][k][l]->Sumw2();
+       for (unsigned int dd = 0; dd<flavor.size(); ++dd) {
+	 for (unsigned int l = 0; l<eta.size(); ++l) {
+	   TString nname = htau_names[i]+"_"+dms[k]+"_"+flavor[dd]+"_"+eta[l];
+	   hh[i][k][dd].push_back( new TH2D(nname, nname, 500, 0, 1000, 500, 0, 5) );
+	   hh[i][k][dd][l]->Sumw2();
+	 }
        }
      }
    }
@@ -148,7 +150,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       if (iEntry < 0) break;
       if (jEntry % 1000 == 0) fprintf(stdout, "\r  Processed events: %8d of %8d ", jEntry, nEntries);
       //if (jEntry % 10 == 0) cout << endl << "Processed events: " << jEntry << " of " << nEntries;
-      
+
       
       nb = fChain->GetEntry(jEntry);
       nbytes += nb;
@@ -166,7 +168,6 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
       if(!trig_Flag_HBHENoiseIsoFilter_accept) continue;
       if(!trig_Flag_EcalDeadCellTriggerPrimitiveFilter_accept) continue;
       if(!trig_Flag_BadPFMuonFilter_accept) continue;
-      //ecal bad calib filter FIXME
 
 
       //Sort muons, taus, by increasing isolation/decreasing pt
@@ -266,11 +267,11 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	  for (unsigned int iTau = 0; iTau < tau_pt->size(); ++iTau) {
 	    if (tau_pt->at(iTau) < 30.0) continue;
 	    if (fabs(tau_eta->at(iTau)) > 2.3) continue;
-	    if (tau_decayModeFinding->at(iTau) < 0.5) continue;
-	    //if (tau_againstMuonTight3->at(iTau) < 0.5) continue;  //FIXME
-	    //if (tau_againstElectronVLooseMVA6->at(iTau) < 0.5) continue;
-	    if (tau_againstMuonLoose3->at(iTau) < 0.5) continue;  //FIXME
-	    if (tau_againstElectronLooseMVA6->at(iTau) < 0.5) continue;
+	    if (tau_byTightDeepTau2017v2p1VSmu->at(iTau) < 0.5) continue;
+            if (tau_byLooseDeepTau2017v2p1VSe->at(iTau) < 0.5) continue;
+            if (tau_byVVVLooseDeepTau2017v2p1VSjet->at(iTau) < 0.5) continue;
+            if (tau_decayModeFindingNewDMs->at(iTau) < 0.5) continue;
+            if (tau_decayMode->at(iTau) == 5 || tau_decayMode->at(iTau) == 6) continue;
 
 	    TLorentzVector tau_p4;
 	    tau_p4.SetPxPyPzE(tau_px->at(iTau), tau_py->at(iTau), tau_pz->at(iTau), tau_energy->at(iTau));
@@ -279,21 +280,25 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    
 	    // MATCH TAUS TO AK4 jets
 	    bool matched_to_reco_jet=false;
+	    int dJetFlavor = -1;
 	    TLorentzVector jet_p4(0.,0.,0.,0.);
 	    for (unsigned int ijet = 0; ijet < jet_pt->size(); ijet++){
 	      if(!(fabs(jet_eta->at(ijet)) < 2.3)) continue;
 	      bool looseJet = false;
 	      if (data) looseJet = jet_isJetIDLoose_2016->at(ijet);
-	      else looseJet = jet_isJetIDLoose->at(ijet);
+	      else looseJet = jet_isJetIDLoose_2016->at(ijet);
 	      if(!looseJet) continue;
 	      TLorentzVector jet_p4_tmp;
 	      jet_p4_tmp.SetPxPyPzE(jet_px->at(ijet), jet_py->at(ijet), jet_pz->at(ijet), jet_energy->at(ijet));
 	      if(!(tau_p4.DeltaR(jet_p4_tmp) < 0.2)) continue;
+	      if (abs(jet_partonFlavour->at(ijet)) == 21) dJetFlavor = d_gluon;
+	      else if (abs(jet_partonFlavour->at(ijet)) <= 6) dJetFlavor = d_quark;
 	      matched_to_reco_jet=true;
 	      jet_p4=jet_p4_tmp;
 	      break;
-
 	    }
+
+	    if (dJetFlavor < 0) continue;
 
 	    if(!(matched_to_reco_jet)) continue;
 	    float ratio = 0;
@@ -326,6 +331,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    else if (tau_decayMode->at(iTau) == 10) {
 	      j_dm = 2;
 	    }
+	    else if (tau_decayMode->at(iTau) == 11) {
+	      j_dm = 3;
+	    }
+	    else {
+	      continue;
+	    }
 
 	    TString eta_string = GetEtaString(tau_eta->at(iTau));
 	    if (eta_string == "barrel") {
@@ -337,13 +348,12 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
 	    if (j_dm == -1 || k_eta == -1) continue;
 
 	    cout << eta_string << endl;
-	    cout << "vloose " << tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) << endl;
 	    //Tau histos
-	    if (tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5) {
-	      hh[0][j_dm][k_eta]->Fill(tau_pt->at(iTau), ratio, final_weight);
+            if (tau_byTightDeepTau2017v2p1VSjet->at(iTau) > 0.5) {
+	      hh[0][j_dm][dJetFlavor][k_eta]->Fill(tau_pt->at(iTau), ratio, final_weight);
 	    }
-	    if ((tau_byTightIsolationMVArun2v1DBoldDMwLT->at(iTau) < 0.5) && (tau_byVLooseIsolationMVArun2v1DBoldDMwLT->at(iTau) > 0.5)) {
-	      hh[1][j_dm][k_eta]->Fill(tau_pt->at(iTau), ratio, final_weight);
+	    if ((tau_byTightDeepTau2017v2p1VSjet->at(iTau) < 0.5) && (tau_byVVVLooseDeepTau2017v2p1VSjet->at(iTau) > 0.5)) {
+	      hh[1][j_dm][dJetFlavor][k_eta]->Fill(tau_pt->at(iTau), ratio, final_weight);
 	    }
 	  }//loop over taus
 	}//loop over mus
@@ -356,7 +366,7 @@ void IIHEAnalysis::Loop(string controlregion, string type_of_data, string out_na
    h_total_events->Write();
    h_reweight->Write();
    for (unsigned int i = 0; i<histo_names.size(); ++i) h[i]->Write();
-   for (unsigned int i=0; i<htau_names.size(); ++i) for (unsigned int j=0; j<dms.size(); ++j) for (unsigned int k=0; k<eta.size(); ++k) hh[i][j][k]->Write();
+   for (unsigned int i=0; i<htau_names.size(); ++i) for (unsigned int j=0; j<dms.size(); ++j) for (unsigned int dd=0; dd<flavor.size(); ++dd) for (unsigned int k=0; k<eta.size(); ++k) hh[i][j][dd][k]->Write();
    file_out->Close();
 
 }

@@ -1,19 +1,21 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri Jul 19 15:53:51 2019 by ROOT version 6.12/07
+// Tue Mar  3 16:41:03 2020 by ROOT version 6.12/07
 // from TTree IIHEAnalysis/IIHEAnalysis
-// found on file: /pnfs/iihe/cms/store/user/dbeghin/Legacy/2016/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/crab_WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/190620_184305/0000/outfile_13.root
+// found on file: /pnfs/iihe/cms/store/user/amkalsi/2016_ReReco_DeepTau/DYJetsToLL_M-400to500_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/crab_DYJetsToLL_M-400to500_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/200205_110652/0000/outfile_10.root
 //////////////////////////////////////////////////////////
 
 #ifndef IIHEAnalysis_h
 #define IIHEAnalysis_h
 
-#include "TROOT.h"
-#include "TChain.h"
-#include "TFile.h"
+#include <TROOT.h>
+#include <TChain.h>
+#include <TFile.h>
 #include "TLeaf.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "LHAPDF/LHAPDF.h"
+//#include "LHAPDF/include/LHAPDF/LHAPDF.h"
 #include "aux.h"
 
 using namespace std;
@@ -50,6 +52,9 @@ public :
    Float_t         LHE_weight_nominal;
    vector<float>   *LHE_weight_sys;
    UInt_t          mc_n;
+   Int_t           mc_nMEPartons;
+   Int_t           mc_nMEPartonsFiltered;
+   vector<float>   *mc_DJRValues;
    Float_t         mc_weight;
    Float_t         mc_w_sign;
    Int_t           mc_id_first;
@@ -105,6 +110,10 @@ public :
    vector<float>   *genjet_eta;
    vector<float>   *genjet_phi;
    vector<float>   *genjet_energy;
+   vector<float>   *genjetAK8_pt;
+   vector<float>   *genjetAK8_eta;
+   vector<float>   *genjetAK8_phi;
+   vector<float>   *genjetAK8_energy;
    vector<float>   *gen_weight_sys;
    UInt_t          pv_n;
    vector<float>   *pv_x;
@@ -163,7 +172,6 @@ public :
    vector<int>     *gsf_VID_cutBasedElectronID_Summer16_80X_V1_tight;
    vector<int>     *gsf_VID_cutBasedElectronID_Summer16_80X_V1_veto;
    vector<int>     *gsf_VID_heepElectronID_HEEPV70;
-   vector<int>     *gsf_VIDHEEP7;
    vector<int>     *gsf_VID_mvaEleID_Fall17_iso_V1_wp80;
    vector<int>     *gsf_VID_mvaEleID_Fall17_iso_V1_wp90;
    vector<int>     *gsf_VID_mvaEleID_Fall17_iso_V1_wpLoose;
@@ -545,7 +553,6 @@ public :
    vector<float>   *jet_DeepJet;
    vector<float>   *jet_DeepCSV;
    vector<int>     *jet_isJetIDLoose_2016;
-   vector<int>     *jet_isJetIDLoose;
    vector<int>     *jet_isJetIDTight_2016;
    vector<int>     *jet_isJetIDTightLepVeto_2016;
    vector<int>     *jet_isJetID_2017;
@@ -799,6 +806,29 @@ public :
    vector<float>   *tau_byTightIsolationMVArun2v1DBoldDMwLT2016;
    vector<float>   *tau_byVTightIsolationMVArun2v1DBoldDMwLT2016;
    vector<float>   *tau_byVVTightIsolationMVArun2v1DBoldDMwLT2016;
+   vector<float>   *tau_byDeepTau2017v2p1VSjetraw;
+   vector<float>   *tau_byVVVLooseDeepTau2017v2p1VSjet;
+   vector<float>   *tau_byVVLooseDeepTau2017v2p1VSjet;
+   vector<float>   *tau_byVLooseDeepTau2017v2p1VSjet;
+   vector<float>   *tau_byLooseDeepTau2017v2p1VSjet;
+   vector<float>   *tau_byMediumDeepTau2017v2p1VSjet;
+   vector<float>   *tau_byTightDeepTau2017v2p1VSjet;
+   vector<float>   *tau_byVTightDeepTau2017v2p1VSjet;
+   vector<float>   *tau_byVVTightDeepTau2017v2p1VSjet;
+   vector<float>   *tau_byDeepTau2017v2p1VSeraw;
+   vector<float>   *tau_byVVVLooseDeepTau2017v2p1VSe;
+   vector<float>   *tau_byVVLooseDeepTau2017v2p1VSe;
+   vector<float>   *tau_byVLooseDeepTau2017v2p1VSe;
+   vector<float>   *tau_byLooseDeepTau2017v2p1VSe;
+   vector<float>   *tau_byMediumDeepTau2017v2p1VSe;
+   vector<float>   *tau_byTightDeepTau2017v2p1VSe;
+   vector<float>   *tau_byVTightDeepTau2017v2p1VSe;
+   vector<float>   *tau_byVVTightDeepTau2017v2p1VSe;
+   vector<float>   *tau_byDeepTau2017v2p1VSmuraw;
+   vector<float>   *tau_byVLooseDeepTau2017v2p1VSmu;
+   vector<float>   *tau_byLooseDeepTau2017v2p1VSmu;
+   vector<float>   *tau_byMediumDeepTau2017v2p1VSmu;
+   vector<float>   *tau_byTightDeepTau2017v2p1VSmu;
    Int_t           trig_Flag_ecalBadCalibReduced;
    Int_t           trig_Flag_HBHENoiseFilter_accept;
    Int_t           trig_Flag_HBHENoiseIsoFilter_accept;
@@ -1281,6 +1311,9 @@ public :
    TBranch        *b_LHE_weight_nominal;   //!
    TBranch        *b_LHE_weight_sys;   //!
    TBranch        *b_mc_n;   //!
+   TBranch        *b_mc_nMEPartons;   //!
+   TBranch        *b_mc_nMEPartonsFiltered;   //!
+   TBranch        *b_mc_DJRValues;   //!
    TBranch        *b_mc_weight;   //!
    TBranch        *b_mc_w_sign;   //!
    TBranch        *b_mc_id_first;   //!
@@ -1336,6 +1369,10 @@ public :
    TBranch        *b_genjet_eta;   //!
    TBranch        *b_genjet_phi;   //!
    TBranch        *b_genjet_energy;   //!
+   TBranch        *b_genjetAK8_pt;   //!
+   TBranch        *b_genjetAK8_eta;   //!
+   TBranch        *b_genjetAK8_phi;   //!
+   TBranch        *b_genjetAK8_energy;   //!
    TBranch        *b_gen_weight_sys;   //!
    TBranch        *b_pv_n;   //!
    TBranch        *b_pv_x;   //!
@@ -1394,7 +1431,6 @@ public :
    TBranch        *b_gsf_VID_cutBasedElectronID_Summer16_80X_V1_tight;   //!
    TBranch        *b_gsf_VID_cutBasedElectronID_Summer16_80X_V1_veto;   //!
    TBranch        *b_gsf_VID_heepElectronID_HEEPV70;   //!
-   TBranch        *b_gsf_VIDHEEP7;   //!
    TBranch        *b_gsf_VID_mvaEleID_Fall17_iso_V1_wp80;   //!
    TBranch        *b_gsf_VID_mvaEleID_Fall17_iso_V1_wp90;   //!
    TBranch        *b_gsf_VID_mvaEleID_Fall17_iso_V1_wpLoose;   //!
@@ -1776,7 +1812,6 @@ public :
    TBranch        *b_jet_DeepJet;   //!
    TBranch        *b_jet_DeepCSV;   //!
    TBranch        *b_jet_isJetIDLoose_2016;   //!
-   TBranch        *b_jet_isJetIDLoose;   //!
    TBranch        *b_jet_isJetIDTight_2016;   //!
    TBranch        *b_jet_isJetIDTightLepVeto_2016;   //!
    TBranch        *b_jet_isJetID_2017;   //!
@@ -2030,6 +2065,29 @@ public :
    TBranch        *b_tau_byTightIsolationMVArun2v1DBoldDMwLT2016;   //!
    TBranch        *b_tau_byVTightIsolationMVArun2v1DBoldDMwLT2016;   //!
    TBranch        *b_tau_byVVTightIsolationMVArun2v1DBoldDMwLT2016;   //!
+   TBranch        *b_tau_byDeepTau2017v2p1VSjetraw;   //!
+   TBranch        *b_tau_byVVVLooseDeepTau2017v2p1VSjet;   //!
+   TBranch        *b_tau_byVVLooseDeepTau2017v2p1VSjet;   //!
+   TBranch        *b_tau_byVLooseDeepTau2017v2p1VSjet;   //!
+   TBranch        *b_tau_byLooseDeepTau2017v2p1VSjet;   //!
+   TBranch        *b_tau_byMediumDeepTau2017v2p1VSjet;   //!
+   TBranch        *b_tau_byTightDeepTau2017v2p1VSjet;   //!
+   TBranch        *b_tau_byVTightDeepTau2017v2p1VSjet;   //!
+   TBranch        *b_tau_byVVTightDeepTau2017v2p1VSjet;   //!
+   TBranch        *b_tau_byDeepTau2017v2p1VSeraw;   //!
+   TBranch        *b_tau_byVVVLooseDeepTau2017v2p1VSe;   //!
+   TBranch        *b_tau_byVVLooseDeepTau2017v2p1VSe;   //!
+   TBranch        *b_tau_byVLooseDeepTau2017v2p1VSe;   //!
+   TBranch        *b_tau_byLooseDeepTau2017v2p1VSe;   //!
+   TBranch        *b_tau_byMediumDeepTau2017v2p1VSe;   //!
+   TBranch        *b_tau_byTightDeepTau2017v2p1VSe;   //!
+   TBranch        *b_tau_byVTightDeepTau2017v2p1VSe;   //!
+   TBranch        *b_tau_byVVTightDeepTau2017v2p1VSe;   //!
+   TBranch        *b_tau_byDeepTau2017v2p1VSmuraw;   //!
+   TBranch        *b_tau_byVLooseDeepTau2017v2p1VSmu;   //!
+   TBranch        *b_tau_byLooseDeepTau2017v2p1VSmu;   //!
+   TBranch        *b_tau_byMediumDeepTau2017v2p1VSmu;   //!
+   TBranch        *b_tau_byTightDeepTau2017v2p1VSmu;   //!
    TBranch        *b_trig_Flag_ecalBadCalibReduced;   //!
    TBranch        *b_trig_Flag_HBHENoiseFilter_accept;   //!
    TBranch        *b_trig_Flag_HBHENoiseIsoFilter_accept;   //!
@@ -2496,6 +2554,7 @@ public :
    virtual void     Loop(string phase, string type_of_data, string out_name, Float_t nEvents);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+   vector<LHAPDF::PDF*> pdf;
 };
 
 #endif
@@ -2506,9 +2565,9 @@ IIHEAnalysis::IIHEAnalysis(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/pnfs/iihe/cms/store/user/dbeghin/Legacy/2016/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/crab_WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/190620_184305/0000/outfile_13.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/pnfs/iihe/cms/store/user/amkalsi/2016_ReReco_DeepTau/DYJetsToLL_M-400to500_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/crab_DYJetsToLL_M-400to500_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/200205_110652/0000/outfile_10.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/pnfs/iihe/cms/store/user/dbeghin/Legacy/2016/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/crab_WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8/190620_184305/0000/outfile_13.root");
+         f = new TFile("/pnfs/iihe/cms/store/user/amkalsi/2016_ReReco_DeepTau/DYJetsToLL_M-400to500_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/crab_DYJetsToLL_M-400to500_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/200205_110652/0000/outfile_10.root");
       }
       f->GetObject("IIHEAnalysis",tree);
 
@@ -2559,6 +2618,7 @@ void IIHEAnalysis::Init(TTree *tree)
    LHE_pdgid = 0;
    LHE_status = 0;
    LHE_weight_sys = 0;
+   mc_DJRValues = 0;
    mc_index = 0;
    mc_pdgId = 0;
    mc_charge = 0;
@@ -2603,6 +2663,10 @@ void IIHEAnalysis::Init(TTree *tree)
    genjet_eta = 0;
    genjet_phi = 0;
    genjet_energy = 0;
+   genjetAK8_pt = 0;
+   genjetAK8_eta = 0;
+   genjetAK8_phi = 0;
+   genjetAK8_energy = 0;
    gen_weight_sys = 0;
    pv_x = 0;
    pv_y = 0;
@@ -2659,7 +2723,6 @@ void IIHEAnalysis::Init(TTree *tree)
    gsf_VID_cutBasedElectronID_Summer16_80X_V1_tight = 0;
    gsf_VID_cutBasedElectronID_Summer16_80X_V1_veto = 0;
    gsf_VID_heepElectronID_HEEPV70 = 0;
-   gsf_VIDHEEP7 = 0;
    gsf_VID_mvaEleID_Fall17_iso_V1_wp80 = 0;
    gsf_VID_mvaEleID_Fall17_iso_V1_wp90 = 0;
    gsf_VID_mvaEleID_Fall17_iso_V1_wpLoose = 0;
@@ -3038,7 +3101,6 @@ void IIHEAnalysis::Init(TTree *tree)
    jet_DeepJet = 0;
    jet_DeepCSV = 0;
    jet_isJetIDLoose_2016 = 0;
-   jet_isJetIDLoose = 0;
    jet_isJetIDTight_2016 = 0;
    jet_isJetIDTightLepVeto_2016 = 0;
    jet_isJetID_2017 = 0;
@@ -3220,6 +3282,29 @@ void IIHEAnalysis::Init(TTree *tree)
    tau_byTightIsolationMVArun2v1DBoldDMwLT2016 = 0;
    tau_byVTightIsolationMVArun2v1DBoldDMwLT2016 = 0;
    tau_byVVTightIsolationMVArun2v1DBoldDMwLT2016 = 0;
+   tau_byDeepTau2017v2p1VSjetraw = 0;
+   tau_byVVVLooseDeepTau2017v2p1VSjet = 0;
+   tau_byVVLooseDeepTau2017v2p1VSjet = 0;
+   tau_byVLooseDeepTau2017v2p1VSjet = 0;
+   tau_byLooseDeepTau2017v2p1VSjet = 0;
+   tau_byMediumDeepTau2017v2p1VSjet = 0;
+   tau_byTightDeepTau2017v2p1VSjet = 0;
+   tau_byVTightDeepTau2017v2p1VSjet = 0;
+   tau_byVVTightDeepTau2017v2p1VSjet = 0;
+   tau_byDeepTau2017v2p1VSeraw = 0;
+   tau_byVVVLooseDeepTau2017v2p1VSe = 0;
+   tau_byVVLooseDeepTau2017v2p1VSe = 0;
+   tau_byVLooseDeepTau2017v2p1VSe = 0;
+   tau_byLooseDeepTau2017v2p1VSe = 0;
+   tau_byMediumDeepTau2017v2p1VSe = 0;
+   tau_byTightDeepTau2017v2p1VSe = 0;
+   tau_byVTightDeepTau2017v2p1VSe = 0;
+   tau_byVVTightDeepTau2017v2p1VSe = 0;
+   tau_byDeepTau2017v2p1VSmuraw = 0;
+   tau_byVLooseDeepTau2017v2p1VSmu = 0;
+   tau_byLooseDeepTau2017v2p1VSmu = 0;
+   tau_byMediumDeepTau2017v2p1VSmu = 0;
+   tau_byTightDeepTau2017v2p1VSmu = 0;
    trig_HLT_DoubleEle33_CaloIdL_hltL1sSingleAndDoubleEGNonIsoOrWithEG26WithJetAndTau_eta = 0;
    trig_HLT_DoubleEle33_CaloIdL_hltL1sSingleAndDoubleEGNonIsoOrWithEG26WithJetAndTau_phi = 0;
    trig_HLT_DoubleEle33_CaloIdL_hltL1sSingleAndDoubleEGNonIsoOrWithEG26WithJetAndTau_et = 0;
@@ -3418,6 +3503,9 @@ void IIHEAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("LHE_weight_nominal", &LHE_weight_nominal, &b_LHE_weight_nominal);
    fChain->SetBranchAddress("LHE_weight_sys", &LHE_weight_sys, &b_LHE_weight_sys);
    fChain->SetBranchAddress("mc_n", &mc_n, &b_mc_n);
+   fChain->SetBranchAddress("mc_nMEPartons", &mc_nMEPartons, &b_mc_nMEPartons);
+   fChain->SetBranchAddress("mc_nMEPartonsFiltered", &mc_nMEPartonsFiltered, &b_mc_nMEPartonsFiltered);
+   fChain->SetBranchAddress("mc_DJRValues", &mc_DJRValues, &b_mc_DJRValues);
    fChain->SetBranchAddress("mc_weight", &mc_weight, &b_mc_weight);
    fChain->SetBranchAddress("mc_w_sign", &mc_w_sign, &b_mc_w_sign);
    fChain->SetBranchAddress("mc_id_first", &mc_id_first, &b_mc_id_first);
@@ -3473,6 +3561,10 @@ void IIHEAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("genjet_eta", &genjet_eta, &b_genjet_eta);
    fChain->SetBranchAddress("genjet_phi", &genjet_phi, &b_genjet_phi);
    fChain->SetBranchAddress("genjet_energy", &genjet_energy, &b_genjet_energy);
+   fChain->SetBranchAddress("genjetAK8_pt", &genjetAK8_pt, &b_genjetAK8_pt);
+   fChain->SetBranchAddress("genjetAK8_eta", &genjetAK8_eta, &b_genjetAK8_eta);
+   fChain->SetBranchAddress("genjetAK8_phi", &genjetAK8_phi, &b_genjetAK8_phi);
+   fChain->SetBranchAddress("genjetAK8_energy", &genjetAK8_energy, &b_genjetAK8_energy);
    fChain->SetBranchAddress("gen_weight_sys", &gen_weight_sys, &b_gen_weight_sys);
    fChain->SetBranchAddress("pv_n", &pv_n, &b_pv_n);
    fChain->SetBranchAddress("pv_x", &pv_x, &b_pv_x);
@@ -3531,7 +3623,6 @@ void IIHEAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("gsf_VID_cutBasedElectronID_Summer16_80X_V1_tight", &gsf_VID_cutBasedElectronID_Summer16_80X_V1_tight, &b_gsf_VID_cutBasedElectronID_Summer16_80X_V1_tight);
    fChain->SetBranchAddress("gsf_VID_cutBasedElectronID_Summer16_80X_V1_veto", &gsf_VID_cutBasedElectronID_Summer16_80X_V1_veto, &b_gsf_VID_cutBasedElectronID_Summer16_80X_V1_veto);
    fChain->SetBranchAddress("gsf_VID_heepElectronID_HEEPV70", &gsf_VID_heepElectronID_HEEPV70, &b_gsf_VID_heepElectronID_HEEPV70);
-   fChain->SetBranchAddress("gsf_VIDHEEP7", &gsf_VIDHEEP7, &b_gsf_VIDHEEP7);
    fChain->SetBranchAddress("gsf_VID_mvaEleID_Fall17_iso_V1_wp80", &gsf_VID_mvaEleID_Fall17_iso_V1_wp80, &b_gsf_VID_mvaEleID_Fall17_iso_V1_wp80);
    fChain->SetBranchAddress("gsf_VID_mvaEleID_Fall17_iso_V1_wp90", &gsf_VID_mvaEleID_Fall17_iso_V1_wp90, &b_gsf_VID_mvaEleID_Fall17_iso_V1_wp90);
    fChain->SetBranchAddress("gsf_VID_mvaEleID_Fall17_iso_V1_wpLoose", &gsf_VID_mvaEleID_Fall17_iso_V1_wpLoose, &b_gsf_VID_mvaEleID_Fall17_iso_V1_wpLoose);
@@ -3913,7 +4004,6 @@ void IIHEAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("jet_DeepJet", &jet_DeepJet, &b_jet_DeepJet);
    fChain->SetBranchAddress("jet_DeepCSV", &jet_DeepCSV, &b_jet_DeepCSV);
    fChain->SetBranchAddress("jet_isJetIDLoose_2016", &jet_isJetIDLoose_2016, &b_jet_isJetIDLoose_2016);
-   fChain->SetBranchAddress("jet_isJetIDLoose", &jet_isJetIDLoose, &b_jet_isJetIDLoose);
    fChain->SetBranchAddress("jet_isJetIDTight_2016", &jet_isJetIDTight_2016, &b_jet_isJetIDTight_2016);
    fChain->SetBranchAddress("jet_isJetIDTightLepVeto_2016", &jet_isJetIDTightLepVeto_2016, &b_jet_isJetIDTightLepVeto_2016);
    fChain->SetBranchAddress("jet_isJetID_2017", &jet_isJetID_2017, &b_jet_isJetID_2017);
@@ -4167,6 +4257,29 @@ void IIHEAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("tau_byTightIsolationMVArun2v1DBoldDMwLT2016", &tau_byTightIsolationMVArun2v1DBoldDMwLT2016, &b_tau_byTightIsolationMVArun2v1DBoldDMwLT2016);
    fChain->SetBranchAddress("tau_byVTightIsolationMVArun2v1DBoldDMwLT2016", &tau_byVTightIsolationMVArun2v1DBoldDMwLT2016, &b_tau_byVTightIsolationMVArun2v1DBoldDMwLT2016);
    fChain->SetBranchAddress("tau_byVVTightIsolationMVArun2v1DBoldDMwLT2016", &tau_byVVTightIsolationMVArun2v1DBoldDMwLT2016, &b_tau_byVVTightIsolationMVArun2v1DBoldDMwLT2016);
+   fChain->SetBranchAddress("tau_byDeepTau2017v2p1VSjetraw", &tau_byDeepTau2017v2p1VSjetraw, &b_tau_byDeepTau2017v2p1VSjetraw);
+   fChain->SetBranchAddress("tau_byVVVLooseDeepTau2017v2p1VSjet", &tau_byVVVLooseDeepTau2017v2p1VSjet, &b_tau_byVVVLooseDeepTau2017v2p1VSjet);
+   fChain->SetBranchAddress("tau_byVVLooseDeepTau2017v2p1VSjet", &tau_byVVLooseDeepTau2017v2p1VSjet, &b_tau_byVVLooseDeepTau2017v2p1VSjet);
+   fChain->SetBranchAddress("tau_byVLooseDeepTau2017v2p1VSjet", &tau_byVLooseDeepTau2017v2p1VSjet, &b_tau_byVLooseDeepTau2017v2p1VSjet);
+   fChain->SetBranchAddress("tau_byLooseDeepTau2017v2p1VSjet", &tau_byLooseDeepTau2017v2p1VSjet, &b_tau_byLooseDeepTau2017v2p1VSjet);
+   fChain->SetBranchAddress("tau_byMediumDeepTau2017v2p1VSjet", &tau_byMediumDeepTau2017v2p1VSjet, &b_tau_byMediumDeepTau2017v2p1VSjet);
+   fChain->SetBranchAddress("tau_byTightDeepTau2017v2p1VSjet", &tau_byTightDeepTau2017v2p1VSjet, &b_tau_byTightDeepTau2017v2p1VSjet);
+   fChain->SetBranchAddress("tau_byVTightDeepTau2017v2p1VSjet", &tau_byVTightDeepTau2017v2p1VSjet, &b_tau_byVTightDeepTau2017v2p1VSjet);
+   fChain->SetBranchAddress("tau_byVVTightDeepTau2017v2p1VSjet", &tau_byVVTightDeepTau2017v2p1VSjet, &b_tau_byVVTightDeepTau2017v2p1VSjet);
+   fChain->SetBranchAddress("tau_byDeepTau2017v2p1VSeraw", &tau_byDeepTau2017v2p1VSeraw, &b_tau_byDeepTau2017v2p1VSeraw);
+   fChain->SetBranchAddress("tau_byVVVLooseDeepTau2017v2p1VSe", &tau_byVVVLooseDeepTau2017v2p1VSe, &b_tau_byVVVLooseDeepTau2017v2p1VSe);
+   fChain->SetBranchAddress("tau_byVVLooseDeepTau2017v2p1VSe", &tau_byVVLooseDeepTau2017v2p1VSe, &b_tau_byVVLooseDeepTau2017v2p1VSe);
+   fChain->SetBranchAddress("tau_byVLooseDeepTau2017v2p1VSe", &tau_byVLooseDeepTau2017v2p1VSe, &b_tau_byVLooseDeepTau2017v2p1VSe);
+   fChain->SetBranchAddress("tau_byLooseDeepTau2017v2p1VSe", &tau_byLooseDeepTau2017v2p1VSe, &b_tau_byLooseDeepTau2017v2p1VSe);
+   fChain->SetBranchAddress("tau_byMediumDeepTau2017v2p1VSe", &tau_byMediumDeepTau2017v2p1VSe, &b_tau_byMediumDeepTau2017v2p1VSe);
+   fChain->SetBranchAddress("tau_byTightDeepTau2017v2p1VSe", &tau_byTightDeepTau2017v2p1VSe, &b_tau_byTightDeepTau2017v2p1VSe);
+   fChain->SetBranchAddress("tau_byVTightDeepTau2017v2p1VSe", &tau_byVTightDeepTau2017v2p1VSe, &b_tau_byVTightDeepTau2017v2p1VSe);
+   fChain->SetBranchAddress("tau_byVVTightDeepTau2017v2p1VSe", &tau_byVVTightDeepTau2017v2p1VSe, &b_tau_byVVTightDeepTau2017v2p1VSe);
+   fChain->SetBranchAddress("tau_byDeepTau2017v2p1VSmuraw", &tau_byDeepTau2017v2p1VSmuraw, &b_tau_byDeepTau2017v2p1VSmuraw);
+   fChain->SetBranchAddress("tau_byVLooseDeepTau2017v2p1VSmu", &tau_byVLooseDeepTau2017v2p1VSmu, &b_tau_byVLooseDeepTau2017v2p1VSmu);
+   fChain->SetBranchAddress("tau_byLooseDeepTau2017v2p1VSmu", &tau_byLooseDeepTau2017v2p1VSmu, &b_tau_byLooseDeepTau2017v2p1VSmu);
+   fChain->SetBranchAddress("tau_byMediumDeepTau2017v2p1VSmu", &tau_byMediumDeepTau2017v2p1VSmu, &b_tau_byMediumDeepTau2017v2p1VSmu);
+   fChain->SetBranchAddress("tau_byTightDeepTau2017v2p1VSmu", &tau_byTightDeepTau2017v2p1VSmu, &b_tau_byTightDeepTau2017v2p1VSmu);
    fChain->SetBranchAddress("trig_Flag_ecalBadCalibReduced", &trig_Flag_ecalBadCalibReduced, &b_trig_Flag_ecalBadCalibReduced);
    fChain->SetBranchAddress("trig_Flag_HBHENoiseFilter_accept", &trig_Flag_HBHENoiseFilter_accept, &b_trig_Flag_HBHENoiseFilter_accept);
    fChain->SetBranchAddress("trig_Flag_HBHENoiseIsoFilter_accept", &trig_Flag_HBHENoiseIsoFilter_accept, &b_trig_Flag_HBHENoiseIsoFilter_accept);

@@ -33,8 +33,6 @@ int main(int argc, char** argv) {
 
   vector<TString> names;
   names.push_back("data_");//0
-  //names.push_back("WJets_");//1
-  //names.push_back("QCD_");//2
   names.push_back("DY_");
   names.push_back("TT_");
   names.push_back("ST_");
@@ -51,25 +49,33 @@ int main(int argc, char** argv) {
   vars.push_back("mu_phi");
   vars.push_back("mu_isolation");
   vars.push_back("ev_DRmutau");
-  //vars.push_back("ev_DeltaPhimutau");
-  //vars.push_back("ev_DeltaPhiMETtau");
+  vars.push_back("ev_deltaMET");
   vars.push_back("ev_Mt");
   vars.push_back("ev_MET");
   vars.push_back("ev_Mcol");
   vars.push_back("sign");
+  vars.push_back("ev_Nvertex");
+  vars.push_back("njet");
+  vars.push_back("nbjet");
+  //exclusively for TT region now                                                                                                                                                        
+  int n_TT_plots = vars.size();
+  vars.push_back("bjet_pt");
+  vars.push_back("bjet_eta");
+  vars.push_back("bjet_phi");
 
   
   vector<TString> Mth;
   Mth.push_back("MtLow_OS");
   Mth.push_back("MtLow_SS");
   Mth.push_back("MtHigh");
-  Mth.push_back("MtLow_TT");
+  Mth.push_back("MtLow_TT");  int k_low_TT = Mth.size()-1;
   Mth.push_back("MtHigh_TT");
 
   vector<TString> systs;
   systs.push_back("nominal");
   vector<TString> systs_aux = GetSys();
   for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    if (systs_aux[iAux] == "topPt") continue;
     systs.push_back(systs_aux[iAux]+"_up");
     systs.push_back(systs_aux[iAux]+"_down");
   }
@@ -77,14 +83,17 @@ int main(int argc, char** argv) {
 
   //retrieve histograms from all control regions
   //only for CR4 (1) do we care to have all histos
-  vector<TH1F*> h[names.size()][vars.size()][systs.size()];
+  vector<TH1F*> h[names.size()][vars.size()][Mth.size()];
   for (unsigned int i=0; i<names.size(); ++i) {
     for (unsigned int j=0; j<vars.size(); ++j) {
-      for (unsigned int k=0; k<systs.size(); ++k) {
-	for (unsigned int l=0; l<Mth.size(); ++l) {
-	  //cout << systs[k]+"/"+names[i]+vars[j]+"_"+"realtau_"+systs[k]+"_"+Mth[l] << endl;
-	  h[i][j][k].push_back( (TH1F*) file_in->Get(systs[k]+"/"+names[i]+vars[j]+"_"+"realtau_"+systs[k]+"_"+Mth[l]) );
-	  h[i][j][k][l]->SetName(names[i]+vars[j]+"_"+systs[k]+"_"+Mth[l]);
+      for (unsigned int l=0; l<Mth.size(); ++l) {
+	for (unsigned int k=0; k<systs.size(); ++k) {
+
+          if (l < k_low_TT && j >= n_TT_plots) continue;
+
+	  cout << systs[k]+"/"+names[i]+vars[j]+"_"+"realtau_"+systs[k]+"_"+Mth[l] << endl;
+	  h[i][j][l].push_back( (TH1F*) file_in->Get(systs[k]+"/"+names[i]+vars[j]+"_"+"realtau_"+systs[k]+"_"+Mth[l]) );
+	  h[i][j][l][k]->SetName(names[i]+vars[j]+"_"+systs[k]+"_"+Mth[l]);
 	}
       }
     }
@@ -95,8 +104,11 @@ int main(int argc, char** argv) {
   for (unsigned int j=0; j<vars.size(); ++j) {
     for (unsigned int k=0; k<systs.size(); ++k) {
       for (unsigned int l=0; l<Mth.size(); ++l) {
-	TH1F* h_faketau = (TH1F*) h[0][j][k][l]->Clone("faketau_"+systs[k]+"_"+vars[j]+"_"+Mth[l]);
-	for (unsigned int i=1; i<names.size(); ++i) h_faketau->Add(h[i][j][k][l], -1);//subtract all real tau bg
+
+	if (l < k_low_TT && j >= n_TT_plots) continue;
+
+	TH1F* h_faketau = (TH1F*) h[0][j][l][0]->Clone("faketau_"+systs[k]+"_"+vars[j]+"_"+Mth[l]);
+	for (unsigned int i=1; i<names.size(); ++i) h_faketau->Add(h[i][j][l][k], -1);//subtract all real tau bg
 	
 	for (unsigned int iBin = 0; iBin<h_faketau->GetNbinsX(); ++iBin) {
 	  if (h_faketau->GetBinContent(iBin) < 0) h_faketau->SetBinContent(iBin,0);

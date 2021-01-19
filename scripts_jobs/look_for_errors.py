@@ -11,7 +11,7 @@ for i in f.readlines():
         error = False
         counter = -1
         for line in error_file.readlines():
-            if ("unknown branch" in line) or ("bytes" in line) or ("mkdir" in line) or ("records" in line):
+            if ("unknown branch" in line) or ("bytes" in line) or ("mkdir" in line) or ("records" in line) or ("transvers momentum" in line):
                 continue
             else:
                 summary_file.write(i + "\n")

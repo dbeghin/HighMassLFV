@@ -31,6 +31,7 @@ public :
    Float_t         MCTruth_DeltaROverlapThreshold;
    vector<float>   *mc_sumofWeights;
    vector<string>  *mc_weightsId;
+   vector<string>  *mc_LHEweightsId;
    Float_t         mc_nEventsWeighted;
    Float_t         nEventsRaw;
    Float_t         nEventsStored;
@@ -43,6 +44,7 @@ public :
    TBranch        *b_MCTruth_DeltaROverlapThreshold;   //!
    TBranch        *b_mc_sumofWeights;   //!
    TBranch        *b_mc_weightsId;   //!
+   TBranch        *b_mc_LHEweightsId;   //!
    TBranch        *b_mc_nEventsWeighted;   //!
    TBranch        *b_nEventsRaw;   //!
    TBranch        *b_nEventsStored;   //!
@@ -116,6 +118,7 @@ void meta::Init(TTree *tree)
    globalTag = 0;
    mc_sumofWeights = 0;
    mc_weightsId = 0;
+   mc_LHEweightsId = 0;
    nRuns = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
@@ -129,6 +132,7 @@ void meta::Init(TTree *tree)
    fChain->SetBranchAddress("MCTruth_DeltaROverlapThreshold", &MCTruth_DeltaROverlapThreshold, &b_MCTruth_DeltaROverlapThreshold);
    fChain->SetBranchAddress("mc_sumofWeights", &mc_sumofWeights, &b_mc_sumofWeights);
    fChain->SetBranchAddress("mc_weightsId", &mc_weightsId, &b_mc_weightsId);
+   fChain->SetBranchAddress("mc_LHEweightsId", &mc_LHEweightsId, &b_mc_LHEweightsId);
    fChain->SetBranchAddress("mc_nEventsWeighted", &mc_nEventsWeighted, &b_mc_nEventsWeighted);
    fChain->SetBranchAddress("nEventsRaw", &nEventsRaw, &b_nEventsRaw);
    fChain->SetBranchAddress("nEventsStored", &nEventsStored, &b_nEventsStored);
