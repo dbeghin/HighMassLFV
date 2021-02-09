@@ -8,9 +8,8 @@ import os
 from datasets_signal import * #imports dataset paths: pnfn[], myname[] and myoption[] arrays 
 if __name__ == "__main__":
     location=os.getcwd();
-    #name of your *compiled* code (omit the .exe extension)
     code_area = "/user/dbeghin/Work/MuTauHighMass/"
-    #code_name = "HighMassLFVMuTau_forsignal"
+    #name of your *compiled* code (omit the .exe extension)
     code_name = "HighMassLFVMuTau_rankPDF"
     region = "CR100"
     folder = "/user/dbeghin/Work/MuTauHighMass/HighMassLFVMuTau/RankPDF/"
