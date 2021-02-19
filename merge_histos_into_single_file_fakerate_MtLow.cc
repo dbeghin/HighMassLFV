@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
 
   vector<TFile*> DY_files;
   TFile* file_in_DY_lowmass = new TFile(folder_in+"/Arranged_DY/DY_inclusive.root", "R");            DY_files.push_back(file_in_DY_lowmass);
+  TFile* file_in_DY_100to200 = new TFile(folder_in+"/Arranged_DY/DY_100to200.root", "R");            DY_files.push_back(file_in_DY_100to200);
   TFile* file_in_DY_200to400 = new TFile(folder_in+"/Arranged_DY/DY_200to400.root", "R");            DY_files.push_back(file_in_DY_200to400);
   TFile* file_in_DY_400to500 = new TFile(folder_in+"/Arranged_DY/DY_400to500.root", "R");            DY_files.push_back(file_in_DY_400to500);
   TFile* file_in_DY_500to700 = new TFile(folder_in+"/Arranged_DY/DY_500to700.root", "R");	     DY_files.push_back(file_in_DY_500to700);
@@ -101,8 +102,8 @@ int main(int argc, char** argv) {
   
 
   vector<TString> vars_TH2;
-  vars_TH2.push_back("taupt_ratio_pass");
-  vars_TH2.push_back("taupt_ratio_fail");
+  vars_TH2.push_back("taupt_ratio_DeepTauPass");
+  vars_TH2.push_back("taupt_ratio_DeepTauFail");
 
   vector<TString> Mth;
   Mth.push_back("MtLow_OS");
@@ -113,6 +114,7 @@ int main(int argc, char** argv) {
 
   vector<TString> systs_aux = GetSys();
   for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    if (systs_aux[iAux] == "topPt") continue;
     systs.push_back(systs_aux[iAux]+"_up");
     systs.push_back(systs_aux[iAux]+"_down");
   }
@@ -126,10 +128,11 @@ int main(int argc, char** argv) {
 
 
   //cross-sections
-  float kNNLO = 1.048;
+  float kNNLO = 1.023;
 
   vector<double> xs_DY;
-  double xs_DY_lowmass   = 6225.4;           xs_DY.push_back(xs_DY_lowmass);
+  double xs_DY_lowmass   = 6077.22;          xs_DY.push_back(xs_DY_lowmass);
+  double xs_DY_100to200  = kNNLO*226.6;      xs_DY.push_back(xs_DY_100to200);
   double xs_DY_200to400  = kNNLO*7.77;       xs_DY.push_back(xs_DY_200to400);
   double xs_DY_400to500  = kNNLO*0.4065;     xs_DY.push_back(xs_DY_400to500);
   double xs_DY_500to700  = kNNLO*0.2334;     xs_DY.push_back(xs_DY_500to700);
@@ -142,8 +145,6 @@ int main(int argc, char** argv) {
 
 
   vector<double> xs_TT;
-  //xs_TT.push_back(831.76*0.438); //semilep
-  //xs_TT.push_back(831.76*0.457); //had    
   xs_TT.push_back(831.76*0.105); //2l2nu  
   double xs_TT_500to800 = 0.326;             xs_TT.push_back(xs_TT_500to800);
   double xs_TT_800to1200 = 3.26e-2;         xs_TT.push_back(xs_TT_800to1200);

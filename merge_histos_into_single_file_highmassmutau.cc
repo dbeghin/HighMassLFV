@@ -38,6 +38,7 @@ TH1F* MC_histo(TString var, TFile* file_in, TFile* file_in_d, double xs, int reb
   //Weight
   double w = 0;
   if (Nevents != 0) w = xs*lumi/Nevents;
+  cout << "xs: " << xs << "  Nevents: " << Nevents << endl;
   cout << "Events in data/events in MC " << w << endl;
   
   TH1F* h;
@@ -110,6 +111,8 @@ int main(int argc, char** argv) {
 
   vector<TFile*> DY_files;
   TFile* file_in_DY_lowmass = new TFile(folder_in+"/Arranged_DY/DY_inclusive.root", "R");            DY_files.push_back(file_in_DY_lowmass);
+  TFile* file_in_DY_100to200 = new TFile(folder_in+"/Arranged_DY/DY_100to200.root", "R");            DY_files.push_back(file_in_DY_100to200);
+  TFile* file_in_DY_200to400 = new TFile(folder_in+"/Arranged_DY/DY_200to400.root", "R");            DY_files.push_back(file_in_DY_200to400);
   TFile* file_in_DY_400to500 = new TFile(folder_in+"/Arranged_DY/DY_400to500.root", "R");            DY_files.push_back(file_in_DY_400to500);
   TFile* file_in_DY_500to700 = new TFile(folder_in+"/Arranged_DY/DY_500to700.root", "R");	     DY_files.push_back(file_in_DY_500to700);
   TFile* file_in_DY_700to800 = new TFile(folder_in+"/Arranged_DY/DY_700to800.root", "R");	     DY_files.push_back(file_in_DY_700to800);
@@ -171,15 +174,20 @@ int main(int argc, char** argv) {
   vars.push_back("mu_eta");           
   vars.push_back("mu_phi");           
   vars.push_back("ev_DRmutau");       
-  //vars.push_back("ev_DeltaPhimutau"); 
-  //vars.push_back("ev_DeltaPhiMETtau");
+  vars.push_back("ev_deltaMET");       
   vars.push_back("ev_Mt");        
   vars.push_back("ev_MET"); 
   vars.push_back("ev_Mcol"); 
   vars.push_back("mu_isolation"); 
   vars.push_back("sign");
-  //if (CR == "CR7") vars.push_back("ev_Mt"); 
-  //if (CR == "CR9") vars.push_back("ev_Mt"); 
+  vars.push_back("ev_Nvertex");
+  vars.push_back("njet");
+  vars.push_back("nbjet");
+  //exclusively for TT region now                                                                                                                                                        
+  int n_TT_plots = vars.size();
+  vars.push_back("bjet_pt");
+  vars.push_back("bjet_eta");
+  vars.push_back("bjet_phi");
 
 
   vector<TString> taun;
@@ -189,22 +197,25 @@ int main(int argc, char** argv) {
   Mth.push_back("MtLow_OS");
   Mth.push_back("MtLow_SS");
   Mth.push_back("MtHigh");
-  Mth.push_back("MtLow_TT");
+  Mth.push_back("MtLow_TT");  int k_low_TT= Mth.size()-1;
   Mth.push_back("MtHigh_TT");
 
   vector<TString> systs;              
   systs.push_back("nominal");
   vector<TString> systs_aux = GetSys();
   for (unsigned int iAux=0; iAux<systs_aux.size(); ++iAux) {
+    if (systs_aux[iAux] == "topPt") continue;
     systs.push_back(systs_aux[iAux]+"_up");
     systs.push_back(systs_aux[iAux]+"_down");
   }
 
   //cross-sections
-  float kNNLO = 1.048;
+  float kNNLO = 1.023;
 
   vector<double> xs_DY;
-  double xs_DY_lowmass   = 6225.4;           xs_DY.push_back(xs_DY_lowmass);
+  double xs_DY_lowmass   = 6077.22;          xs_DY.push_back(xs_DY_lowmass);
+  double xs_DY_100to200  = kNNLO*226.6;      xs_DY.push_back(xs_DY_100to200);
+  double xs_DY_200to400  = kNNLO*7.77;       xs_DY.push_back(xs_DY_200to400);
   double xs_DY_400to500  = kNNLO*0.4065;     xs_DY.push_back(xs_DY_400to500);
   double xs_DY_500to700  = kNNLO*0.2334;     xs_DY.push_back(xs_DY_500to700);
   double xs_DY_700to800  = kNNLO*0.03614;    xs_DY.push_back(xs_DY_700to800);
@@ -251,6 +262,9 @@ int main(int argc, char** argv) {
     for (unsigned int i = 0; i<vars.size(); ++i) {
       for (unsigned int j = 0; j<taun.size(); ++j) {
 	for (unsigned int l = 0; l<Mth.size(); ++l) {
+
+	  if (l < k_low_TT && i >= n_TT_plots) continue;
+
           var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+"_"+Mth[l];
           //var_in = systs[k]+"/"+vars[i]+"_"+taun[j]+"_"+systs[k]+Mth[l];
 	  if (CR == "CR100" || CR == "CR102") {
@@ -308,12 +322,6 @@ int main(int argc, char** argv) {
           h_ST->Write();
 	  delete h_ST;
 	  
-	  if (CR != "CR101") {
-	    //TH1F* h_signal = MC_histo(var_in, file_in_signal, xs_signal, N_signal, rebin);
-	    //h_signal->SetName("Signal_"+var_out);
-	    //h_signal->Write();
-	    //FIXME
-	  }
           
           TH1F* h_data = (TH1F*) file_in_data -> Get(var_in);//Data is, by definition, normalized
           h_data -> SetName("data_"+var_out);
@@ -321,7 +329,6 @@ int main(int argc, char** argv) {
           h_data->Write();
 	  delete h_data;
 
-	  if (j>0) continue;
 	  if (CR == "CR100" || CR == "CR102") {
 	    var_in = systs[k]+"_"+vars[i]+"_"+Mth[l];
 	    cout << file_in_faketau->GetName() << endl;
