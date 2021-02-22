@@ -59,6 +59,8 @@ ROOT.gStyle.SetPaintTextFormat("0.2f")
 kInvertedDarkBodyRadiator=56
 ROOT.gStyle.SetPalette(kInvertedDarkBodyRadiator)
 kAzure=860
+kMagenta = 616
+kBlue = 600
 
 c=ROOT.TCanvas("canvas","",0,0,1200,900)
 c.cd()
@@ -89,9 +91,9 @@ photogenic_var2.append("tau p_{T} / jet p_{T} ratio")
 
 
 ends = []
-ends.append("total")     
-ends.append("eta_barrel")
-ends.append("eta_endcap")
+ends.append("total_nominal")     
+ends.append("nominal_barrel")
+ends.append("nominal_endcap")
 #ends.append("DM0_barrel")
 #ends.append("DM0_endcap")
 #ends.append("DM1_barrel")
@@ -100,15 +102,15 @@ ends.append("eta_endcap")
 #ends.append("DM10_endcap")
 
 ph_ends = {
-"total"       : "Inclusive",
-"eta_barrel"  : "Barrel - All DMs",
-"eta_endcap"  : "Endcap - All DMs",
-"DM0_barrel"  : "Barrel - DM0",
-"DM0_endcap"  : "Endcap - DM0",
-"DM1_barrel"  : "Barrel - DM1",
-"DM1_endcap"  : "Endcap - DM1",
-"DM10_barrel" : "Barrel - DM10",
-"DM10_endcap" : "Endcap - DM10",
+"total_nominal" : "Inclusive",
+"nominal_barrel": "Barrel - All DMs",
+"nominal_endcap": "Endcap - All DMs",
+"DM0_barrel"    : "Barrel - DM0",
+"DM0_endcap"    : "Endcap - DM0",
+"DM1_barrel"    : "Barrel - DM1",
+"DM1_endcap"    : "Endcap - DM1",
+"DM10_barrel"   : "Barrel - DM10",
+"DM10_endcap"   : "Endcap - DM10",
 }
 
 
@@ -146,9 +148,13 @@ for k in range (0,nvar):
             Data.GetYaxis().SetTitle(photogenic_var2[k])
             Data.GetXaxis().SetTitle(photogenic_var[k])
             Data.SetMarkerStyle(20)
-            Data.SetMarkerSize(0.97)
-            Data.SetMarkerColor(kAzure+7)
-            Data.SetLineColor(kAzure+7)
+            Data.SetMarkerSize(1.3)
+            #Data.SetMarkerColor(kAzure+7)
+            #Data.SetLineColor(kAzure+7)
+            #Data.SetMarkerColor(kMagenta-4)
+            #Data.SetLineColor(kMagenta-4)
+            Data.SetMarkerColor(kBlue-4)
+            Data.SetLineColor(kBlue-4)
                     
                     
             pad1 = ROOT.TPad("pad1","pad1",0,0,1,1)
@@ -171,7 +177,7 @@ for k in range (0,nvar):
                     
             Data.SetMaximum(0.6)#2.5)#FIXME
             Data.SetMinimum(0.0)
-            Data.Draw("colztexte2")
+            Data.Draw("colztext")
                     
                     
             #legende=make_legend()
@@ -196,6 +202,6 @@ for k in range (0,nvar):
             ROOT.gPad.RedrawAxis()
             
             c.Modified()
-            c.SaveAs(var_in+".png")
+            c.SaveAs(var_in+".pdf")
 
 
